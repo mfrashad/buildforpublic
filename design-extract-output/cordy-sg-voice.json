@@ -1,0 +1,33 @@
+{
+  "tone": "friendly",
+  "pronoun": "you-only",
+  "headingStyle": "Sentence case",
+  "headingLengthClass": "tight",
+  "ctaVerbs": [
+    {
+      "value": "start",
+      "count": 2
+    }
+  ],
+  "buttonPatterns": [
+    {
+      "value": "start",
+      "count": 2
+    }
+  ],
+  "sampleHeadings": [
+    "FIND WHAT\nEXCITES YOU",
+    "START",
+    "FIND WHAT\nEXCITES YOU",
+    "START",
+    "I know 600+ competitions,\nworkshops, volunteering....",
+    "I’ll recommend the best ones for you.",
+    "100+ available\nright now.",
+    "FIND\nOPPORTUNITIES\nNOW",
+    "START"
+  ],
+  "stats": {
+    "buttons": 2,
+    "headings": 9
+  }
+}

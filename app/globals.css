@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* ── Cordy eggshell palette ── */
+  --color-bg: #fff7e7;
+  --color-surface: #fffbf4;
+  --color-surface-raised: #ffffff;
+  --color-text-primary: #1a1b1f;
+  --color-text-secondary: #4a4b52;
+  --color-text-tertiary: #7a7b84;
+  --color-border: #1a1b1f;
+  --color-border-subtle: #dcdad2;
+
+  /* ── Brand primary — Cordy red ── */
+  --color-clay: #e84855;
+  --color-clay-hover: #cc3340;
+
+  /* ── Accent palette — Cordy colors ── */
+  --color-olive: #06d6a0;
+  --color-cactus: #ffc44d;
+  --color-sky: #4cc9f0;
+  --color-fig: #ff70a6;
+
+  /* ── Fonts ── */
+  --font-serif: "Space Grotesk", "DM Sans", sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+}
+
+/* ── BASE ── */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+/* ── PILL BUTTONS — neobrutalist ── */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 2px solid var(--color-border);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-pill-filled {
+  background: var(--color-text-primary);
+  color: var(--color-bg);
+  box-shadow: 3px 3px 0px var(--color-border);
+}
+
+.btn-pill-filled:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--color-border);
+}
+
+.btn-pill-outline {
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.btn-pill-outline:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--color-border);
+}
+
+.btn-pill-clay {
+  background: var(--color-clay);
+  color: #fff;
+  box-shadow: 3px 3px 0px var(--color-border);
+}
+
+.btn-pill-clay:hover {
+  background: var(--color-clay-hover);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--color-border);
+}
+
+/* ── CARDS — neobrutalist ── */
+.card {
+  background: var(--color-surface-raised);
+  border-radius: 16px;
+  border: 2px solid var(--color-border);
+  box-shadow: 4px 4px 0px var(--color-border);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--color-border);
+}
+
+.card-flat {
+  background: var(--color-surface-raised);
+  border-radius: 16px;
+  border: 2px solid var(--color-border);
+  overflow: hidden;
+}
+
+/* ── ACCENT STRIPS ── */
+.accent-olive  { border-top: 4px solid var(--color-olive); }
+.accent-clay   { border-top: 4px solid var(--color-clay); }
+.accent-sky    { border-top: 4px solid var(--color-sky); }
+.accent-fig    { border-top: 4px solid var(--color-fig); }
+.accent-cactus { border-top: 4px solid var(--color-cactus); }
+
+/* ── SECTION SPACING ── */
+.section-padding { padding: 6rem 1.5rem; }
+
+@media (max-width: 768px) {
+  .section-padding { padding: 4rem 1rem; }
+}
+
+/* ── SCROLL INDICATOR ── */
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+.scroll-indicator { animation: bounce-down 2s ease-in-out infinite; }
+
+/* ── TYPOGRAPHY ── */
+.heading-display {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+}
+
+.heading-section {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .heading-section { font-size: 2.5rem; }
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height: 2px;
+  background: var(--color-border);
+}

@@ -1,0 +1,347 @@
+{
+  "colors": {
+    "all": [
+      {
+        "hex": "#1a1b1f",
+        "rgb": {
+          "r": 26,
+          "g": 27,
+          "b": 31,
+          "a": 1
+        },
+        "hsl": {
+          "h": 228,
+          "s": 9,
+          "l": 11
+        },
+        "count": 3759,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#000000",
+        "rgb": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 0
+        },
+        "count": 72,
+        "contexts": [
+          "text",
+          "border",
+          "background"
+        ]
+      },
+      {
+        "hex": "#ffffff",
+        "rgb": {
+          "r": 255,
+          "g": 255,
+          "b": 255,
+          "a": 1
+        },
+        "hsl": {
+          "h": 0,
+          "s": 0,
+          "l": 100
+        },
+        "count": 15,
+        "contexts": [
+          "text",
+          "border",
+          "background"
+        ]
+      },
+      {
+        "hex": "#ef476f",
+        "rgb": {
+          "r": 239,
+          "g": 71,
+          "b": 111,
+          "a": 1
+        },
+        "hsl": {
+          "h": 346,
+          "s": 84,
+          "l": 61
+        },
+        "count": 10,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#fff7e7",
+        "rgb": {
+          "r": 255,
+          "g": 247,
+          "b": 231,
+          "a": 1
+        },
+        "hsl": {
+          "h": 40,
+          "s": 100,
+          "l": 95
+        },
+        "count": 2,
+        "contexts": [
+          "background"
+        ]
+      },
+      {
+        "hex": "#e84855",
+        "rgb": {
+          "r": 232,
+          "g": 72,
+          "b": 85,
+          "a": 1
+        },
+        "hsl": {
+          "h": 355,
+          "s": 78,
+          "l": 60
+        },
+        "count": 2,
+        "contexts": [
+          "background"
+        ]
+      },
+      {
+        "hex": "#ff70a6",
+        "rgb": {
+          "r": 255,
+          "g": 112,
+          "b": 166,
+          "a": 1
+        },
+        "hsl": {
+          "h": 337,
+          "s": 100,
+          "l": 72
+        },
+        "count": 2,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#06d6a0",
+        "rgb": {
+          "r": 6,
+          "g": 214,
+          "b": 160,
+          "a": 1
+        },
+        "hsl": {
+          "h": 164,
+          "s": 95,
+          "l": 43
+        },
+        "count": 2,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#4cc9f0",
+        "rgb": {
+          "r": 76,
+          "g": 201,
+          "b": 240,
+          "a": 1
+        },
+        "hsl": {
+          "h": 194,
+          "s": 85,
+          "l": 62
+        },
+        "count": 2,
+        "contexts": [
+          "text",
+          "border"
+        ]
+      },
+      {
+        "hex": "#2e519f",
+        "rgb": {
+          "r": 46,
+          "g": 81,
+          "b": 159,
+          "a": 1
+        },
+        "hsl": {
+          "h": 221,
+          "s": 55,
+          "l": 40
+        },
+        "count": 1,
+        "contexts": [
+          "background"
+        ]
+      }
+    ]
+  },
+  "regions": [
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 150,
+        "y": 0,
+        "w": 980,
+        "h": 493.359375
+      },
+      "heading": "FIND WHAT\nEXCITES YOU",
+      "buttonCount": 1,
+      "cardCount": 0,
+      "className": "section-52"
+    },
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 150,
+        "y": 0,
+        "w": 980,
+        "h": 90
+      },
+      "heading": null,
+      "buttonCount": 0,
+      "cardCount": 0,
+      "className": "c2-header"
+    },
+    {
+      "role": "hero",
+      "tag": "section",
+      "bounds": {
+        "x": 150,
+        "y": 110,
+        "w": 980,
+        "h": 383.359375
+      },
+      "heading": "FIND WHAT\nEXCITES YOU",
+      "buttonCount": 1,
+      "cardCount": 0,
+      "className": "c2-hero"
+    },
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 150,
+        "y": 1188.359375,
+        "w": 980,
+        "h": 1254
+      },
+      "heading": "I know 600+ competitions,\nworkshops, volunteering....",
+      "buttonCount": 0,
+      "cardCount": 0,
+      "className": "section-49"
+    },
+    {
+      "role": "hero",
+      "tag": "section",
+      "bounds": {
+        "x": 150,
+        "y": 2462.359375,
+        "w": 980,
+        "h": 440
+      },
+      "heading": "FIND\nOPPORTUNITIES\nNOW",
+      "buttonCount": 1,
+      "cardCount": 0,
+      "className": "c2-hero"
+    },
+    {
+      "role": "content",
+      "tag": "section",
+      "bounds": {
+        "x": 0,
+        "y": 2952.359375,
+        "w": 1280,
+        "h": 110
+      },
+      "heading": null,
+      "buttonCount": 0,
+      "cardCount": 0,
+      "className": "section-41"
+    }
+  ],
+  "componentClusters": [
+    {
+      "kind": "button",
+      "structuralHash": "a>h3",
+      "instanceCount": 2,
+      "variants": [
+        {
+          "css": {
+            "background": "rgb(232, 72, 85)",
+            "color": "rgb(26, 27, 31)",
+            "padding": "0px 0px 0px 0px",
+            "borderRadius": "16px",
+            "border": "4px solid rgb(0, 0, 0)",
+            "fontSize": "20px",
+            "fontWeight": "400"
+          },
+          "instanceCount": 2
+        }
+      ]
+    }
+  ],
+  "accessibility": {
+    "remediation": []
+  },
+  "cssHealth": {
+    "sheets": [
+      {
+        "url": "https://cdn.prod.website-files.com/626554fdd71f1c8c5156b4d6/css/cordy.webflow.shared.74f554987.min.css",
+        "totalBytes": 203443,
+        "usedBytes": 5828,
+        "unusedBytes": 197615,
+        "unusedPercent": 97
+      }
+    ],
+    "totalBytes": 203443,
+    "usedBytes": 5828,
+    "unusedBytes": 197615,
+    "unusedPercent": 97,
+    "importantCount": 40,
+    "duplicates": 6649,
+    "vendorPrefixes": {
+      "webkit": 31,
+      "moz": 4,
+      "ms": 1,
+      "o": 0
+    },
+    "keyframes": [],
+    "specificity": {
+      "max": [
+        1,
+        4,
+        3
+      ],
+      "average": [
+        0,
+        1.17,
+        0.08
+      ],
+      "count": 2542
+    },
+    "issues": [
+      "40 !important rules",
+      "6649 duplicate declarations",
+      "97% unused CSS"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+Clone the design language of this landing page and build a fresh equivalent.
+Visual feel: flat. Tone: friendly · Headings: Sentence case · CTA verbs: [object Object]
+Primary palette: #1a1b1f, #000000, #ffffff, #ef476f, #fff7e7.
+Typography: [object Object], [object Object], [object Object].
+Corner radius vocabulary: 8, 16, 60.
+Shadow vocabulary: rgb(0, 0, 0) 0px 5px 0px 0px.
+Page structure:
+- hero — heading: "FIND WHAT
+EXCITES YOU"
+- hero — heading: "FIND
+OPPORTUNITIES
+NOW"

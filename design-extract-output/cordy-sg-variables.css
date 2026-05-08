@@ -1,0 +1,72 @@
+:root {
+  /* Colors — Primary */
+  --color-primary: #e84855;
+  --color-secondary: #2e519f;
+  --color-accent: #ff70a6;
+
+  /* Colors — Neutrals */
+  --color-neutral-50: #1a1b1f;
+  --color-neutral-100: #000000;
+  --color-neutral-200: #ffffff;
+  --color-neutral-300: #fff7e7;
+
+  /* Colors — Backgrounds */
+  --color-bg: #fff7e7;
+  --color-bg-1: #000000;
+
+  /* Colors — Text */
+  --color-text: #000000;
+  --color-text-1: #1a1b1f;
+  --color-text-2: #ef476f;
+  --color-text-3: #ffffff;
+  --color-text-4: #ff70a6;
+
+  /* Typography — Families */
+  --font-body: 'DM Sans', sans-serif;
+  --font-heading: 'sans-serif', sans-serif;
+  --font-font-2: 'Gilroy', sans-serif;
+
+  /* Typography — Scale */
+  --font-size-50: 50px;
+  --font-size-30: 30px;
+  --font-size-25: 25px;
+  --font-size-20: 20px;
+  --font-size-16: 16px;
+
+  /* Spacing */
+  --spacing-5: 5px;
+  --spacing-40: 40px;
+  --spacing-100: 100px;
+  --spacing-234: 234px;
+
+  /* Border Radius */
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 60px;
+
+  /* Box Shadows */
+  --shadow-sm: rgb(0, 0, 0) 0px 5px 0px 0px;
+
+  /* Original Site Variables */
+  /* — spacing — */
+  --space-cadet-csg: #2e519f;
+  /* — other — */
+  --eggshell: #fff7e7;
+  --black: black;
+  --white: white;
+  --white-2: #fffbf4;
+  --crayon-red: #e84855;
+  --yellow-crayola: #ffe787;
+  --opp-red: #ef476f;
+  --opp-orange: #fb8500;
+  --opp-pink: #ff70a6;
+  --opp-green: #06d6a0;
+  --opp-blue: #4cc9f0;
+  --opp-yellow: #ffc44d;
+  /* — semantic — */
+  success: [object Object];
+  warning: [object Object];
+  error: [object Object];
+  info: [object Object];
+
+}

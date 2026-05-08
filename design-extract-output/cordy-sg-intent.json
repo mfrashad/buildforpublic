@@ -1,0 +1,173 @@
+{
+  "pageIntent": {
+    "type": "landing",
+    "confidence": 0.45,
+    "path": "/",
+    "title": "CORDY",
+    "description": "Find your passions with CORDY. Find opportunities for youths such as competitions, workshops, hackathons, grants, volunteering  and more!",
+    "signals": [
+      {
+        "kind": "url",
+        "type": "landing",
+        "weight": 0.45,
+        "detail": "root-path"
+      }
+    ],
+    "alternates": [],
+    "needsSmart": true
+  },
+  "sectionRoles": {
+    "sections": [
+      {
+        "index": 0,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": "FIND WHAT\nEXCITES YOU",
+        "bounds": {
+          "x": 150,
+          "y": 0,
+          "w": 980,
+          "h": 493.359375
+        },
+        "buttonCount": 1,
+        "cardCount": 0,
+        "slots": {
+          "heading": "FIND WHAT\nEXCITES YOU",
+          "subheadings": [
+            "START"
+          ],
+          "ctaCount": 1,
+          "lede": "FIND WHAT\nEXCITES YOU\nSTART"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 1,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": null,
+        "bounds": {
+          "x": 150,
+          "y": 0,
+          "w": 980,
+          "h": 90
+        },
+        "buttonCount": 0,
+        "cardCount": 0,
+        "slots": {},
+        "needsSmart": true
+      },
+      {
+        "index": 2,
+        "tag": "section",
+        "role": "hero",
+        "subrole": null,
+        "confidence": 0.85,
+        "heading": "FIND WHAT\nEXCITES YOU",
+        "bounds": {
+          "x": 150,
+          "y": 110,
+          "w": 980,
+          "h": 383.359375
+        },
+        "buttonCount": 1,
+        "cardCount": 0,
+        "slots": {
+          "heading": "FIND WHAT\nEXCITES YOU",
+          "subheadings": [
+            "START"
+          ],
+          "ctaCount": 1,
+          "lede": "FIND WHAT\nEXCITES YOU\nSTART"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 3,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": "I know 600+ competitions,\nworkshops, volunteering....",
+        "bounds": {
+          "x": 150,
+          "y": 1188.359375,
+          "w": 980,
+          "h": 1254
+        },
+        "buttonCount": 0,
+        "cardCount": 0,
+        "slots": {
+          "heading": "I know 600+ competitions,\nworkshops, volunteering....",
+          "subheadings": [
+            "I’ll recommend the best ones for you.",
+            "100+ available\nright now."
+          ],
+          "lede": "I know 600+ competitions,\nworkshops, volunteering....\nI’ll recommend the best ones for you.\nbased on your interests and goals.\n100+ available\nright now.\nthat's 10x more than most schools in Singapore"
+        },
+        "needsSmart": true
+      },
+      {
+        "index": 4,
+        "tag": "section",
+        "role": "hero",
+        "subrole": null,
+        "confidence": 0.85,
+        "heading": "FIND\nOPPORTUNITIES\nNOW",
+        "bounds": {
+          "x": 150,
+          "y": 2462.359375,
+          "w": 980,
+          "h": 440
+        },
+        "buttonCount": 1,
+        "cardCount": 0,
+        "slots": {
+          "heading": "FIND\nOPPORTUNITIES\nNOW",
+          "subheadings": [
+            "START"
+          ],
+          "ctaCount": 1,
+          "lede": "FIND\nOPPORTUNITIES\nNOW\nSTART"
+        },
+        "needsSmart": false
+      },
+      {
+        "index": 5,
+        "tag": "section",
+        "role": "content",
+        "subrole": null,
+        "confidence": 0.3,
+        "heading": null,
+        "bounds": {
+          "x": 0,
+          "y": 2952.359375,
+          "w": 1280,
+          "h": 110
+        },
+        "buttonCount": 0,
+        "cardCount": 0,
+        "slots": {
+          "lede": "Contact\nAbout"
+        },
+        "needsSmart": true
+      }
+    ],
+    "counts": {
+      "content": 4,
+      "hero": 2
+    },
+    "readingOrder": [
+      "content",
+      "content",
+      "hero",
+      "content",
+      "hero",
+      "content"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "skills": {
+    "nano-banana": {
+      "source": "kingbootoshi/nano-banana-2-skill",
+      "sourceType": "github",
+      "computedHash": "52227e4869035e53d9abef6017eb289196207a8eb9d341949eaf8e3d500cc562"
+    },
+    "stop-slop": {
+      "source": "hardikpandya/stop-slop",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "617bf97d33162a6bd0da4f40a97aac589de58e5a6c9cf011ed6108992210e7cb"
+    }
+  }
+}

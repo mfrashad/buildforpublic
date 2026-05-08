@@ -1,0 +1,19 @@
+/* shadcn/ui Theme — extracted from https://www.cordy.sg/ */
+/* Paste into your globals.css */
+
+@layer base {
+  :root {
+    --background: 40 100% 95%;
+    --foreground: 0 0% 0%;
+    --primary: 355 78% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 221 55% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 337 100% 72%;
+    --accent-foreground: 0 0% 0%;
+    --muted: 40 100% 95%;
+    --muted-foreground: 228 9% 11%;
+    --border: 40 100% 95%;
+    --radius: 8px;
+  }
+}
