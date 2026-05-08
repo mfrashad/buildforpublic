@@ -3,32 +3,32 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Why This Matters Now — AI for Good Malaysia",
+  title: "Why This Matters Now — Build for Public",
   description:
     "Five companies control 71% of global AI compute. 93% of the world's languages are invisible to AI training data. The window to build public-interest AI infrastructure is closing.",
 };
 
 const NOW_CARDS = [
   {
-    accent: "accent-clay",
+    accent: "accent-yellow",
     label: "AI compute is owned by five companies",
     body: "Amazon, Google, Meta, Microsoft, and Oracle control 71% of the world's cumulative AI compute, up from 63% eighteen months earlier. Their combined capital expenditure for 2026 exceeds $660 billion. Any community, NGO, or government that needs AI pays rent to this oligopoly.",
     source: "Epoch AI, 2025",
   },
   {
-    accent: "accent-sky",
+    accent: "accent-blue",
     label: "The US gets 23 times more AI investment than China",
     body: "US private AI investment reached $285.9 billion in 2025. China received $13.3 billion. Southeast Asia received a rounding error. The AI frontier is not a global phenomenon. It is concentrated in a handful of zip codes in San Francisco and Seattle. Everywhere else is structurally excluded.",
     source: "Stanford HAI 2026 AI Index",
   },
   {
-    accent: "accent-olive",
+    accent: "accent-mint",
     label: "93% of the world's languages are invisible to AI",
     body: "Only 7% of the world's 7,000 languages appear in published online material. English dominates AI training data at 30%. Malay, Bahasa Indonesia, Tamil, and the languages of Malaysia's indigenous communities are statistical noise. AI systems built on this data will fail anyone who does not speak English. Not as a bug. As an architectural consequence.",
     source: "Nature, 2025",
   },
   {
-    accent: "accent-fig",
+    accent: "accent-peach",
     label: "The most powerful AI systems are getting less transparent",
     body: "Stanford HAI's Foundation Model Transparency Index dropped from 58 to 40 in a single year. The most capable AI systems are becoming less auditable as they become more powerful. Power is concentrating. The public's ability to scrutinize it is shrinking.",
     source: "Stanford HAI 2026 AI Index",
@@ -55,19 +55,19 @@ const NEXT_CARDS = [
 
 const BUILD_CARDS = [
   {
-    accent: "accent-olive",
+    accent: "accent-mint",
     label: "Open infrastructure anyone can use",
     body: "The OECD and the UN both concluded in 2024 that core AI components should be governed as public commons: open, interoperable, auditable. The policy consensus exists. Open-source communities building MIT-licensed tools for NGOs are not ahead of their time. They are ahead of most governments in actually doing it.",
     source: "OECD.AI 2025; UN 2024",
   },
   {
-    accent: "accent-olive",
+    accent: "accent-mint",
     label: "A public record of the AI divide",
     body: "Data that does not exist cannot drive policy. We built the AI Adoption by Country API because no single source tracked this across 16 countries in a usable format. That data is now free. Any researcher, journalist, or NGO can use it. This is what public-interest AI infrastructure looks like in practice.",
     source: "",
   },
   {
-    accent: "accent-olive",
+    accent: "accent-mint",
     label: "AI literacy in the languages that need it most",
     body: "Hugging Face grew from 160,000 to 1.57 million generative AI model repositories in two years. 46% of Fortune 500 leaders prefer open models. The technology is there. What is missing is content explaining it in the languages of the people most affected by it. That content is what this community builds.",
     source: "Mozilla Foundation, 2024",
@@ -86,19 +86,19 @@ export default function WhyNowPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-40 pb-16 px-6 border-b-2 border-border">
+      <section className="pt-40 pb-16 px-6 border-b-2 border-black">
         <div className="max-w-3xl mx-auto">
           <div
-            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-text-primary bg-surface-raised px-5 py-2 rounded-full border-2 border-border"
+            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-black bg-white px-5 py-2 rounded-full border-2 border-black"
             style={{ boxShadow: "3px 3px 0px #1a1b1f" }}
           >
             THE CASE FOR PUBLIC-INTEREST AI
           </div>
-          <h1 className="heading-display text-4xl sm:text-5xl text-text-primary mb-6 max-w-2xl">
+          <h1 className="heading-display text-4xl sm:text-5xl text-black mb-6 max-w-2xl">
             AI is concentrating power.{" "}
             <span className="text-clay">The window to counter this is now.</span>
           </h1>
-          <p className="text-lg text-text-secondary max-w-2xl leading-relaxed">
+          <p className="text-lg text-black/60 max-w-2xl leading-relaxed">
             All of this is already happening. The data below is from 2024 and 2025.
           </p>
         </div>
@@ -107,22 +107,22 @@ export default function WhyNowPage() {
       {/* Section 1 — Now */}
       <section className="section-padding">
         <div className="max-w-5xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">What is happening right now</h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+          <h2 className="heading-section text-black mb-3">What is happening right now</h2>
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
             Four sourced facts on who controls AI and who it serves.
           </p>
           <div className="grid sm:grid-cols-2 gap-5">
             {NOW_CARDS.map((card) => (
               <div key={card.label} className={`card-flat ${card.accent} p-6`}>
                 <h3
-                  className="text-base font-semibold text-text-primary mb-3"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="text-base font-semibold text-black mb-3"
+                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   {card.label}
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed mb-4">{card.body}</p>
+                <p className="text-sm text-black/60 leading-relaxed mb-4">{card.body}</p>
                 {card.source && (
-                  <p className="text-xs text-text-tertiary font-medium">{card.source}</p>
+                  <p className="text-xs text-black/50 font-medium">{card.source}</p>
                 )}
               </div>
             ))}
@@ -133,22 +133,22 @@ export default function WhyNowPage() {
       {/* Section 2 — What comes next */}
       <section className="section-padding pt-0">
         <div className="max-w-5xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">What comes next</h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+          <h2 className="heading-section text-black mb-3">What comes next</h2>
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
             These follow directly from the trends above.
           </p>
           <div className="space-y-5">
             {NEXT_CARDS.map((card) => (
-              <div key={card.label} className="card accent-clay p-6 sm:p-8">
+              <div key={card.label} className="card accent-yellow p-6 sm:p-8">
                 <h3
-                  className="text-base font-semibold text-text-primary mb-3"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="text-base font-semibold text-black mb-3"
+                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   {card.label}
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed mb-3">{card.body}</p>
+                <p className="text-sm text-black/60 leading-relaxed mb-3">{card.body}</p>
                 {card.source && (
-                  <p className="text-xs text-text-tertiary font-medium">{card.source}</p>
+                  <p className="text-xs text-black/50 font-medium">{card.source}</p>
                 )}
               </div>
             ))}
@@ -159,22 +159,22 @@ export default function WhyNowPage() {
       {/* Section 3 — What we can still build */}
       <section className="section-padding pt-0">
         <div className="max-w-5xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">What we can still build</h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+          <h2 className="heading-section text-black mb-3">What we can still build</h2>
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
             Each problem above has a direct counter: builders and content creators working in public, releasing everything as open-source code.
           </p>
           <div className="grid sm:grid-cols-3 gap-5">
             {BUILD_CARDS.map((card) => (
               <div key={card.label} className={`card ${card.accent} p-6`}>
                 <h3
-                  className="text-base font-semibold text-text-primary mb-3"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="text-base font-semibold text-black mb-3"
+                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   {card.label}
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed mb-3">{card.body}</p>
+                <p className="text-sm text-black/60 leading-relaxed mb-3">{card.body}</p>
                 {card.source && (
-                  <p className="text-xs text-text-tertiary font-medium">{card.source}</p>
+                  <p className="text-xs text-black/50 font-medium">{card.source}</p>
                 )}
               </div>
             ))}
@@ -191,15 +191,15 @@ export default function WhyNowPage() {
               <a
                 key={card.label}
                 href={card.href}
-                className="card-flat p-6 hover:bg-surface transition-colors group"
+                className="card-flat p-6 hover:bg-bp-light transition-colors group"
               >
                 <h4
-                  className="text-base font-semibold text-text-primary mb-1 group-hover:text-clay transition-colors"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="text-base font-semibold text-black mb-1 group-hover:text-black transition-colors"
+                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   {card.label} →
                 </h4>
-                <p className="text-sm text-text-secondary">{card.sub}</p>
+                <p className="text-sm text-black/60">{card.sub}</p>
               </a>
             ))}
           </div>

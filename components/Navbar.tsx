@@ -25,18 +25,25 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-bg/90 backdrop-blur-md border-b-2 border-border">
+    <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b-[3px] border-black">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-0">
           <span
-            className="text-xl tracking-tight text-text-primary"
-            style={{ fontFamily: "var(--font-serif)", fontWeight: 700 }}
+            className="text-xl text-black"
+            style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}
           >
-            AI for Good
+            Build for{" "}
           </span>
-          <span className="text-xs font-bold text-clay bg-clay/10 px-2 py-0.5 rounded-full border border-clay/30">
-            .MY
+          <span
+            className="text-xl px-1"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              background: "var(--color-bp-yellow)",
+            }}
+          >
+            Public
           </span>
         </a>
 
@@ -46,7 +53,8 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              className="text-[15px] font-medium text-text-secondary hover:text-text-primary transition-colors"
+              className="text-[15px] font-medium text-black/70 hover:text-black transition-colors"
+              style={{ fontFamily: "var(--font-display)" }}
             >
               {link.label}
             </a>
@@ -66,7 +74,7 @@ export default function Navbar() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="btn-pill btn-pill-clay text-sm py-2 px-5 flex items-center gap-2"
+              className="btn-pill btn-pill-filled text-sm py-2 px-5 flex items-center gap-2"
             >
               Get Involved
               <svg
@@ -90,12 +98,15 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-3 rounded-xl hover:bg-bg transition-colors group"
+                      className="block px-4 py-3 hover:bg-bp-light transition-colors group"
                     >
-                      <span className="block text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-0.5 group-hover:text-clay transition-colors">
+                      <span className="eyebrow block mb-0.5 group-hover:text-black transition-colors">
                         {item.audience}
                       </span>
-                      <span className="text-sm font-medium text-text-primary">
+                      <span
+                        className="text-sm font-medium text-black"
+                        style={{ fontFamily: "var(--font-display)" }}
+                      >
                         {item.label}
                       </span>
                     </a>
@@ -112,40 +123,37 @@ export default function Navbar() {
           className="md:hidden flex flex-col gap-1.5 p-2"
           aria-label="Toggle menu"
         >
-          <span className={`block w-5 h-0.5 bg-text-primary transition-transform duration-200 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-text-primary transition-opacity duration-200 ${mobileOpen ? "opacity-0" : ""}`} />
-          <span className={`block w-5 h-0.5 bg-text-primary transition-transform duration-200 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span className={`block w-5 h-0.5 bg-black transition-transform duration-200 ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
+          <span className={`block w-5 h-0.5 bg-black transition-opacity duration-200 ${mobileOpen ? "opacity-0" : ""}`} />
+          <span className={`block w-5 h-0.5 bg-black transition-transform duration-200 ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
         </button>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-surface border-t-2 border-border px-6 py-6 space-y-1">
+        <div className="md:hidden bg-white border-t-[3px] border-black px-6 py-6 space-y-1">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="block py-2.5 text-base text-text-secondary hover:text-text-primary transition-colors"
+              className="block py-2.5 text-base text-black/70 hover:text-black transition-colors"
+              style={{ fontFamily: "var(--font-display)" }}
             >
               {link.label}
             </a>
           ))}
 
-          <div className="pt-2 border-t border-border-subtle mt-4">
-            <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-2 pt-2">
-              Get Involved
-            </p>
+          <div className="pt-2 border-t-2 border-black/10 mt-4">
+            <p className="eyebrow mb-2 pt-2">Get Involved</p>
             {GET_INVOLVED.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="block py-2 pl-3 text-sm text-text-secondary hover:text-text-primary transition-colors border-l-2 border-border-subtle hover:border-clay mb-1"
+                className="block py-2 pl-3 text-sm text-black/70 hover:text-black transition-colors border-l-2 border-black/20 hover:border-black mb-1"
               >
-                <span className="text-[10px] font-bold text-text-tertiary uppercase tracking-widest block">
-                  {item.audience}
-                </span>
+                <span className="eyebrow block">{item.audience}</span>
                 {item.label}
               </a>
             ))}

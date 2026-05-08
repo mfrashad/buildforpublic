@@ -1,8 +1,8 @@
 export const SITE = {
-  name: "AI for Good",
-  domain: "aiforgood.my",
+  name: "Build for Public",
+  domain: "buildforpublic.com",
   description:
-    "Open-source AI projects, community, and advocacy for social impact in Southeast Asia and beyond.",
+    "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.",
   email: "m.fathyrashad@gmail.com",
   github: "https://github.com/mfrashad/aiforgood",
   twitter: "https://x.com/maboroshiiii",
@@ -28,7 +28,7 @@ export const ROLES = [
     id: "builder",
     title: "Builder",
     description:
-      "Contribute code to open-source projects. Ship tools that help real orgs.",
+      "Contribute code to open-source projects. Ship tools that serve the public interest.",
     emoji: "wrench",
   },
   {
@@ -49,7 +49,7 @@ export const ROLES = [
     id: "researcher",
     title: "Researcher",
     description:
-      "Produce data and analysis on AI adoption, NGO digital readiness, and public-sector AI in SEA.",
+      "Produce data and analysis on AI adoption, public-sector readiness, and open-source infrastructure.",
     emoji: "chart",
   },
 ];
@@ -86,7 +86,7 @@ export const CONTENT_TYPES = [
     badge: "TikTok · Instagram",
     title: "Short-form Videos",
     description:
-      "Making AI concepts accessible in 60 seconds. AI safety, open source, and tech for good explained for everyone.",
+      "Making AI concepts accessible in 60 seconds. AI safety, open source, and public-interest tech explained for everyone.",
     image: "/sprites/advocacy-videos.png",
   },
   {
@@ -94,7 +94,7 @@ export const CONTENT_TYPES = [
     badge: "Blog · Tutorials",
     title: "Articles & Guides",
     description:
-      "Technical tutorials, AI safety guides, and thought pieces on responsible AI. Published in English and Bahasa Malaysia.",
+      "Technical tutorials, AI safety guides, and thought pieces on public-interest technology. Published in English and Bahasa Malaysia.",
     image: "/sprites/advocacy-articles.png",
   },
   {
@@ -109,19 +109,19 @@ export const CONTENT_TYPES = [
 
 export const VISION = {
   problem: [
-    "AI is being built to maximize returns for shareholders. Problems that don't generate revenue stay unsolved.",
-    "The organizations that could most use AI are the ones no company will build for. Food banks, refugee legal aid clinics, rural schools. They are not paying customers.",
+    "The systems shaping public life are privately owned. Infrastructure deciding loans, jobs, health, and governance is built to maximize private return — not public benefit.",
+    "Private capital builds for paying customers. Communities that don't generate revenue — NGOs, public services, underrepresented languages — get nothing. The public stack has to be built by the public.",
   ],
   problemImage: "/sprites/vision-problem.png",
   vision: [
     {
-      title: "Build What the Market Won't",
-      text: "We build and fund projects the market won't touch. If no company will ship it, we will.",
+      title: "Build What Private Capital Won't",
+      text: "We build and fund projects private capital won't touch. If no company will ship it for public benefit, we will.",
       image: "/sprites/vision-fund.png",
     },
     {
-      title: "Put AI in the Hands of NGOs",
-      text: "AI lets one volunteer build what used to take a team. We show NGOs what's possible, match them with builders, and ship the tool together.",
+      title: "Put Open AI in the Hands of the Public",
+      text: "AI lets one volunteer build what used to take a team. We show NGOs and public-interest orgs what's possible, match them with builders, and ship the tool together.",
       image: "/sprites/vision-volunteer.png",
     },
     {
@@ -230,19 +230,19 @@ export const AI_COMMUNITIES = [
 ];
 
 export const TALKS_DESCRIPTION =
-  "20+ speaking engagements at meetups, conferences, and government briefings including Malaysia's Foreign Affairs Ministry (IDFR) and Yayasan Peneraju. Featured on Bernama TV, RTM TV1, Era.fm, and Kosmo.";
+  "20+ speaking engagements at meetups, conferences, and government briefings. Featured on Bernama TV, RTM TV1, Era.fm, and Kosmo.";
 
 export const ROLE_DETAILS = [
   {
     id: "builder",
     title: "Builder",
-    tagline: "Build open-source AI tools for social impact and local community problems.",
+    tagline: "Build open-source software for public-interest problems.",
     commitment: "3–7 hrs / week",
-    accentClass: "accent-sky",
+    accentClass: "accent-blue",
     responsibilities: [
       "Take full ownership as PIC (Person In Charge) of one project end-to-end — start a new one, or take over an existing one until it ships.",
-      "Projects tackle real problems: NGO needs, underserved communities, local causes in Southeast Asia — not random open source.",
-      "Open-source the work where possible and keep the community updated on your progress.",
+      "Projects tackle real problems: NGO needs, underserved communities, public-sector gaps — not random open source.",
+      "Open-source the work and keep the community updated on your progress.",
       "Scope, build, iterate, and hand off with documentation when done.",
     ],
     whoFits: [
@@ -254,19 +254,19 @@ export const ROLE_DETAILS = [
   {
     id: "advocate",
     title: "Advocate",
-    tagline: "Be the voice of AI for Good.",
+    tagline: "Be the voice of Build for Public.",
     commitment: "~1 post / week",
-    accentClass: "accent-clay",
+    accentClass: "accent-yellow",
     responsibilities: [
       "Publish ~1 piece of content per week in any format: short-form video, blog post, tweet/thread, or infographic.",
-      "Topics: AI social-impact & safety awareness, OR marketing AI for Good's projects and events.",
+      "Topics: public-interest tech, AI safety awareness, OR marketing Build for Public's projects and events.",
       "Claim content requests posted by builders when they need launch coverage or a specific topic covered.",
-      "Publish in English or Bahasa Malaysia.",
+      "Publish in any language — multilingual reach is a feature, not an afterthought.",
     ],
     whoFits: [
       "Writers, video creators, graphic designers",
       "Anyone with a platform or learning to build one",
-      "People who want to make AI topics accessible to everyone",
+      "People who want to make public-interest tech topics accessible to everyone",
     ],
   },
   {
@@ -274,7 +274,7 @@ export const ROLE_DETAILS = [
     title: "Organizer",
     tagline: "Be the connective tissue — events, Discord, the day-to-day.",
     commitment: "1+ event / month or online admin",
-    accentClass: "accent-olive",
+    accentClass: "accent-mint",
     responsibilities: [
       "In-person: host or co-organize at least one meetup per month. Support PIC launch events, hackathons, and demo nights.",
       "Online admin: manage Discord (moderation, welcomes), keep the event calendar updated, design event posters and social cards.",
@@ -292,11 +292,11 @@ export const ROLE_DETAILS = [
     title: "Researcher",
     tagline: "Produce the data and analysis that powers our advocacy.",
     commitment: "3–5 hrs / week",
-    accentClass: "accent-fig",
+    accentClass: "accent-peach",
     responsibilities: [
-      "Collect, clean, and analyze data on AI adoption, NGO digital readiness, and public-sector AI procurement across Southeast Asia.",
+      "Collect, clean, and analyze data on AI adoption, NGO digital readiness, and public-sector AI procurement.",
       "Produce reports, datasets, and visual summaries the community can publish and cite in advocacy and grant applications.",
-      "Conduct NGO digital-capacity audits — what tools they use, what they're missing, what AI could improve.",
+      "Conduct NGO digital-capacity audits — what tools they use, what they're missing, what open-source AI could improve.",
       "Contribute new datasets and improved methodology to our open data API on AI adoption across 16+ countries.",
     ],
     whoFits: [
@@ -311,7 +311,7 @@ export const MANIFESTO_CLAIMS = [
   {
     n: "01",
     claim:
-      "AI's benefits are concentrating. This is the expected outcome of building AI to maximize returns for shareholders.",
+      "Public infrastructure shouldn't be privately owned. Yet AI — already deciding loans, jobs, content, and public services — is owned by five companies, accountable only to private capital.",
     evidence:
       "Five companies control 71% of the world's AI compute, up from 63% eighteen months earlier. US private AI investment reached $285.9 billion in 2025. The Global South received a rounding error.",
     source: "Epoch AI 2025; Stanford HAI 2026 AI Index",
@@ -319,7 +319,7 @@ export const MANIFESTO_CLAIMS = [
   {
     n: "02",
     claim:
-      "The communities that will be most transformed by AI are the least represented in building it.",
+      "The communities most affected by technology are the least represented in building it. AI made the gap measurable.",
     evidence:
       "93% of the world's languages are absent from AI training data. Facial recognition systems misidentify dark-skinned faces 10 to 100 times more often than light-skinned ones. The Foundation Model Transparency Index dropped from 58 to 40 in a single year.",
     source: "Nature 2025; MIT Sloan; Stanford HAI 2026",
@@ -327,7 +327,7 @@ export const MANIFESTO_CLAIMS = [
   {
     n: "03",
     claim:
-      "Open-source AI built by volunteer communities is one of the few mechanisms that consistently produces tools for people markets ignore.",
+      "Open-source software built by volunteer communities is one of the few mechanisms that consistently produces tools for needs private capital won't fund.",
     evidence:
       "Hugging Face grew from 160,000 to 1.57 million generative AI model repositories in two years. 46% of Fortune 500 leaders prefer open models. The AI Adoption by Country API is MIT-licensed, tracks 16 countries, and is used by researchers for free.",
     source: "Mozilla Foundation 2024; our own data",
@@ -335,15 +335,15 @@ export const MANIFESTO_CLAIMS = [
   {
     n: "04",
     claim:
-      "AI literacy is not a luxury. AI systems already make decisions about jobs, loans, content, and public services. Communities that cannot read those decisions are subject to them.",
+      "Public literacy in the systems that govern us is not optional. AI makes decisions about jobs, loans, content, and public services. Communities that cannot read those decisions are subject to them.",
     evidence:
-      "5M+ views of AI literacy content produced by this community, mostly in English and Bahasa Malaysia — languages underrepresented in AI safety discourse.",
+      "5M+ views of public-interest AI content produced by this community — AI safety, open source, and civic tech explained for everyone.",
     source: "",
   },
   {
     n: "05",
     claim:
-      "The window to build public-interest AI infrastructure is closing. The compute concentration ratio moved from 63% to 71% in eighteen months. The trend is not slowing.",
+      "The window to build public-interest infrastructure is closing. Compute concentration moved from 63% to 71% in eighteen months. The trend is not slowing.",
     evidence:
       "The OECD and the UN both concluded in 2024 that AI must be governed as public commons. The policy consensus exists. The implementation does not. Communities like this one are part of filling that gap.",
     source: "OECD.AI 2025; UN Governing AI for Humanity 2024",
@@ -353,8 +353,8 @@ export const MANIFESTO_CLAIMS = [
 export const VOLUNTEER_EXPECTATIONS = [
   {
     icon: "🎯",
-    title: "Passion for the Mission",
-    body: "You believe AI should serve communities, not shareholders. You show up to contribute, not to build your portfolio.",
+    title: "Belief in the Mission",
+    body: "You believe technology should serve public interest, not private capital. You show up to contribute, not to build your portfolio.",
   },
   {
     icon: "🤲",

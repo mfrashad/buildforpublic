@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 import { SITE, HELPED_NGOS, FEATURED_PROJECT } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Partner with Us — AI for Good Malaysia",
+  title: "Partner with Us — Build for Public",
   description:
-    "We build for organizations that markets ignore. Bring us a real operational problem and we will scope, build, and ship a solution — for free, openly, and in 4–8 weeks.",
+    "We build for organizations that private capital won't serve. Bring us a real operational problem and we will scope, build, and ship a solution — for free, openly, and in 4–8 weeks.",
 };
 
 const PRIORITY_CRITERIA = [
@@ -63,24 +63,24 @@ export default function PartnersPage() {
       <Navbar />
 
       {/* ── Hero ── */}
-      <section className="pt-40 pb-16 px-6 border-b-2 border-border">
+      <section className="pt-40 pb-16 px-6 border-b-2 border-black">
         <div className="max-w-3xl mx-auto">
           <div
-            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-text-primary bg-surface-raised px-5 py-2 rounded-full border-2 border-border"
+            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-black bg-white px-5 py-2 rounded-full border-2 border-black"
             style={{ boxShadow: "3px 3px 0px #1a1b1f" }}
           >
             FOR NGOS &amp; PUBLIC-SECTOR ORGS
           </div>
-          <h1 className="heading-display text-4xl sm:text-5xl text-text-primary mb-8 max-w-2xl">
-            We build for organizations that markets ignore.
+          <h1 className="heading-display text-4xl sm:text-5xl text-black mb-8 max-w-2xl">
+            We build for organizations that private capital won't serve.
           </h1>
-          <p className="text-lg text-text-secondary max-w-2xl leading-relaxed mb-10">
+          <p className="text-lg text-black/60 max-w-2xl leading-relaxed mb-10">
             Your organization serves people no SaaS company will build for. You
             have a bottleneck AI could fix. Tell us. We scope, build, and ship
             for free.
           </p>
           <div className="flex flex-wrap gap-3">
-            <a href={`mailto:${SITE.email}`} className="btn-pill btn-pill-clay text-base px-8 py-3">
+            <a href={`mailto:${SITE.email}`} className="btn-pill btn-pill-filled text-base px-8 py-3">
               Tell us about your problem
             </a>
             <a href="#shipped" className="btn-pill btn-pill-outline text-base px-8 py-3">
@@ -93,8 +93,8 @@ export default function PartnersPage() {
       {/* ── Who we work with ── */}
       <section className="section-padding">
         <div className="max-w-4xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">Who we work with</h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+          <h2 className="heading-section text-black mb-3">Who we work with</h2>
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
             We work with NGOs, public-sector teams, and social enterprises in
             Malaysia and Southeast Asia. We have shipped for Pocket of Pink and
             are scoping work with food banks, refugee legal aid clinics, and
@@ -102,14 +102,14 @@ export default function PartnersPage() {
           </p>
 
           <div className="card-flat p-8 sm:p-10">
-            <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wider mb-6">
+            <p className="text-sm font-semibold text-black/50 uppercase tracking-wider mb-6">
               We prioritize partners who
             </p>
             <div className="space-y-4">
               {PRIORITY_CRITERIA.map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <span className="text-clay font-bold flex-shrink-0 mt-0.5">+</span>
-                  <p className="text-sm text-text-secondary leading-relaxed">{item}</p>
+                  <p className="text-sm text-black/60 leading-relaxed">{item}</p>
                 </div>
               ))}
             </div>
@@ -120,17 +120,17 @@ export default function PartnersPage() {
       {/* ── What good problems look like ── */}
       <section className="section-padding pt-0">
         <div className="max-w-4xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">
+          <h2 className="heading-section text-black mb-3">
             What good problems look like
           </h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
             The projects that work have a specific shape: a recurring cost, a
             clear scope, and a codebase another NGO can reuse.
           </p>
 
           <div className="grid sm:grid-cols-2 gap-6 mb-8">
             {/* Yes column */}
-            <div className="card accent-olive p-6">
+            <div className="card accent-mint p-6">
               <p className="text-xs font-semibold text-olive uppercase tracking-wider mb-5">
                 Examples we would say yes to
               </p>
@@ -138,14 +138,14 @@ export default function PartnersPage() {
                 {GOOD_PROBLEMS.map((p, i) => (
                   <div key={i} className="flex gap-3">
                     <span className="text-olive font-bold flex-shrink-0 mt-0.5">✓</span>
-                    <p className="text-sm text-text-secondary leading-relaxed italic">&ldquo;{p}&rdquo;</p>
+                    <p className="text-sm text-black/60 leading-relaxed italic">&ldquo;{p}&rdquo;</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* No column */}
-            <div className="card accent-fig p-6">
+            <div className="card accent-peach p-6">
               <p className="text-xs font-semibold text-fig uppercase tracking-wider mb-5">
                 Examples we would say no to
               </p>
@@ -154,10 +154,10 @@ export default function PartnersPage() {
                   <div key={i} className="flex gap-3">
                     <span className="text-fig font-bold flex-shrink-0 mt-0.5">✕</span>
                     <div>
-                      <p className="text-sm text-text-primary font-medium leading-snug mb-0.5">
+                      <p className="text-sm text-black font-medium leading-snug mb-0.5">
                         &ldquo;{item.problem}&rdquo;
                       </p>
-                      <p className="text-xs text-text-secondary leading-relaxed">{item.why}</p>
+                      <p className="text-xs text-black/60 leading-relaxed">{item.why}</p>
                     </div>
                   </div>
                 ))}
@@ -170,8 +170,8 @@ export default function PartnersPage() {
       {/* ── How it works ── */}
       <section className="section-padding pt-0">
         <div className="max-w-4xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">How it works</h2>
-          <p className="text-lg text-text-secondary mb-10">Five steps. No surprises.</p>
+          <h2 className="heading-section text-black mb-3">How it works</h2>
+          <p className="text-lg text-black/60 mb-10">Five steps. No surprises.</p>
 
           <div className="space-y-4">
             {HOW_IT_WORKS.map((step) => (
@@ -182,19 +182,19 @@ export default function PartnersPage() {
                 <div className="flex-shrink-0">
                   <span
                     className="text-3xl font-bold text-clay"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    style={{ fontFamily: "var(--font-display)" }}
                   >
                     {step.step}
                   </span>
                 </div>
                 <div>
                   <h3
-                    className="text-base font-semibold text-text-primary mb-2"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    className="text-base font-semibold text-black mb-2"
+                    style={{ fontFamily: "var(--font-display)" }}
                   >
                     {step.title}
                   </h3>
-                  <p className="text-sm text-text-secondary leading-relaxed">{step.body}</p>
+                  <p className="text-sm text-black/60 leading-relaxed">{step.body}</p>
                 </div>
               </div>
             ))}
@@ -205,20 +205,20 @@ export default function PartnersPage() {
       {/* ── What we have shipped ── */}
       <section id="shipped" className="section-padding pt-0">
         <div className="max-w-4xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">What we have shipped</h2>
-          <p className="text-lg text-text-secondary mb-10">Real partners, real outcomes.</p>
+          <h2 className="heading-section text-black mb-3">What we have shipped</h2>
+          <p className="text-lg text-black/60 mb-10">Real partners, real outcomes.</p>
 
           <div className="space-y-5">
             {HELPED_NGOS.map((ngo) => (
-              <div key={ngo.name} className="card accent-clay p-6 sm:p-8">
+              <div key={ngo.name} className="card accent-yellow p-6 sm:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
                   <div>
                     <span className="text-xs font-semibold text-clay uppercase tracking-wider block mb-2">
                       {ngo.badge}
                     </span>
                     <h3
-                      className="text-xl text-text-primary"
-                      style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+                      className="text-xl text-black"
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
                     >
                       {ngo.name}
                     </h3>
@@ -232,19 +232,19 @@ export default function PartnersPage() {
                     Visit Website →
                   </a>
                 </div>
-                <p className="text-sm text-text-secondary leading-relaxed">{ngo.description}</p>
+                <p className="text-sm text-black/60 leading-relaxed">{ngo.description}</p>
               </div>
             ))}
 
-            <div className="card accent-sky p-6 sm:p-8">
+            <div className="card accent-blue p-6 sm:p-8">
               <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
                 <div>
                   <span className="text-xs font-semibold text-sky uppercase tracking-wider block mb-2">
                     OPEN DATA PROJECT
                   </span>
                   <h3
-                    className="text-xl text-text-primary"
-                    style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+                    className="text-xl text-black"
+                    style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
                   >
                     {FEATURED_PROJECT.title}
                   </h3>
@@ -258,16 +258,16 @@ export default function PartnersPage() {
                   Live API →
                 </a>
               </div>
-              <p className="text-sm text-text-secondary leading-relaxed">
+              <p className="text-sm text-black/60 leading-relaxed">
                 {FEATURED_PROJECT.description}
               </p>
             </div>
 
             <div className="card-flat p-6 sm:p-8 border-dashed text-center">
-              <p className="text-text-secondary text-sm mb-2">
+              <p className="text-black/60 text-sm mb-2">
                 More in active scoping.
               </p>
-              <p className="text-text-tertiary text-sm">
+              <p className="text-black/50 text-sm">
                 If you want to see in-progress work, ask.
               </p>
             </div>
@@ -278,8 +278,8 @@ export default function PartnersPage() {
       {/* ── Get in touch ── */}
       <section className="section-padding pt-0 pb-24">
         <div className="max-w-2xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-4">Get in touch</h2>
-          <p className="text-lg text-text-secondary mb-8 leading-relaxed">
+          <h2 className="heading-section text-black mb-4">Get in touch</h2>
+          <p className="text-lg text-black/60 mb-8 leading-relaxed">
             Tell us briefly:
           </p>
           <div className="card-flat p-8 mb-10">
@@ -294,17 +294,17 @@ export default function PartnersPage() {
                   <span className="text-clay font-bold flex-shrink-0 w-5 text-sm mt-0.5">
                     {i + 1}.
                   </span>
-                  <p className="text-sm text-text-secondary leading-relaxed">{item}</p>
+                  <p className="text-sm text-black/60 leading-relaxed">{item}</p>
                 </div>
               ))}
             </div>
           </div>
           <div className="flex flex-wrap gap-3">
-            <a href={`mailto:${SITE.email}`} className="btn-pill btn-pill-clay text-base px-8 py-3">
+            <a href={`mailto:${SITE.email}`} className="btn-pill btn-pill-filled text-base px-8 py-3">
               Email us
             </a>
           </div>
-          <p className="text-sm text-text-secondary mt-6">
+          <p className="text-sm text-black/60 mt-6">
             We respond within a week. If we cannot take on the build ourselves,
             we will try to refer you to someone who can.
           </p>

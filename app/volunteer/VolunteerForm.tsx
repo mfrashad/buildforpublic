@@ -69,10 +69,10 @@ const ROLE_INFO: {
     title: "Advocate",
     commitment: "~1 post / week",
     description:
-      "Be the voice of AI for Good. Create content that educates people on AI for social good, raises awareness of AI safety and impact issues, or promotes what the community is building.",
+      "Be the voice of Build for Public. Create content that educates people on AI for social good, raises awareness of AI safety and impact issues, or promotes what the community is building.",
     expectations: [
       "1 post/week in any format: video, blog, tweet, infographic",
-      "Topics: AI social impact / safety, OR promoting AI for Good's work",
+      "Topics: AI social impact / safety, OR promoting Build for Public's work",
       "English or Bahasa Malaysia — pick whatever suits you",
       "No prior audience needed — just consistency and heart",
     ],
@@ -181,7 +181,7 @@ function validate(d: FormData): Errors {
 }
 
 const inputBase =
-  "w-full bg-surface border border-border rounded-xl px-4 py-2.5 text-text-primary text-sm focus:outline-none focus:border-clay/50 transition-colors placeholder:text-text-secondary/40";
+  "w-full bg-surface border border-black rounded-xl px-4 py-2.5 text-black text-sm focus:outline-none focus:border-black/50 transition-colors placeholder:text-black/60/40";
 
 function ErrMsg({ msg }: { msg?: string }) {
   if (!msg) return null;
@@ -190,7 +190,7 @@ function ErrMsg({ msg }: { msg?: string }) {
 
 function Label({ text, required }: { text: string; required?: boolean }) {
   return (
-    <label className="block text-sm font-medium text-text-secondary mb-1.5">
+    <label className="block text-sm font-medium text-black/60 mb-1.5">
       {text}
       {required && <span className="text-clay ml-0.5">*</span>}
     </label>
@@ -199,7 +199,7 @@ function Label({ text, required }: { text: string; required?: boolean }) {
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-base font-semibold text-text-primary mb-5 pb-2.5 border-b border-border">
+    <h3 className="text-base font-semibold text-black mb-5 pb-2.5 border-b border-black">
       {children}
     </h3>
   );
@@ -219,7 +219,7 @@ function PillToggle({
       type="button"
       onClick={onClick}
       className={`btn-pill text-sm py-1.5 px-4 transition-all ${
-        active ? "btn-pill-clay" : "btn-pill-outline"
+        active ? "btn-pill-filled" : "btn-pill-outline"
       }`}
     >
       {label}
@@ -250,7 +250,7 @@ function RoleCard({
           <div className="flex items-center gap-2.5">
             <span
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                selected ? "bg-clay border-clay" : "border-border"
+                selected ? "bg-clay border-clay" : "border-black"
               }`}
             >
               {selected && (
@@ -272,22 +272,22 @@ function RoleCard({
               )}
             </span>
             <span
-              className="text-base text-text-primary"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+              className="text-base text-black"
+              style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
             >
               {role.title}
             </span>
           </div>
-          <span className="text-xs font-medium text-text-secondary bg-surface-raised px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
+          <span className="text-xs font-medium text-black/60 bg-white px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
             {role.commitment}
           </span>
         </div>
-        <p className="text-sm text-text-secondary leading-relaxed mb-3 ml-7">
+        <p className="text-sm text-black/60 leading-relaxed mb-3 ml-7">
           {role.description}
         </p>
         <ul className="space-y-1 ml-7">
           {role.expectations.map((exp, i) => (
-            <li key={i} className="text-xs text-text-secondary/60 flex gap-1.5">
+            <li key={i} className="text-xs text-black/60/60 flex gap-1.5">
               <span className="flex-shrink-0 mt-0.5">—</span>
               {exp}
             </li>
@@ -300,7 +300,7 @@ function RoleCard({
 
       {/* Expandable details — only when selected */}
       {selected && children && (
-        <div className="border-t border-border px-5 pb-6 pt-5 space-y-5 bg-surface/40">
+        <div className="border-t border-black px-5 pb-6 pt-5 space-y-5 bg-white">
           {children}
         </div>
       )}
@@ -315,12 +315,12 @@ function SuccessCard() {
         ✓
       </div>
       <h3
-        className="text-2xl text-text-primary mb-3"
-        style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+        className="text-2xl text-black mb-3"
+        style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
       >
         Application submitted!
       </h3>
-      <p className="text-text-secondary text-sm leading-relaxed">
+      <p className="text-black/60 text-sm leading-relaxed">
         Thanks for applying. We&apos;ll review your application and get back to
         you within 1–2 weeks.
       </p>
@@ -502,7 +502,7 @@ export default function VolunteerForm() {
                 className={inputBase}
                 placeholder="Tell us about your skills, past projects, work, or studies — doesn't have to be technical..."
               />
-              <span className="absolute bottom-2.5 right-3 text-xs text-text-secondary/40 select-none pointer-events-none">
+              <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
                 {d.about.length}/1000
               </span>
             </div>
@@ -517,9 +517,9 @@ export default function VolunteerForm() {
                 maxLength={1000}
                 rows={4}
                 className={inputBase}
-                placeholder="What draws you to AI for Good? What would you like to contribute or learn?"
+                placeholder="What draws you to Build for Public? What would you like to contribute or learn?"
               />
-              <span className="absolute bottom-2.5 right-3 text-xs text-text-secondary/40 select-none pointer-events-none">
+              <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
                 {d.motivation.length}/1000
               </span>
             </div>
@@ -531,7 +531,7 @@ export default function VolunteerForm() {
       {/* ── 3. Role selection — each card expands with its own detail form ── */}
       <div id="field-roles">
         <SectionHeading>Which role(s) are you applying for?</SectionHeading>
-        <p className="text-sm text-text-secondary mb-5">
+        <p className="text-sm text-black/60 mb-5">
           Click a card to select it. You can pick more than one. Each role expands
           with a few quick questions once selected.
         </p>
@@ -557,7 +557,7 @@ export default function VolunteerForm() {
                   />
                 ))}
               </div>
-              <p className="text-xs text-text-secondary/50 mt-2">
+              <p className="text-xs text-black/60/50 mt-2">
                 No wrong answer — we match projects to where you&apos;re at.
               </p>
             </div>
@@ -623,7 +623,7 @@ export default function VolunteerForm() {
                 className={inputBase}
                 placeholder="yourusername — skip if you don't have one yet"
               />
-              <p className="text-xs text-text-secondary/50 mt-1.5">
+              <p className="text-xs text-black/60/50 mt-1.5">
                 No GitHub? No problem — we&apos;ll help you get set up if needed.
               </p>
             </div>
@@ -773,15 +773,15 @@ export default function VolunteerForm() {
               type="checkbox"
               checked={d.acknowledgesUnpaid}
               onChange={(e) => set("acknowledgesUnpaid", e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-border accent-clay flex-shrink-0 cursor-pointer"
+              className="mt-0.5 w-4 h-4 rounded border-black accent-yellow flex-shrink-0 cursor-pointer"
             />
             <div>
               <label
                 htmlFor="acknowledgesUnpaid"
-                className="text-sm text-text-secondary cursor-pointer leading-relaxed"
+                className="text-sm text-black/60 cursor-pointer leading-relaxed"
               >
                 I understand this role is{" "}
-                <span className="text-text-primary font-medium">
+                <span className="text-black font-medium">
                   unpaid and volunteer-run
                 </span>
                 , and I&apos;m committing 3–7 hours per week.{" "}
@@ -802,7 +802,7 @@ export default function VolunteerForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="btn-pill btn-pill-clay text-base px-10 py-3 w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
+        className="btn-pill btn-pill-filled text-base px-10 py-3 w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === "submitting" ? "Submitting…" : "Submit application →"}
       </button>

@@ -50,15 +50,15 @@ export default function CommunitySection() {
         <div className="md:flex md:items-center md:gap-16 mb-16">
           {/* Text content */}
           <div className="md:w-1/2 mb-10 md:mb-0">
-            <span className="text-xs font-medium text-text-secondary bg-surface-raised px-3 py-1 rounded-full inline-block mb-6">
+            <span className="text-xs font-medium text-black/60 bg-white px-3 py-1 rounded-full inline-block mb-6">
               COMING SOON
             </span>
 
-            <h2 className="heading-section text-text-primary mb-6">
+            <h2 className="heading-section text-black mb-6">
               Community
             </h2>
 
-            <p className="text-lg text-text-secondary leading-relaxed mb-6">
+            <p className="text-lg text-black/60 leading-relaxed mb-6">
               Biweekly sessions connecting builders to NGOs and social impact
               orgs. Part workshop, part co-working, part open hangout. We form
               teams, match real needs to builders, and ship projects that matter.
@@ -66,7 +66,7 @@ export default function CommunitySection() {
 
             <a
               href="/volunteer"
-              className="text-base font-medium text-clay hover:text-clay-hover transition-colors"
+              className="text-base font-medium text-clay hover:underline transition-colors"
             >
               Join as Volunteer Committee &rarr;
             </a>
@@ -89,8 +89,8 @@ export default function CommunitySection() {
         {/* AI Communities Carousel */}
         <div>
           <h3
-            className="text-xl text-text-primary mb-6"
-            style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+            className="text-xl text-black mb-6"
+            style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
           >
             Explore Other AI Communities
           </h3>
@@ -118,7 +118,7 @@ export default function CommunitySection() {
                   href={community.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="card-flat p-5 flex-shrink-0 hover:border-clay/30 transition-colors"
+                  className="card-flat p-5 flex-shrink-0 hover:border-black/30 transition-colors"
                   style={{ width: CARD_WIDTH }}
                   draggable={false}
                 >
@@ -138,13 +138,13 @@ export default function CommunitySection() {
                       </div>
                     )}
                     <h4
-                      className="text-sm text-text-primary font-medium leading-tight"
-                      style={{ fontFamily: "var(--font-serif)" }}
+                      className="text-sm text-black font-medium leading-tight"
+                      style={{ fontFamily: "var(--font-display)" }}
                     >
                       {community.name}
                     </h4>
                   </div>
-                  <p className="text-xs text-text-secondary leading-relaxed line-clamp-3">
+                  <p className="text-xs text-black/60 leading-relaxed line-clamp-3">
                     {community.description}
                   </p>
                 </a>

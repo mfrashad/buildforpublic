@@ -1,43 +1,20 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import StatsBar from "@/components/StatsBar";
-import InitiativesSection from "@/components/InitiativesSection";
-import CommunitySection from "@/components/rooms/CommunityRoom";
-import AdvocacySection from "@/components/rooms/AdvocacyRoom";
-import ProjectsSection from "@/components/rooms/ProjectsRoom";
-import VisionSection from "@/components/rooms/VisionRoom";
-import WhyNowRoom from "@/components/rooms/WhyNowRoom";
-import JoinSection from "@/components/rooms/JoinRoom";
-import Footer from "@/components/Footer";
+import LandingPage from "@/components/LandingPage";
+import { VARIANTS } from "@/lib/landing-variants";
 
 export const metadata: Metadata = {
-  title: "AI for Good Malaysia",
+  title: "Build for Public",
   description:
-    "A volunteer community shipping open-source AI tools for NGOs, creating AI literacy content, and running builder events across Southeast Asia.",
-  alternates: { canonical: "https://aiforgood.my" },
+    "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.",
+  alternates: { canonical: "https://buildforpublic.com" },
   openGraph: {
-    title: "AI for Good Malaysia",
+    title: "Build for Public",
     description:
-      "A volunteer community shipping open-source AI tools for NGOs, creating AI literacy content, and running builder events across Southeast Asia.",
-    url: "https://aiforgood.my",
+      "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.",
+    url: "https://buildforpublic.com",
   },
 };
 
 export default function Home() {
-  return (
-    <main>
-      <Navbar />
-      <HeroSection />
-      <StatsBar />
-      <VisionSection />
-      <WhyNowRoom />
-      <InitiativesSection />
-      <CommunitySection />
-      <AdvocacySection />
-      <ProjectsSection />
-      <JoinSection />
-      <Footer />
-    </main>
-  );
+  return <LandingPage variant={VARIANTS[0]} />;
 }

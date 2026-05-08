@@ -31,17 +31,17 @@ const ACTIONS: Record<Time, Record<Role, Action[]>> = {
   "5 Minutes": {
     Builder: [
       { title: "Star the GitHub repo", why: "Most engineers who would build for good have not heard of us. One star changes their discovery feed.", href: "https://github.com/mfrashad/aiforgood" },
-      { title: "Share a project on LinkedIn", why: "You know ten engineers who have never heard of AI for Good. One share changes that.", href: "https://github.com/mfrashad/aiforgood" },
+      { title: "Share a project on LinkedIn", why: "You know ten engineers who have never heard of Build for Public. One share changes that.", href: "https://github.com/mfrashad/aiforgood" },
       { title: "Browse open issues and leave a comment", why: "Comments attract contributors. Leave one.", href: "https://github.com/mfrashad/aiforgood/issues" },
     ],
     Advocate: [
-      { title: "Share one AI for Good video to your story", why: "Each share reaches people the algorithm has not surfaced yet.", href: "https://tiktok.com/@mfrashad" },
+      { title: "Share one Build for Public video to your story", why: "Each share reaches people the algorithm has not surfaced yet.", href: "https://tiktok.com/@mfrashad" },
       { title: "Repost the AI adoption data with a one-line take", why: "Nobody shares raw numbers. They share your one-line take on them.", href: "https://aiadoption-gray.vercel.app" },
-      { title: "Follow @aiforgood.my on TikTok and Instagram", why: "Discovery is the first barrier. Help us past it.", href: "https://tiktok.com/@mfrashad" },
+      { title: "Follow @buildforpublic.com on TikTok and Instagram", why: "Discovery is the first barrier. Help us past it.", href: "https://tiktok.com/@mfrashad" },
     ],
     Organizer: [
       { title: "Forward this page to one community you are part of", why: "One message in the right group can bring in ten builders.", href: "/act" },
-      { title: "Add AI for Good to your bio", why: "Visibility is recruiting. Every impression is a potential volunteer.", href: "https://aiforgood.my" },
+      { title: "Add Build for Public to your bio", why: "Visibility is recruiting. Every impression is a potential volunteer.", href: "https://buildforpublic.com" },
       { title: "Share the volunteer link in a WhatsApp group", why: "The people most likely to join are the ones you already know.", href: "/volunteer" },
     ],
     Researcher: [
@@ -58,11 +58,11 @@ const ACTIONS: Record<Time, Record<Role, Action[]>> = {
     ],
     Advocate: [
       { title: "Write one post about an AI safety concept in plain Bahasa Malaysia or English", why: "If you can explain it to someone outside tech, you have done something useful.", href: "#" },
-      { title: "Record a 60-second video explaining one AI for Good project", why: "Short-form content about real projects is rare. Yours will stand out.", href: "#" },
+      { title: "Record a 60-second video explaining one Build for Public project", why: "Short-form content about real projects is rare. Yours will stand out.", href: "#" },
       { title: "Translate existing AI safety content for a SEA audience", why: "Translation is not copying. It is giving access.", href: "#" },
     ],
     Organizer: [
-      { title: "Post about AI for Good in one Slack or Discord community you are in", why: "Most builders are in the right rooms. They have not heard of us yet.", href: "https://github.com/mfrashad/aiforgood" },
+      { title: "Post about Build for Public in one Slack or Discord community you are in", why: "Most builders are in the right rooms. They have not heard of us yet.", href: "https://github.com/mfrashad/aiforgood" },
       { title: "DM three engineers who might want to build for good", why: "Personal invitations convert at ten times the rate of public posts.", href: "/volunteer" },
       { title: "Draft a short event proposal for a local AI meetup", why: "One written proposal is all it takes to start a session.", href: "mailto:m.fathyrashad@gmail.com" },
     ],
@@ -86,7 +86,7 @@ const ACTIONS: Record<Time, Record<Role, Action[]>> = {
     Organizer: [
       { title: "Host a small builder session: three people, two hours, one problem", why: "The format works. It fits a weekday evening.", href: "mailto:m.fathyrashad@gmail.com" },
       { title: "Set up a community call with one NGO to explore collaboration", why: "Most NGO-builder relationships start with a single call.", href: "mailto:m.fathyrashad@gmail.com" },
-      { title: "Organize a local AI for Good watch party or discussion", why: "The people who show up are the ones who stay.", href: "mailto:m.fathyrashad@gmail.com" },
+      { title: "Organize a local Build for Public watch party or discussion", why: "The people who show up are the ones who stay.", href: "mailto:m.fathyrashad@gmail.com" },
     ],
     Researcher: [
       { title: "Audit the digital tools used by one NGO you have access to", why: "An honest audit of one NGO is more useful than a survey of one hundred.", href: "mailto:m.fathyrashad@gmail.com" },
@@ -103,12 +103,12 @@ const ACTIONS: Record<Time, Record<Role, Action[]>> = {
     Advocate: [
       { title: "Commit to one post per week for three months", why: "Three months is long enough to build an audience. Most people stop at week three.", href: "/volunteer" },
       { title: "Build a small audience around responsible AI in Southeast Asia", why: "An audience you own is infrastructure no algorithm can take away.", href: "/volunteer" },
-      { title: "Become the voice of AI for Good in your language community", why: "No one is doing this in most SEA languages. That is the opening.", href: "/volunteer" },
+      { title: "Become the voice of Build for Public in your language community", why: "No one is doing this in most SEA languages. That is the opening.", href: "/volunteer" },
     ],
     Organizer: [
       { title: "Run monthly builder sessions: own the logistics, the NGO pipeline, the follow-up", why: "The organizer is the reason sessions happen at all.", href: "/volunteer" },
       { title: "Be the Discord moderator and community glue", why: "Community without moderation decays. This role keeps it functional.", href: "/volunteer" },
-      { title: "Connect AI for Good to two new communities in your city", why: "Each new community brings in builders we would never reach alone.", href: "/volunteer" },
+      { title: "Connect Build for Public to two new communities in your city", why: "Each new community brings in builders we would never reach alone.", href: "/volunteer" },
     ],
     Researcher: [
       { title: "Own the AI adoption dataset: expand it, maintain it, publish findings", why: "The dataset is only as useful as the person maintaining it.", href: "/volunteer" },
@@ -124,13 +124,13 @@ function ActionCard({ action, roleColor }: { action: Action; roleColor: string }
       <div className="w-1 flex-shrink-0 self-stretch rounded-full" style={{ background: roleColor }} />
       <div className="flex-1">
         <h4
-          className="text-base font-semibold text-text-primary mb-1"
-          style={{ fontFamily: "var(--font-serif)" }}
+          className="text-base font-semibold text-black mb-1"
+          style={{ fontFamily: "var(--font-display)" }}
         >
           {action.title}
         </h4>
-        <p className="text-sm text-text-secondary leading-relaxed mb-3">{action.why}</p>
-        <a href={action.href} className="text-sm font-medium text-clay hover:text-clay-hover transition-colors">
+        <p className="text-sm text-black/60 leading-relaxed mb-3">{action.why}</p>
+        <a href={action.href} className="text-sm font-medium text-clay hover:underline transition-colors">
           Do this →
         </a>
       </div>
@@ -148,13 +148,13 @@ export default function ActPage() {
     <main>
       <Navbar />
 
-      <section className="pt-40 pb-12 px-6 border-b-2 border-border">
+      <section className="pt-40 pb-12 px-6 border-b-2 border-black">
         <div className="max-w-3xl mx-auto">
-          <h1 className="heading-display text-4xl sm:text-5xl text-text-primary mb-5">
+          <h1 className="heading-display text-4xl sm:text-5xl text-black mb-5">
             Pick your time. Pick your skill.{" "}
             <span className="text-clay">Here&apos;s exactly what to do.</span>
           </h1>
-          <p className="text-lg text-text-secondary max-w-2xl leading-relaxed">
+          <p className="text-lg text-black/60 max-w-2xl leading-relaxed">
             Every action on this page connects to a concrete outcome. Five-minute ones compound. Going all in sets the direction of this project.
           </p>
         </div>
@@ -163,7 +163,7 @@ export default function ActPage() {
       <section className="section-padding">
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <p className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-3">
+            <p className="text-xs font-semibold text-black/50 uppercase tracking-widest mb-3">
               How much time?
             </p>
             <div className="flex flex-wrap gap-2">
@@ -171,10 +171,10 @@ export default function ActPage() {
                 <button
                   key={time}
                   onClick={() => setSelectedTime(time)}
-                  className={`px-4 py-2 rounded-full border-2 border-border text-sm font-semibold transition-all ${
+                  className={`px-4 py-2 rounded-full border-2 border-black text-sm font-semibold transition-all ${
                     selectedTime === time
                       ? "bg-clay text-white shadow-[3px_3px_0_#1a1b1f]"
-                      : "bg-surface-raised text-text-secondary hover:bg-bg"
+                      : "bg-white text-black/60 hover:bg-bg"
                   }`}
                 >
                   {time}
@@ -184,7 +184,7 @@ export default function ActPage() {
           </div>
 
           <div className="mb-10">
-            <p className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-3">
+            <p className="text-xs font-semibold text-black/50 uppercase tracking-widest mb-3">
               You are a
             </p>
             <div className="flex flex-wrap gap-2">
@@ -192,10 +192,10 @@ export default function ActPage() {
                 <button
                   key={role}
                   onClick={() => setSelectedRole(role)}
-                  className={`px-4 py-2 rounded-full border-2 border-border text-sm font-semibold transition-all ${
+                  className={`px-4 py-2 rounded-full border-2 border-black text-sm font-semibold transition-all ${
                     selectedRole === role
                       ? "bg-clay text-white shadow-[3px_3px_0_#1a1b1f]"
-                      : "bg-surface-raised text-text-secondary hover:bg-bg"
+                      : "bg-white text-black/60 hover:bg-bg"
                   }`}
                 >
                   {role}
@@ -205,7 +205,7 @@ export default function ActPage() {
           </div>
 
           <p
-            className="text-lg font-medium text-text-primary mb-8 border-l-4 pl-4"
+            className="text-lg font-medium text-black mb-8 border-l-4 pl-4"
             style={{ borderColor: roleColor }}
           >
             {ESCALATION[selectedTime]}
@@ -217,9 +217,9 @@ export default function ActPage() {
             ))}
           </div>
 
-          <div className="mt-14 pt-10 border-t-2 border-border text-center">
-            <p className="text-text-secondary mb-4">Ready to commit?</p>
-            <a href="/volunteer" className="btn-pill btn-pill-clay px-8 py-3 text-base">
+          <div className="mt-14 pt-10 border-t-2 border-black text-center">
+            <p className="text-black/60 mb-4">Ready to commit?</p>
+            <a href="/volunteer" className="btn-pill btn-pill-filled px-8 py-3 text-base">
               Join as a Volunteer →
             </a>
           </div>

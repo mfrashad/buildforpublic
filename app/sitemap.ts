@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://aiforgood.my";
+const BASE = "https://buildforpublic.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -13,5 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/faq`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/roadmap`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE}/funders`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE}/compare`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
   ];
 }

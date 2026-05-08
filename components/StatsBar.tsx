@@ -9,15 +9,15 @@ export default function StatsBar() {
             {STATS.map((stat, i) => (
               <div
                 key={stat.label}
-                className={`text-center ${i < STATS.length - 1 ? "md:border-r md:border-border" : ""}`}
+                className={`text-center ${i < STATS.length - 1 ? "md:border-r md:border-black" : ""}`}
               >
                 <div
-                  className="text-3xl sm:text-4xl text-text-primary mb-1"
-                  style={{ fontFamily: "var(--font-serif)", fontWeight: 700 }}
+                  className="text-3xl sm:text-4xl text-black mb-1"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
                 >
                   {stat.value}
                 </div>
-                <div className="text-sm text-text-secondary">
+                <div className="text-sm text-black/60">
                   {stat.label}
                 </div>
               </div>

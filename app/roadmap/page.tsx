@@ -3,9 +3,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Roadmap — AI for Good Malaysia",
+  title: "Roadmap — Build for Public",
   description:
-    "What AI for Good Malaysia is today and what becomes possible at each level of support. Scenario model from bootstrapped to infrastructure.",
+    "What Build for Public is today and what becomes possible at each level of support. Scenario model from bootstrapped to infrastructure.",
 };
 
 const SCENARIOS = [
@@ -67,19 +67,19 @@ export default function RoadmapPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-40 pb-16 px-6 border-b-2 border-border">
+      <section className="pt-40 pb-16 px-6 border-b-2 border-black">
         <div className="max-w-3xl mx-auto">
           <div
-            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-text-primary bg-surface-raised px-5 py-2 rounded-full border-2 border-border"
+            className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-black bg-white px-5 py-2 rounded-full border-2 border-black"
             style={{ boxShadow: "3px 3px 0px #1a1b1f" }}
           >
             COMMUNITY ROADMAP
           </div>
-          <h1 className="heading-display text-4xl sm:text-5xl text-text-primary mb-6 max-w-2xl">
+          <h1 className="heading-display text-4xl sm:text-5xl text-black mb-6 max-w-2xl">
             What this community is.<br />
             <span className="text-clay">What it can become.</span>
           </h1>
-          <p className="text-lg text-text-secondary max-w-2xl leading-relaxed">
+          <p className="text-lg text-black/60 max-w-2xl leading-relaxed">
             This page is honest about where we are and direct about what different levels of support make possible. No projections without a basis. No inflated targets.
           </p>
         </div>
@@ -88,21 +88,21 @@ export default function RoadmapPage() {
       {/* Today */}
       <section className="section-padding">
         <div className="max-w-4xl mx-auto">
-          <p className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-4">
+          <p className="text-xs font-semibold text-black/50 uppercase tracking-widest mb-4">
             Today — bootstrapped
           </p>
-          <h2 className="heading-section text-text-primary mb-4">
+          <h2 className="heading-section text-black mb-4">
             Everything you see was built in the gaps.
           </h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
-            AI for Good Malaysia is a volunteer community. The founder is doing ops, community management, and technical work simultaneously. That is the constraint. It is also the proof that the model works before it has resources.
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
+            Build for Public is a volunteer community. The founder is doing ops, community management, and technical work simultaneously. That is the constraint. It is also the proof that the model works before it has resources.
           </p>
           <div className="card-flat p-8 sm:p-10">
             <div className="space-y-4">
               {TODAY_ITEMS.map((item, i) => (
                 <div key={i} className="flex gap-4">
                   <span className="text-clay font-bold flex-shrink-0 mt-0.5">+</span>
-                  <p className="text-sm text-text-secondary leading-relaxed">{item}</p>
+                  <p className="text-sm text-black/60 leading-relaxed">{item}</p>
                 </div>
               ))}
             </div>
@@ -113,24 +113,24 @@ export default function RoadmapPage() {
       {/* Scenarios */}
       <section className="section-padding pt-0">
         <div className="max-w-4xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-3">What support enables</h2>
-          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+          <h2 className="heading-section text-black mb-3">What support enables</h2>
+          <p className="text-lg text-black/60 mb-10 leading-relaxed">
             Each level below describes what becomes possible with that level of funding. Read each as an outcome, not a budget line.
           </p>
 
           <div className="space-y-5">
             {SCENARIOS.map((s) => (
-              <div key={s.amount} className="card accent-cactus p-6 sm:p-10">
+              <div key={s.amount} className="card accent-yellow p-6 sm:p-10">
                 <div className="flex flex-wrap items-baseline gap-4 mb-4">
                   <span
                     className="text-4xl font-bold text-clay"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    style={{ fontFamily: "var(--font-display)" }}
                   >
                     {s.amount}
                   </span>
                   <span
-                    className="text-lg font-semibold text-text-primary"
-                    style={{ fontFamily: "var(--font-serif)" }}
+                    className="text-lg font-semibold text-black"
+                    style={{ fontFamily: "var(--font-display)" }}
                   >
                     {s.headline}
                   </span>
@@ -139,7 +139,7 @@ export default function RoadmapPage() {
                   {s.enables.map((item, i) => (
                     <div key={i} className="flex gap-4">
                       <span className="text-cactus font-bold flex-shrink-0 mt-0.5 text-sm">→</span>
-                      <p className="text-sm text-text-secondary leading-relaxed">{item}</p>
+                      <p className="text-sm text-black/60 leading-relaxed">{item}</p>
                     </div>
                   ))}
                 </div>
@@ -153,13 +153,13 @@ export default function RoadmapPage() {
       <section className="section-padding pt-0">
         <div className="max-w-4xl mx-auto">
           <div className="card-flat p-8 sm:p-10 border-l-4 border-clay">
-            <p className="text-sm font-semibold text-text-tertiary uppercase tracking-widest mb-4">
+            <p className="text-sm font-semibold text-black/50 uppercase tracking-widest mb-4">
               A note on constraints
             </p>
-            <p className="text-base text-text-secondary leading-relaxed mb-4">
+            <p className="text-base text-black/60 leading-relaxed mb-4">
               These scenarios are cumulative. $25,000 includes everything $10,000 enables. $100,000 includes all of it.
             </p>
-            <p className="text-base text-text-secondary leading-relaxed">
+            <p className="text-base text-black/60 leading-relaxed">
               The community is doing useful work now. Funding changes the rate and scale. The mission exists with or without it.
             </p>
           </div>
@@ -169,12 +169,12 @@ export default function RoadmapPage() {
       {/* CTA to funders */}
       <section className="section-padding pt-0 pb-24">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="heading-section text-text-primary mb-4">Want to support this?</h2>
-          <p className="text-lg text-text-secondary mb-8 leading-relaxed max-w-xl mx-auto">
+          <h2 className="heading-section text-black mb-4">Want to support this?</h2>
+          <p className="text-lg text-black/60 mb-8 leading-relaxed max-w-xl mx-auto">
             The funders page has the full context: what we are raising, why, and what you get in return.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <a href="/funders" className="btn-pill btn-pill-clay px-8 py-3 text-base">
+            <a href="/funders" className="btn-pill btn-pill-filled px-8 py-3 text-base">
               Read the funders page
             </a>
             <a href="/act" className="btn-pill btn-pill-outline px-8 py-3 text-base">

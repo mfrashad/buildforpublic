@@ -3,9 +3,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "FAQ — AI for Good Malaysia",
+  title: "FAQ — Build for Public",
   description:
-    "Questions we hear a lot about AI for Good Malaysia: what we have shipped, who we are for, how volunteer time works, and why this exists.",
+    "Questions we hear a lot about Build for Public: what we have shipped, who we are for, how volunteer time works, and why this exists.",
 };
 
 const FAQS = [
@@ -27,12 +27,12 @@ const FAQS = [
     a: "Only if someone builds the bridge. Shipping code to GitHub is not enough. We scope directly with NGOs, co-design the build with their staff, and hand over documentation they can maintain. Pocket of Pink is the proof of concept. It required a human relationship, not just a repository.",
   },
   {
-    q: "How is this different from Big Tech's own AI for Good programs?",
+    q: "How is this different from Big Tech's own Build for Public programs?",
     steel: "Google.org and Microsoft Philanthropies spend hundreds of millions on AI for social good.",
     a: "They build for problems their existing tools can already solve. They do not build for the specific, unglamorous bottlenecks of a Malaysian food bank or a Philippine refugee legal aid clinic. Those problems have no product-market fit. We build what the market will not.",
   },
   {
-    q: "What has AI for Good Malaysia actually shipped?",
+    q: "What has Build for Public actually shipped?",
     a: "Pocket of Pink: a youth education nonprofit's website, shipped in one day. The AI Adoption by Country API: 16 countries, open JSON, used by researchers. 5M+ views of AI literacy content in English and Bahasa Malaysia. 20+ active community builders. Two NGO partnerships active or in scoping. See more at the projects section or contact us directly.",
     links: [{ label: "Browse projects", href: "/#projects" }, { label: "Contact", href: "mailto:m.fathyrashad@gmail.com" }],
   },
@@ -59,12 +59,12 @@ export default function FaqPage() {
     <main>
       <Navbar />
 
-      <section className="pt-40 pb-16 px-6 border-b-2 border-border">
+      <section className="pt-40 pb-16 px-6 border-b-2 border-black">
         <div className="max-w-3xl mx-auto">
-          <h1 className="heading-display text-4xl sm:text-5xl text-text-primary mb-6">
+          <h1 className="heading-display text-4xl sm:text-5xl text-black mb-6">
             Questions we hear a lot.
           </h1>
-          <p className="text-lg text-text-secondary leading-relaxed">
+          <p className="text-lg text-black/60 leading-relaxed">
             Honest answers. No softening.
           </p>
         </div>
@@ -75,29 +75,29 @@ export default function FaqPage() {
           {FAQS.map((faq, i) => (
             <div key={i} className="card-flat p-6 sm:p-8">
               {faq.steel && (
-                <p className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-3">
+                <p className="text-xs font-semibold text-black/50 uppercase tracking-widest mb-3">
                   The objection
                 </p>
               )}
               {faq.steel && (
-                <p className="text-sm text-text-secondary italic mb-5 border-l-2 border-border-subtle pl-4">
+                <p className="text-sm text-black/60 italic mb-5 border-l-2 border-black/20 pl-4">
                   {faq.steel}
                 </p>
               )}
               <h3
-                className="text-lg font-semibold text-text-primary mb-4"
-                style={{ fontFamily: "var(--font-serif)" }}
+                className="text-lg font-semibold text-black mb-4"
+                style={{ fontFamily: "var(--font-display)" }}
               >
                 {faq.q}
               </h3>
-              <p className="text-sm text-text-secondary leading-relaxed mb-4">{faq.a}</p>
+              <p className="text-sm text-black/60 leading-relaxed mb-4">{faq.a}</p>
               {faq.links && (
                 <div className="flex flex-wrap gap-3 mt-2">
                   {faq.links.map((link) => (
                     <a
                       key={link.href}
                       href={link.href}
-                      className="text-sm font-medium text-clay hover:text-clay-hover transition-colors"
+                      className="text-sm font-medium text-clay hover:underline transition-colors"
                     >
                       {link.label} →
                     </a>
@@ -113,12 +113,12 @@ export default function FaqPage() {
       <section className="section-padding pt-0 pb-24">
         <div className="max-w-3xl mx-auto">
           <div className="divider mb-14" />
-          <h2 className="heading-section text-text-primary mb-4">Still have questions?</h2>
-          <p className="text-lg text-text-secondary mb-8 leading-relaxed">
+          <h2 className="heading-section text-black mb-4">Still have questions?</h2>
+          <p className="text-lg text-black/60 mb-8 leading-relaxed">
             Email the founder directly. Response within 48 hours.
           </p>
           <div className="flex flex-wrap gap-3">
-            <a href="mailto:m.fathyrashad@gmail.com" className="btn-pill btn-pill-clay px-8 py-3 text-base">
+            <a href="mailto:m.fathyrashad@gmail.com" className="btn-pill btn-pill-filled px-8 py-3 text-base">
               Email Rashad
             </a>
             <a href="/act" className="btn-pill btn-pill-outline px-8 py-3 text-base">

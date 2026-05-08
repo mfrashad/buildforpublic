@@ -2,57 +2,62 @@ import { SITE } from "@/lib/constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-surface border-t border-border">
+    <footer className="bg-white border-t-[3px] border-black">
       <div className="max-w-6xl mx-auto px-6 pt-16 pb-10">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
           {/* Logo + description */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-0 mb-4">
               <span
-                className="text-lg text-text-primary"
-                style={{ fontFamily: "var(--font-serif)", fontWeight: 700 }}
+                className="text-lg text-black"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}
               >
-                AI for Good
+                Build for{" "}
               </span>
-              <span className="text-xs font-semibold text-clay bg-clay/15 px-2 py-0.5 rounded-full">
-                .MY
+              <span
+                className="text-lg px-1"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  background: "var(--color-bp-yellow)",
+                }}
+              >
+                Public
               </span>
             </div>
-            <p className="text-sm text-text-secondary leading-relaxed max-w-sm">
-              Open-source AI projects, community, and advocacy for social impact
-              in Southeast Asia and beyond. Built by the community, for the
-              community.
+            <p className="text-sm text-black/60 leading-relaxed max-w-sm">
+              A movement of builders shipping open code for the public interest.
+              Open-source software for communities private capital won&apos;t serve.
+              Built by volunteers. Owned by everyone.
             </p>
           </div>
 
           {/* Pages */}
           <div>
-            <h4 className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-4">
-              Pages
-            </h4>
+            <h4 className="eyebrow mb-4">Pages</h4>
             <div className="flex flex-col gap-3">
-              <a href="/act" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/act" className="text-sm text-black/60 hover:text-black transition-colors">
                 Take Action
               </a>
-              <a href="/why-now" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/why-now" className="text-sm text-black/60 hover:text-black transition-colors">
                 Why This Matters
               </a>
-              <a href="/manifesto" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/manifesto" className="text-sm text-black/60 hover:text-black transition-colors">
                 Manifesto
               </a>
-              <a href="/faq" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/faq" className="text-sm text-black/60 hover:text-black transition-colors">
                 FAQ
               </a>
-              <a href="/roadmap" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/roadmap" className="text-sm text-black/60 hover:text-black transition-colors">
                 Roadmap
               </a>
-              <a href="/volunteer" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/volunteer" className="text-sm text-black/60 hover:text-black transition-colors">
                 Volunteer
               </a>
-              <a href="/partners" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/partners" className="text-sm text-black/60 hover:text-black transition-colors">
                 Partner with Us
               </a>
-              <a href="/funders" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+              <a href="/funders" className="text-sm text-black/60 hover:text-black transition-colors">
                 Support the Work
               </a>
             </div>
@@ -60,15 +65,13 @@ export default function Footer() {
 
           {/* Connect */}
           <div>
-            <h4 className="text-xs font-semibold text-text-tertiary uppercase tracking-widest mb-4">
-              Connect
-            </h4>
+            <h4 className="eyebrow mb-4">Connect</h4>
             <div className="flex flex-col gap-3">
               <a
                 href={SITE.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                className="text-sm text-black/60 hover:text-black transition-colors"
               >
                 GitHub
               </a>
@@ -76,7 +79,7 @@ export default function Footer() {
                 href={SITE.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                className="text-sm text-black/60 hover:text-black transition-colors"
               >
                 X / Twitter
               </a>
@@ -84,13 +87,13 @@ export default function Footer() {
                 href={SITE.tiktok}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                className="text-sm text-black/60 hover:text-black transition-colors"
               >
                 TikTok
               </a>
               <a
                 href={`mailto:${SITE.email}`}
-                className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                className="text-sm text-black/60 hover:text-black transition-colors"
               >
                 Email
               </a>
@@ -99,12 +102,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-border pt-6 flex flex-wrap justify-between items-center gap-4">
-          <p className="text-xs text-text-tertiary">
-            &copy; 2026 AI for Good Malaysia. Open source under MIT License.
+        <div className="border-t-2 border-black pt-6 flex flex-wrap justify-between items-center gap-4">
+          <p className="text-xs text-black/50">
+            &copy; 2026 Build for Public. Open source under MIT License.
           </p>
-          <p className="text-xs text-text-tertiary">
-            A community initiative from Southeast Asia.
+          <p className="text-xs text-black/50">
+            Open code. Public good.
           </p>
         </div>
       </div>

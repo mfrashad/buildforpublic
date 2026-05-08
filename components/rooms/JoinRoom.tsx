@@ -36,10 +36,10 @@ export default function JoinSection() {
   return (
     <section id="join" className="section-padding">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="heading-section text-text-primary mb-4">
+        <h2 className="heading-section text-black mb-4">
           Join the Movement
         </h2>
-        <p className="text-lg text-text-secondary mb-14 max-w-lg mx-auto">
+        <p className="text-lg text-black/60 mb-14 max-w-lg mx-auto">
           We&apos;re looking for builders, advocates, organizers, and
           researchers who want to use their skills for social good.
         </p>
@@ -52,12 +52,12 @@ export default function JoinSection() {
                 {ROLE_ICONS[role.id]}
               </div>
               <h4
-                className="text-lg text-text-primary mb-2"
-                style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+                className="text-lg text-black mb-2"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
               >
                 {role.title}
               </h4>
-              <p className="text-sm text-text-secondary leading-relaxed">
+              <p className="text-sm text-black/60 leading-relaxed">
                 {role.description}
               </p>
             </div>
@@ -68,18 +68,18 @@ export default function JoinSection() {
         <div className="card-flat p-8 max-w-md mx-auto">
           <a
             href="/volunteer"
-            className="btn-pill btn-pill-clay text-base px-8 py-3 mb-5 inline-block"
+            className="btn-pill btn-pill-filled text-base px-8 py-3 mb-5 inline-block"
           >
             See all roles &amp; apply &rarr;
           </a>
           <div className="flex items-center justify-center gap-2">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-tertiary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-black/50">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
             </svg>
             <a
               href="mailto:m.fathyrashad@gmail.com"
-              className="text-sm text-clay hover:text-clay-hover transition-colors"
+              className="text-sm text-clay hover:underline transition-colors"
             >
               Contact us
             </a>

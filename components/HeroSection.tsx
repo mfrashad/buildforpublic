@@ -1,48 +1,70 @@
-export default function HeroSection() {
-  return (
-    <section className="relative pt-36 pb-20 px-6 border-b-2 border-border overflow-hidden">
-      {/* Decorative corner accent */}
-      <div
-        aria-hidden
-        className="absolute top-0 right-0 w-64 h-64 md:w-[28rem] md:h-[28rem] rounded-bl-[6rem] pointer-events-none"
-        style={{ background: "rgba(232,72,85,0.08)" }}
-      />
-      <div
-        aria-hidden
-        className="absolute top-0 right-0 w-32 h-32 md:w-56 md:h-56 rounded-bl-[4rem] pointer-events-none"
-        style={{ background: "rgba(232,72,85,0.12)" }}
-      />
+interface HeroSectionProps {
+  hero: string;
+  slogan: string;
+}
 
+export default function HeroSection({ hero, slogan }: HeroSectionProps) {
+  return (
+    <section
+      className="relative pt-36 pb-24 px-6 overflow-hidden"
+      style={{ background: "var(--color-bp-yellow)", borderBottom: "3px solid #000" }}
+    >
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Badge */}
         <div
-          className="inline-flex items-center gap-2 mb-8 text-sm font-semibold text-text-primary bg-surface-raised px-5 py-2 rounded-full border-2 border-border"
-          style={{ boxShadow: "3px 3px 0px #1a1b1f" }}
+          className="inline-flex items-center gap-2 mb-10 text-xs font-bold uppercase tracking-widest bg-white px-5 py-2"
+          style={{ border: "2px solid #000", boxShadow: "3px 3px 0px #000" }}
         >
-          OPEN SOURCE &middot; COMMUNITY &middot; MALAYSIA
+          OPEN SOURCE &middot; PUBLIC INTEREST &middot; VOLUNTEER-BUILT
         </div>
 
-        {/* Headline */}
-        <h1 className="heading-display text-6xl sm:text-7xl md:text-[5.5rem] lg:text-[6.5rem] text-text-primary mb-8 max-w-2xl">
-          AI<br />
-          for{" "}
-          <span className="text-clay">Good.</span>
+        {/* Hero headline */}
+        <h1
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] mb-6 max-w-3xl"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 800,
+            lineHeight: 1.0,
+            letterSpacing: "-0.02em",
+            color: "#000",
+          }}
+        >
+          {hero}
         </h1>
 
-        {/* Subtext */}
-        <p className="text-lg sm:text-xl text-text-secondary max-w-xl mb-3 leading-relaxed">
-          A community of AI builders who ship tools for NGOs in Southeast Asia.
+        {/* Slogan */}
+        <p
+          className="text-xl sm:text-2xl mb-6 max-w-2xl"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            lineHeight: 1.3,
+            color: "#000",
+          }}
+        >
+          {slogan}
         </p>
-        <p className="text-base sm:text-lg text-text-secondary max-w-xl mb-12 leading-relaxed">
-          We build open-source software, create AI literacy content, and keep everything free.
+
+        {/* Bridge to AI */}
+        <p
+          className="text-base sm:text-lg mb-12 max-w-xl leading-relaxed"
+          style={{ color: "rgba(0,0,0,0.7)" }}
+        >
+          We build open-source AI tools for communities private capital won&apos;t serve — and keep everything free. Starting where private capital is concentrating fastest: AI.
         </p>
 
         {/* CTAs */}
         <div className="flex flex-wrap gap-4">
-          <a href="/volunteer" className="btn-pill btn-pill-clay text-base px-8 py-3">
-            Become a Volunteer
+          <a
+            href="/volunteer"
+            className="btn-primary text-base"
+          >
+            Volunteer →
           </a>
-          <a href="#projects" className="btn-pill btn-pill-outline text-base px-8 py-3">
+          <a
+            href="#projects"
+            className="btn-pill btn-pill-outline text-base px-8 py-3 bg-white"
+          >
             View Projects
           </a>
         </div>
@@ -57,7 +79,7 @@ export default function HeroSection() {
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
-          className="text-text-tertiary"
+          className="text-black/40"
         >
           <path d="M7 10l5 5 5-5" />
         </svg>

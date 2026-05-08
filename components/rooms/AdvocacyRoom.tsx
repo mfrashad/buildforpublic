@@ -53,10 +53,10 @@ export default function AdvocacySection() {
           <span className="text-xs font-medium text-olive bg-olive/15 px-3 py-1 rounded-full inline-block mb-4">
             ACTIVE
           </span>
-          <h2 className="heading-section text-text-primary mb-3">
+          <h2 className="heading-section text-black mb-3">
             Advocacy
           </h2>
-          <p className="text-lg text-text-secondary max-w-2xl">
+          <p className="text-lg text-black/60 max-w-2xl">
             Educational content making AI accessible to everyone.
           </p>
         </div>
@@ -77,16 +77,16 @@ export default function AdvocacySection() {
                 />
               </div>
               <div className="p-6">
-                <span className="text-xs text-text-tertiary mb-3 block">
+                <span className="text-xs text-black/50 mb-3 block">
                   {ct.badge}
                 </span>
                 <h4
-                  className="text-lg text-text-primary mb-2"
-                  style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+                  className="text-lg text-black mb-2"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
                 >
                   {ct.title}
                 </h4>
-                <p className="text-sm text-text-secondary leading-relaxed">
+                <p className="text-sm text-black/60 leading-relaxed">
                   {ct.description}
                 </p>
               </div>
@@ -98,18 +98,18 @@ export default function AdvocacySection() {
         <div className="mb-16">
           <div className="flex items-center justify-between mb-6">
             <h3
-              className="text-xl text-text-primary"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+              className="text-xl text-black"
+              style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
             >
               Featured Videos
             </h3>
             <a
-              href="https://instagram.com/aiforgood.my"
+              href="https://instagram.com/buildforpublic.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-clay hover:text-clay-hover transition-colors"
+              className="text-sm text-clay hover:underline transition-colors"
             >
-              @aiforgood.my &rarr;
+              @buildforpublic.com &rarr;
             </a>
           </div>
 
@@ -117,7 +117,7 @@ export default function AdvocacySection() {
           <div className="grid sm:grid-cols-2 gap-6 mb-8">
             {/* Instagram */}
             <div>
-              <span className="text-xs font-medium text-clay bg-clay/10 px-3 py-1 rounded-full inline-block mb-3">
+              <span className="text-xs font-medium text-clay bg-bp-yellow/50 px-3 py-1 rounded-full inline-block mb-3">
                 {INSTAGRAM_VIDEO.title}
               </span>
               <div className="card-flat overflow-hidden max-h-[420px]">
@@ -140,7 +140,7 @@ export default function AdvocacySection() {
                       href={INSTAGRAM_VIDEO.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-clay hover:text-clay-hover"
+                      className="text-sm text-clay hover:underline"
                     >
                       View on Instagram &mdash; {INSTAGRAM_VIDEO.title}
                     </a>
@@ -151,7 +151,7 @@ export default function AdvocacySection() {
 
             {/* TikTok */}
             <div>
-              <span className="text-xs font-medium text-clay bg-clay/10 px-3 py-1 rounded-full inline-block mb-3">
+              <span className="text-xs font-medium text-clay bg-bp-yellow/50 px-3 py-1 rounded-full inline-block mb-3">
                 {TIKTOK_VIDEO.title}
               </span>
               <div className="card-flat overflow-hidden max-h-[420px]">
@@ -169,7 +169,7 @@ export default function AdvocacySection() {
                       target="_blank"
                       rel="noopener noreferrer"
                       href="https://www.tiktok.com/@rashadventure?refer=embed"
-                      className="text-sm text-clay hover:text-clay-hover"
+                      className="text-sm text-clay hover:underline"
                     >
                       @rashadventure
                     </a>
@@ -181,14 +181,14 @@ export default function AdvocacySection() {
 
           {/* Coming Soon */}
           <div>
-            <h4 className="text-sm font-medium text-text-tertiary mb-3">
+            <h4 className="text-sm font-medium text-black/50 mb-3">
               Coming Soon
             </h4>
             <div className="flex flex-wrap gap-2">
               {COMING_SOON_TOPICS.map((topic) => (
                 <span
                   key={topic}
-                  className="text-sm bg-surface-raised text-text-tertiary px-4 py-1.5 rounded-full border border-border border-dashed"
+                  className="text-sm bg-white text-black/50 px-4 py-1.5 rounded-full border border-black border-dashed"
                 >
                   {topic}
                 </span>
@@ -200,19 +200,19 @@ export default function AdvocacySection() {
         {/* Talks */}
         <div className="card-flat p-8 text-center">
           <h3
-            className="text-xl text-text-primary mb-4"
-            style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+            className="text-xl text-black mb-4"
+            style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
           >
             Talks &amp; Speaking
           </h3>
-          <p className="text-base text-text-secondary leading-relaxed mb-4 max-w-2xl mx-auto">
+          <p className="text-base text-black/60 leading-relaxed mb-4 max-w-2xl mx-auto">
             {TALKS_DESCRIPTION}
           </p>
-          <p className="text-sm text-text-tertiary">
+          <p className="text-sm text-black/50">
             Invite us to speak &mdash;{" "}
             <a
               href={`mailto:${SITE.email}`}
-              className="text-clay hover:text-clay-hover transition-colors"
+              className="text-clay hover:underline transition-colors"
             >
               Contact us
             </a>

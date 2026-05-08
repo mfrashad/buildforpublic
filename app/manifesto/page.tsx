@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { MANIFESTO_CLAIMS } from "@/lib/constants";
 
 const TWITTER_TEXT = encodeURIComponent(
-  "AI for Good Malaysia: a volunteer community of builders and content creators making AI work for the people markets ignore. Read the manifesto: https://aiforgood.my/manifesto"
+  "Build for Public: a volunteer community of builders and content creators making AI work for the communities private capital won't serve. Read the manifesto: https://buildforpublic.com/manifesto"
 );
 
 export default function ManifestoPage() {
@@ -24,16 +24,16 @@ export default function ManifestoPage() {
       <Navbar />
 
       {/* Header */}
-      <section className="pt-40 pb-16 px-6 border-b-2 border-border">
+      <section className="pt-40 pb-16 px-6 border-b-2 border-black">
         <div className="max-w-3xl mx-auto">
-          <p className="font-mono text-xs text-text-tertiary mb-6 tracking-wider">
+          <p className="font-mono text-xs text-black/50 mb-6 tracking-wider">
             Version 1.0 — Published May 2026
           </p>
-          <h1 className="heading-display text-4xl sm:text-5xl text-text-primary mb-6">
+          <h1 className="heading-display text-4xl sm:text-5xl text-black mb-6">
             What we believe. Why we exist.
           </h1>
-          <p className="text-lg text-text-secondary leading-relaxed max-w-2xl">
-            This document states what AI for Good Malaysia believes and why. It will be updated as the evidence changes.
+          <p className="text-lg text-black/60 leading-relaxed max-w-2xl">
+            This document states what Build for Public believes and why. It will be updated as the evidence changes.
           </p>
         </div>
       </section>
@@ -45,22 +45,22 @@ export default function ManifestoPage() {
             <div key={item.n} className="card-flat p-6 sm:p-10">
               <span
                 className="text-5xl font-bold text-clay/15 block mb-6 leading-none"
-                style={{ fontFamily: "var(--font-serif)" }}
+                style={{ fontFamily: "var(--font-display)" }}
               >
                 {item.n}
               </span>
               <p
-                className="text-xl sm:text-2xl text-text-primary leading-snug mb-6"
-                style={{ fontFamily: "var(--font-serif)", fontWeight: 600 }}
+                className="text-xl sm:text-2xl text-black leading-snug mb-6"
+                style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
               >
                 {item.claim}
               </p>
-              <div className="border-l-2 border-border-subtle pl-5">
-                <p className="text-sm text-text-secondary leading-relaxed mb-2">
+              <div className="border-l-2 border-black/20 pl-5">
+                <p className="text-sm text-black/60 leading-relaxed mb-2">
                   {item.evidence}
                 </p>
                 {item.source && (
-                  <p className="text-xs text-text-tertiary font-medium">{item.source}</p>
+                  <p className="text-xs text-black/50 font-medium">{item.source}</p>
                 )}
               </div>
             </div>
@@ -71,14 +71,14 @@ export default function ManifestoPage() {
       {/* Share */}
       <section className="section-padding pt-0 pb-24">
         <div className="max-w-3xl mx-auto">
-          <h2 className="heading-section text-text-primary mb-4">Share this manifesto</h2>
-          <p className="text-lg text-text-secondary mb-8 leading-relaxed">
+          <h2 className="heading-section text-black mb-4">Share this manifesto</h2>
+          <p className="text-lg text-black/60 mb-8 leading-relaxed">
             If it says something you believe, share it.
           </p>
           <div className="flex flex-wrap gap-3">
             <button
               onClick={handleCopy}
-              className="btn-pill btn-pill-clay px-8 py-3 text-base"
+              className="btn-pill btn-pill-filled px-8 py-3 text-base"
             >
               {copied ? "Copied!" : "Copy link"}
             </button>
