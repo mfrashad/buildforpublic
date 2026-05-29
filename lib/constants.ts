@@ -309,44 +309,29 @@ export const ROLE_DETAILS = [
 
 export const MANIFESTO_CLAIMS = [
   {
-    n: "01",
-    claim:
-      "Public infrastructure shouldn't be privately owned. Yet AI — already deciding loans, jobs, content, and public services — is owned by five companies, accountable only to private capital.",
-    evidence:
-      "Five companies control 71% of the world's AI compute, up from 63% eighteen months earlier. US private AI investment reached $285.9 billion in 2025. The Global South received a rounding error.",
-    source: "Epoch AI 2025; Stanford HAI 2026 AI Index",
+    n: "1",
+    title: "Technology is Power, and Power is Concentrating",
+    body: "Humanity is being handed almost unimaginable power through AI, yet our social and political systems are struggling to keep up. Right now, this technology is largely owned by a few big tech companies and elites. It was trained on the collective knowledge of humanity, but its dividends are driving unprecedented wealth concentration. Because AI acts as a massive productivity multiplier that scales with capital, those with the money to wield it pull exponentially further ahead. Left unchecked, the speed and breadth of this shift will widen the social gap and fracture society.",
   },
   {
-    n: "02",
-    claim:
-      "The communities most affected by technology are the least represented in building it. AI made the gap measurable.",
-    evidence:
-      "93% of the world's languages are absent from AI training data. Facial recognition systems misidentify dark-skinned faces 10 to 100 times more often than light-skinned ones. The Foundation Model Transparency Index dropped from 58 to 40 in a single year.",
-    source: "Nature 2025; MIT Sloan; Stanford HAI 2026",
+    n: "2",
+    title: "Private Interests Will Not Build Public Goods",
+    body: "The technology that dictates our daily lives is often designed without our best interests in mind. Social media was optimized for attention, leading to radicalization and brain rot. If we leave AI entirely to private companies, the most critical societal problems will remain under-resourced. We cannot rely on a few corporations to build everything society needs, and we cannot afford the risk that they won't.",
   },
   {
-    n: "03",
-    claim:
-      "Open-source software built by volunteer communities is one of the few mechanisms that consistently produces tools for needs private capital won't fund.",
-    evidence:
-      "Hugging Face grew from 160,000 to 1.57 million generative AI model repositories in two years. 46% of Fortune 500 leaders prefer open models. The AI Adoption by Country API is MIT-licensed, tracks 16 countries, and is used by researchers for free.",
-    source: "Mozilla Foundation 2024; our own data",
+    n: "3",
+    title: "We Need Public AI",
+    body: "We need a whole parallel AI ecosystem that runs on non-commercial incentives. Just like Firefox competing with Internet Explorer, the existence of secure, private, open-source options provides critical alternatives for consumers and forces private competitors to adopt better practices. We must build Public AI — an ecosystem where everyone, not just the wealthiest corporations, can shape and benefit from technology.",
   },
   {
-    n: "04",
-    claim:
-      "Public literacy in the systems that govern us is not optional. AI makes decisions about jobs, loans, content, and public services. Communities that cannot read those decisions are subject to them.",
-    evidence:
-      "5M+ views of public-interest AI content produced by this community — AI safety, open source, and civic tech explained for everyone.",
-    source: "",
+    n: "4",
+    title: "The Barrier to Entry Has Collapsed",
+    body: "For decades, changemakers have been locked out of technology by the sheer cost of building software. Developers who cared were locked out by the demands of their day jobs. AI is dissolving both problems at once. The cost of creation is collapsing. The gap between knowing a problem deeply and shipping a solution has never been smaller. For the first time, the people closest to the problems can build the solutions themselves.",
   },
   {
-    n: "05",
-    claim:
-      "The window to build public-interest infrastructure is closing. Compute concentration moved from 63% to 71% in eighteen months. The trend is not slowing.",
-    evidence:
-      "The OECD and the UN both concluded in 2024 that AI must be governed as public commons. The policy consensus exists. The implementation does not. Communities like this one are part of filling that gap.",
-    source: "OECD.AI 2025; UN Governing AI for Humanity 2024",
+    n: "5",
+    title: "We Build Together",
+    body: "To build technology for the public, the public must build it. We turn changemakers into builders and builders into changemakers. By distributing power and expanding opportunity, we can level the playing field and engage more communities in the future of technology.",
   },
 ];
 

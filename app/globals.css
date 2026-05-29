@@ -199,3 +199,42 @@ body {
   height: 3px;
   background: #000;
 }
+
+/* ── GRID BACKGROUND ── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── LANDING v2 DESIGN TOKENS ── */
+:root {
+  /* Core palette — OKLCH for consistent saturation */
+  --v2-coral:        oklch(68% 0.18 25);
+  --v2-coral-light:  oklch(84% 0.12 25);
+  --v2-coral-dark:   oklch(52% 0.22 25);
+
+  --v2-teal:         oklch(72% 0.14 185);
+  --v2-teal-light:   oklch(86% 0.09 185);
+  --v2-teal-dark:    oklch(55% 0.18 185);
+
+  --v2-amber:        oklch(80% 0.16 75);
+  --v2-amber-light:  oklch(90% 0.10 75);
+  --v2-amber-dark:   oklch(65% 0.20 75);
+
+  --v2-purple:       oklch(62% 0.20 295);
+  --v2-purple-light: oklch(80% 0.13 295);
+  --v2-purple-dark:  oklch(46% 0.25 295);
+
+  --v2-red:          oklch(45% 0.20 15);
+  --v2-red-light:    oklch(65% 0.15 15);
+  --v2-red-dark:     oklch(32% 0.24 15);
+
+  /* Neutrals */
+  --v2-bg:           oklch(98% 0.01 75);   /* warm off-white */
+  --v2-text:         oklch(15% 0.01 270);  /* near-black */
+  --v2-muted:        oklch(55% 0.01 270);
+  --v2-border:       oklch(88% 0.01 270);
+  --v2-surface:      oklch(100% 0 0);
+}
