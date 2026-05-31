@@ -5,7 +5,7 @@ import { MANIFESTO_CLAIMS } from "@/lib/constants";
 const COMMITMENTS = [
   {
     title: "Open by Default",
-    body: "Our work is open-source. Public knowledge compounds when it's shared.",
+    body: "We encourage our work to be open-source. Public knowledge compounds when it's shared.",
   },
   {
     title: "Impact over Profit",

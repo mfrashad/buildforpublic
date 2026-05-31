@@ -1,7 +1,7 @@
 const BELIEFS = [
   {
     title: "Open by default.",
-    body: "Every project is open-source and built in public. The point isn't just sharing code. It's so the next person can pick it up, fork it, and ship something better. Public knowledge compounds when it's shared.",
+    body: "Every project is encouraged to be open and built in public. The point isn't just sharing code. It's so the next person can pick it up, fork it, and ship something better. Public knowledge compounds when it's shared.",
     accent: "#fff200",
   },
   {

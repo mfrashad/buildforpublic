@@ -1,28 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
-
-const GET_INVOLVED = [
-  { href: "/volunteer", audience: "For Builders", label: "Volunteer →" },
-  { href: "/partners", audience: "For NGOs", label: "Partner with Us →" },
-  { href: "/funders", audience: "For Funders", label: "Support the Work →" },
-];
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleOutsideClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, []);
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b-[3px] border-black">
@@ -69,52 +51,9 @@ export default function Navbar() {
           >
             Contact
           </a>
-
-          {/* Get Involved dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="btn-pill btn-pill-filled text-sm py-2 px-5 flex items-center gap-2"
-            >
-              Get Involved
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                className={`transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
-              >
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
-
-            {dropdownOpen && (
-              <div className="absolute top-full right-0 mt-3 w-60 card-flat z-50">
-                <div className="p-2">
-                  {GET_INVOLVED.map((item) => (
-                    <a
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-3 hover:bg-bp-light transition-colors group"
-                    >
-                      <span className="eyebrow block mb-0.5 group-hover:text-black transition-colors">
-                        {item.audience}
-                      </span>
-                      <span
-                        className="text-sm font-medium text-black"
-                        style={{ fontFamily: "var(--font-display)" }}
-                      >
-                        {item.label}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <a href="/volunteer" className="btn-pill btn-pill-filled text-sm py-2 px-5">
+            Volunteer
+          </a>
         </div>
 
         {/* Mobile hamburger */}
@@ -144,22 +83,14 @@ export default function Navbar() {
             </a>
           ))}
 
-          <div className="pt-2 border-t-2 border-black/10 mt-4">
-            <p className="eyebrow mb-2 pt-2">Get Involved</p>
-            {GET_INVOLVED.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="block py-2 pl-3 text-sm text-black/70 hover:text-black transition-colors border-l-2 border-black/20 hover:border-black mb-1"
-              >
-                <span className="eyebrow block">{item.audience}</span>
-                {item.label}
-              </a>
-            ))}
-          </div>
-
           <div className="pt-4 flex flex-col gap-3">
+            <a
+              href="/volunteer"
+              onClick={() => setMobileOpen(false)}
+              className="btn-pill btn-pill-filled text-center"
+            >
+              Volunteer
+            </a>
             <a
               href={`mailto:${SITE.email}`}
               onClick={() => setMobileOpen(false)}

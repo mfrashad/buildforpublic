@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation } from "./_generated/server";
+import { internal } from "./_generated/api";
 
 export const create = mutation({
   args: {
@@ -98,6 +99,15 @@ export const create = mutation({
             organizerExperience: args.organizerExperience || undefined,
           }
         : {}),
+    });
+
+    await ctx.scheduler.runAfter(0, internal.emails.sendVolunteerNotification, {
+      name: args.name.trim(),
+      email: args.email.trim().toLowerCase(),
+      roles: args.roles,
+      country: args.country.trim(),
+      about: args.about.trim(),
+      motivation: args.motivation.trim(),
     });
 
     return { ok: true, id };

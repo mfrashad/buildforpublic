@@ -3,8 +3,21 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import LottieHero from "@/app/components/illustrations/LottieHero";
 import { Star1, Star6, Star3 } from "@/app/components/decorations/Stars";
+import BrickPhysics, { BrickDef } from "@/app/components/decorations/bricks/BrickPhysics";
+import BrickAssembly from "@/app/components/decorations/bricks/BrickAssembly";
+
+// Floating bricks scattered around the edges of the hero — draggable on desktop
+const HERO_BRICKS: BrickDef[] = [
+  { type: "cube",  color: "yellow", size: 88, xPct:  7,  yPct: 22, visualTilt: -12 },
+  { type: "plate", color: "blue",   size: 75, xPct: 91,  yPct: 35, visualTilt:  10 },
+  { type: "cube",  color: "green",  size: 65, xPct: 14,  yPct: 75, visualTilt:  18 },
+  { type: "slope", color: "red",    size: 72, xPct: 85,  yPct: 72, visualTilt:  -8 },
+  { type: "cube",  color: "cobalt", size: 55, xPct: 48,  yPct: 88, visualTilt:  25 },
+  { type: "cube",  color: "purple", size: 60, xPct: 62,  yPct:  6, visualTilt: -20 },
+  { type: "plate", color: "yellow", size: 68, xPct:  3,  yPct: 48, visualTilt:  15 },
+  { type: "slope", color: "cobalt", size: 58, xPct: 78,  yPct:  8, visualTilt:  -5 },
+];
 
 const TAGLINES = [
   "Build in public for the public.",
@@ -28,6 +41,14 @@ export default function Hero() {
       className="band band-white grid-bg min-h-screen flex items-center overflow-hidden relative"
       aria-label="Hero"
     >
+      {/* Floating + draggable LEGO bricks — desktop: grab and fling; mobile: ambient float */}
+      <BrickPhysics
+        bricks={HERO_BRICKS}
+        gravity={0}
+        drag
+        className="absolute inset-0 z-0"
+      />
+
       {/* Decorative stars */}
       <div className="absolute top-20 right-[6%] pointer-events-none select-none" aria-hidden>
         <Star1 size={72} color="#fff200" stroke="#000" strokeWidth={6} />
@@ -46,12 +67,12 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-24 lg:py-0">
         <div className="grid lg:grid-cols-[1.3fr_1fr] items-center">
 
-          {/* Lottie column */}
-          <div>
-            <LottieHero />
+          {/* Brick assembly column — desktop only, loops continuously */}
+          <div className="hidden lg:flex items-center justify-center lg:-translate-x-[75px] lg:-translate-y-[75px]">
+            <BrickAssembly loop autoPlay size={480} />
           </div>
 
-          {/* Text column — pull left into animation's internal padding */}
+          {/* Text column — pull left into animation's whitespace (original hero proportions) */}
           <div className="lg:-ml-44">
 
             <div

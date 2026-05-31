@@ -1,7 +1,11 @@
+import BrickField from "@/app/components/decorations/bricks/BrickField";
+
 export default function TheMoment() {
   return (
-    <section className="band band-yellow section-padding px-6" aria-labelledby="moment-heading">
-      <div className="max-w-2xl mx-auto">
+    <section className="band band-yellow section-padding px-6 relative overflow-hidden" aria-labelledby="moment-heading">
+      {/* Ambient floating bricks — gentle background texture */}
+      <BrickField opacity={0.35} className="absolute inset-0 z-0" />
+      <div className="max-w-2xl mx-auto relative z-10">
         <h2
           id="moment-heading"
           className="heading-section mb-10"

@@ -4,7 +4,7 @@ export const SITE = {
   description:
     "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.",
   email: "m.fathyrashad@gmail.com",
-  github: "https://github.com/mfrashad/aiforgood",
+  github: "https://github.com/mfrashad/buildforpublic",
   twitter: "https://x.com/maboroshiiii",
   tiktok: "https://tiktok.com/@mfrashad",
 };
@@ -18,8 +18,6 @@ export const STATS = [
 
 export const NAV_LINKS = [
   { href: "/manifesto", label: "Manifesto" },
-  { href: "/#community", label: "Community" },
-  { href: "/#advocacy", label: "Advocacy" },
   { href: "/#projects", label: "Projects" },
 ];
 
@@ -70,7 +68,7 @@ export const FEATURED_PROJECTS = [
     description:
       "Turn your reading library into a beautiful shareable poster. Import from Goodreads or Hardcover, pick a visualization style, and download. Built on World Book Day to raise awareness for global literacy — 773 million adults cannot read.",
     tags: ["Next.js", "Open Source", "Literacy", "World Book Day"],
-    liveUrl: "https://bookshelf.aiforgood.my",
+    liveUrl: "https://bookshelf.buildforpublic.com",
     githubUrl: "https://github.com/mfrashad/bookshelf",
     imageUrl: "/sprites/projects/bookshelf.png",
     imageAlt: "Bookshelf — book cover grid visualization",

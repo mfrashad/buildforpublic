@@ -36,29 +36,14 @@ export default function Footer() {
           <div>
             <h4 className="eyebrow mb-4">Pages</h4>
             <div className="flex flex-col gap-3">
-              <a href="/act" className="text-sm text-black/60 hover:text-black transition-colors">
-                Take Action
-              </a>
-              <a href="/why-now" className="text-sm text-black/60 hover:text-black transition-colors">
-                Why This Matters
-              </a>
               <a href="/manifesto" className="text-sm text-black/60 hover:text-black transition-colors">
                 Manifesto
-              </a>
-              <a href="/faq" className="text-sm text-black/60 hover:text-black transition-colors">
-                FAQ
-              </a>
-              <a href="/roadmap" className="text-sm text-black/60 hover:text-black transition-colors">
-                Roadmap
               </a>
               <a href="/volunteer" className="text-sm text-black/60 hover:text-black transition-colors">
                 Volunteer
               </a>
-              <a href="/partners" className="text-sm text-black/60 hover:text-black transition-colors">
-                Partner with Us
-              </a>
-              <a href="/funders" className="text-sm text-black/60 hover:text-black transition-colors">
-                Support the Work
+              <a href="/#projects" className="text-sm text-black/60 hover:text-black transition-colors">
+                Projects
               </a>
             </div>
           </div>

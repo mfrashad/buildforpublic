@@ -1,4 +1,13 @@
 import ProjectCard from "@/app/components/ui/ProjectCard";
+import BrickField from "@/app/components/decorations/bricks/BrickField";
+
+// Lighter, edge-only bricks for Projects — don't compete with the project cards
+const PROJECTS_BRICKS = [
+  { type: "cube"  as const, color: "cobalt",  size: 52, xPct:  2, yPct: 15, floatAmt:  8, floatDur: 3.4, delay: 0.0, tilt: -20 },
+  { type: "slope" as const, color: "yellow",  size: 60, xPct: 97, yPct: 20, floatAmt: 10, floatDur: 2.8, delay: 0.9, tilt:  14 },
+  { type: "plate" as const, color: "green",   size: 55, xPct:  3, yPct: 80, floatAmt:  7, floatDur: 3.8, delay: 0.5, tilt:  10 },
+  { type: "cube"  as const, color: "purple",  size: 48, xPct: 96, yPct: 75, floatAmt: 11, floatDur: 3.1, delay: 1.2, tilt: -16 },
+];
 
 const PROJECTS = [
   {
@@ -37,7 +46,7 @@ const PROJECTS = [
     builtBy: "Build for Public",
     builtWith: "Open library and literacy data",
     whoFor: "Readers, educators, librarians",
-    primaryLink: { label: "Visit", href: "https://bookshelf.aiforgood.my" },
+    primaryLink: { label: "Visit", href: "https://bookshelf.buildforpublic.com" },
     codeLink: { label: "Code", href: "https://github.com/mfrashad/bookshelf" },
     image: "/projects/bookshelf.png",
     status: null,
@@ -62,10 +71,13 @@ const PROJECTS = [
 export default function Projects() {
   return (
     <section
-      className="band band-yellow section-padding px-6"
+      className="band band-yellow section-padding px-6 relative overflow-hidden"
+      id="projects"
       aria-labelledby="projects-heading"
     >
-      <div className="max-w-5xl mx-auto">
+      {/* Edge-only ambient bricks — light enough not to compete with project cards */}
+      <BrickField bricks={PROJECTS_BRICKS} opacity={0.4} className="absolute inset-0 z-0" />
+      <div className="max-w-5xl mx-auto relative z-10">
         <h2 id="projects-heading" className="heading-section mb-4">
           What the community&apos;s shipped.
         </h2>

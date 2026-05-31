@@ -1,4 +1,4 @@
 {
   "framework": "nextjs",
-  "buildCommand": "bunx convex deploy --cmd 'next build'"
+  "buildCommand": "next build"
 }
