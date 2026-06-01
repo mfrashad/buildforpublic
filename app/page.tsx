@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/app/components/sections/Hero";
 import TheMoment from "@/app/components/sections/TheMoment";
@@ -12,7 +12,7 @@ import WeLove from "@/app/components/sections/WeLove";
 import Invitation from "@/app/components/sections/Invitation";
 import LandingFooter from "@/app/components/sections/LandingFooter";
 
-const Events = dynamic(() => import("@/app/components/sections/Events"), { ssr: false });
+const Events = dynamicImport(() => import("@/app/components/sections/Events"), { ssr: false });
 
 export const dynamic = "force-dynamic";
 
