@@ -4,7 +4,7 @@ export default function TheSolution() {
   return (
     <section className="band band-white section-padding px-6" aria-labelledby="solution-heading">
       <div className="max-w-5xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-center">
           {/* Text column */}
           <div>
             <h2
@@ -24,7 +24,7 @@ export default function TheSolution() {
           </div>
 
           {/* Isometric contribution graph */}
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-end">
             <ContributionGraph />
           </div>
         </div>
