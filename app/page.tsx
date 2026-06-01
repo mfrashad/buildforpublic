@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import dynamicImport from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/app/components/sections/Hero";
 import TheMoment from "@/app/components/sections/TheMoment";
@@ -10,9 +9,8 @@ import WhatWeBelieve from "@/app/components/sections/WhatWeBelieve";
 import Projects from "@/app/components/sections/Projects";
 import WeLove from "@/app/components/sections/WeLove";
 import Invitation from "@/app/components/sections/Invitation";
+import Events from "@/app/components/sections/Events";
 import LandingFooter from "@/app/components/sections/LandingFooter";
-
-const Events = dynamicImport(() => import("@/app/components/sections/Events"), { ssr: false });
 
 export const dynamic = "force-dynamic";
 

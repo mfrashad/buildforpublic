@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 const EVENT_SLUG = "cobuilding-kl-1";
 
 export default function Events() {
-  const { isLoaded, isSignedIn, user } = useUser();
   const joinWaitlist = useMutation(api.eventRsvps.join);
   const count = useQuery(api.eventRsvps.count, { eventSlug: EVENT_SLUG });
 
@@ -18,23 +16,14 @@ export default function Events() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const submittedEmail = isSignedIn
-      ? (user.primaryEmailAddress?.emailAddress ?? email)
-      : email;
-
-    if (!submittedEmail || !submittedEmail.includes("@")) {
+    if (!email || !email.includes("@")) {
       setError("Please enter a valid email.");
       return;
     }
-
     setStatus("loading");
     setError("");
     try {
-      const result = await joinWaitlist({
-        eventSlug: EVENT_SLUG,
-        email: submittedEmail,
-        name: isSignedIn ? user.fullName ?? undefined : undefined,
-      });
+      const result = await joinWaitlist({ eventSlug: EVENT_SLUG, email });
       setStatus(result.status === "already_registered" ? "duplicate" : "done");
     } catch {
       setError("Something went wrong. Try again.");
@@ -42,7 +31,6 @@ export default function Events() {
     }
   }
 
-  const signedInEmail = isSignedIn ? user.primaryEmailAddress?.emailAddress : null;
   const isDone = status === "done" || status === "duplicate";
 
   return (
@@ -113,26 +101,17 @@ export default function Events() {
                   >
                     Get notified when it&apos;s confirmed
                   </p>
-
-                  {isLoaded && isSignedIn ? (
-                    <div className="flex items-center gap-2 px-3 py-2 border-2 border-black/20 rounded bg-surface text-sm text-black/60">
-                      <span className="truncate">{signedInEmail}</span>
-                    </div>
-                  ) : (
-                    <input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="px-3 py-2 border-2 border-black rounded text-sm outline-none focus:ring-2 focus:ring-black/20 w-full"
-                      required
-                    />
-                  )}
-
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="px-3 py-2 border-2 border-black rounded text-sm outline-none focus:ring-2 focus:ring-black/20 w-full"
+                    required
+                  />
                   {error && (
                     <p className="text-xs text-red-600">{error}</p>
                   )}
-
                   <button
                     type="submit"
                     disabled={status === "loading"}
@@ -140,16 +119,6 @@ export default function Events() {
                   >
                     {status === "loading" ? "Saving…" : "Join the waitlist →"}
                   </button>
-
-                  {isLoaded && !isSignedIn && (
-                    <p className="text-xs text-black/40 text-center">
-                      or{" "}
-                      <a href="/sign-in" className="underline hover:text-black">
-                        sign in
-                      </a>{" "}
-                      to save your account
-                    </p>
-                  )}
                 </form>
               )}
             </div>
