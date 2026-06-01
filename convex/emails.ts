@@ -51,3 +51,52 @@ export const sendVolunteerNotification = internalAction({
     }
   },
 });
+
+export const sendProjectRequestNotification = internalAction({
+  args: {
+    contactName: v.string(),
+    contactEmail: v.string(),
+    orgName: v.string(),
+    country: v.string(),
+    problem: v.string(),
+    whoItHelps: v.string(),
+  },
+  handler: async (_ctx, args) => {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error("RESEND_API_KEY is not set — skipping email notification");
+      return;
+    }
+
+    const html = `
+      <h2>New project request — Build for Public</h2>
+      <p><strong>Contact:</strong> ${args.contactName} (${args.contactEmail})</p>
+      <p><strong>Organisation:</strong> ${args.orgName}</p>
+      <p><strong>Country:</strong> ${args.country}</p>
+      <hr />
+      <p><strong>Problem:</strong></p>
+      <p>${args.problem}</p>
+      <p><strong>Who it helps:</strong></p>
+      <p>${args.whoItHelps}</p>
+    `;
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Build for Public <noreply@buildforpublic.com>",
+        to: ["m.fathyrashad@gmail.com"],
+        subject: `New project request: ${args.orgName} — ${args.contactName}`,
+        html,
+      }),
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      console.error("Resend error:", res.status, body);
+    }
+  },
+});
