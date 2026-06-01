@@ -7,6 +7,7 @@ export const SITE = {
   github: "https://github.com/mfrashad/buildforpublic",
   twitter: "https://x.com/maboroshiiii",
   tiktok: "https://tiktok.com/@mfrashad",
+  discord: "", // update when Discord server is created
 };
 
 export const STATS = [
@@ -18,7 +19,8 @@ export const STATS = [
 
 export const NAV_LINKS = [
   { href: "/manifesto", label: "Manifesto" },
-  { href: "/#projects", label: "Projects" },
+  { href: "/directory", label: "Projects Board" },
+  { href: "/resources", label: "Resources" },
 ];
 
 export const ROLES = [
@@ -319,7 +321,7 @@ export const MANIFESTO_CLAIMS = [
   {
     n: "3",
     title: "We Need Public AI",
-    body: "We need a whole parallel AI ecosystem that runs on non-commercial incentives. Just like Firefox competing with Internet Explorer, the existence of secure, private, open-source options provides critical alternatives for consumers and forces private competitors to adopt better practices. We must build Public AI — an ecosystem where everyone, not just the wealthiest corporations, can shape and benefit from technology.",
+    body: "We need a whole parallel ecosystem — Public AI — that runs on non-commercial incentives. Just like Signal — a nonprofit — created the encryption protocol that WhatsApp, Google, and Meta were forced to adopt, the existence of open, public-interest alternatives raises the floor for everyone. We must build technology where everyone, not just the wealthiest corporations, can shape and benefit from it.",
   },
   {
     n: "4",
