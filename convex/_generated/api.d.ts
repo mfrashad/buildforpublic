@@ -8,6 +8,13 @@
  * @module
  */
 
+import type * as communityProjects from "../communityProjects.js";
+import type * as emails from "../emails.js";
+import type * as eventRsvps from "../eventRsvps.js";
+import type * as members from "../members.js";
+import type * as opportunities from "../opportunities.js";
+import type * as projectRequests from "../projectRequests.js";
+import type * as seed from "../seed.js";
 import type * as volunteers from "../volunteers.js";
 
 import type {
@@ -17,6 +24,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  communityProjects: typeof communityProjects;
+  emails: typeof emails;
+  eventRsvps: typeof eventRsvps;
+  members: typeof members;
+  opportunities: typeof opportunities;
+  projectRequests: typeof projectRequests;
+  seed: typeof seed;
   volunteers: typeof volunteers;
 }>;
 

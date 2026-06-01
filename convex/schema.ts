@@ -61,4 +61,13 @@ export default defineSchema({
   })
     .index("by_email", ["email"])
     .index("by_status", ["status"]),
+
+  eventRsvps: defineTable({
+    eventSlug: v.string(),
+    email: v.string(),
+    name: v.optional(v.string()),
+    clerkId: v.optional(v.string()),
+  })
+    .index("by_event", ["eventSlug"])
+    .index("by_email_and_event", ["email", "eventSlug"]),
 });
