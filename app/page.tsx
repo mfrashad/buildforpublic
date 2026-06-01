@@ -12,6 +12,8 @@ import Invitation from "@/app/components/sections/Invitation";
 import Events from "@/app/components/sections/Events";
 import LandingFooter from "@/app/components/sections/LandingFooter";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Build for Public",
   description:
