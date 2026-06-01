@@ -68,17 +68,12 @@ export default function Hero() {
         <Star6 size={28} color="#000" />
       </div>
 
-      {/* Grid: animation left, text right */}
+      {/* Grid: text left, animation right */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-24 lg:py-0">
-        <div className="grid lg:grid-cols-[1.3fr_1fr] items-center">
+        <div className="grid lg:grid-cols-2 items-center gap-12">
 
-          {/* Brick assembly column — desktop only, loops continuously */}
-          <div className="hidden lg:flex items-center justify-center lg:-translate-x-[75px] lg:-translate-y-[30px]">
-            <BrickAssembly loop autoPlay size={240} />
-          </div>
-
-          {/* Text column — pull left into animation's whitespace (original hero proportions) */}
-          <div className="lg:-ml-44">
+          {/* Text column */}
+          <div>
 
             <div
               className="relative mb-6"
@@ -114,6 +109,11 @@ export default function Hero() {
                 Read our manifesto
               </Link>
             </div>
+          </div>
+
+          {/* Brick assembly column — desktop only, loops continuously */}
+          <div className="hidden lg:flex items-center justify-center">
+            <BrickAssembly loop autoPlay size={240} />
           </div>
 
         </div>
