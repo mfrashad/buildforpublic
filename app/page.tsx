@@ -9,6 +9,7 @@ import WhatWeBelieve from "@/app/components/sections/WhatWeBelieve";
 import Projects from "@/app/components/sections/Projects";
 import WeLove from "@/app/components/sections/WeLove";
 import Invitation from "@/app/components/sections/Invitation";
+import Events from "@/app/components/sections/Events";
 import LandingFooter from "@/app/components/sections/LandingFooter";
 
 export const metadata: Metadata = {
@@ -39,6 +40,7 @@ export default function Home() {
       <TheMoment />
       <TheSolution />
       <WhoShowsUp />
+      <Events />
       <WhatWeDo />
       <WhatWeBelieve />
       <Projects />
