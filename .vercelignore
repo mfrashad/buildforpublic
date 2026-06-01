@@ -4,8 +4,6 @@ app/directory
 app/join
 app/request
 app/resources
-app/sign-in
-app/sign-up
 app/submit
 convex/members.ts
 convex/eventRsvps.ts

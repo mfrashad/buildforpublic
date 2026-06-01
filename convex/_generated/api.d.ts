@@ -13,6 +13,7 @@ import type * as emails from "../emails.js";
 import type * as eventRsvps from "../eventRsvps.js";
 import type * as members from "../members.js";
 import type * as opportunities from "../opportunities.js";
+import type * as profiles from "../profiles.js";
 import type * as projectRequests from "../projectRequests.js";
 import type * as seed from "../seed.js";
 import type * as volunteers from "../volunteers.js";
@@ -29,6 +30,7 @@ declare const fullApi: ApiFromModules<{
   eventRsvps: typeof eventRsvps;
   members: typeof members;
   opportunities: typeof opportunities;
+  profiles: typeof profiles;
   projectRequests: typeof projectRequests;
   seed: typeof seed;
   volunteers: typeof volunteers;

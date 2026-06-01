@@ -66,7 +66,7 @@ const ROLE_INFO: {
   },
   {
     id: "advocate",
-    title: "Advocate",
+    title: "Ambassador",
     commitment: "~1 post / week",
     description:
       "Be the voice of Build for Public. Create content that educates people on AI for social good, raises awareness of AI safety and impact issues, or promotes what the community is building.",

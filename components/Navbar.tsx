@@ -2,9 +2,19 @@
 
 import { useState } from "react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
+import { useUser, UserButton } from "@clerk/nextjs";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const { isSignedIn } = useUser();
+
+  function copyEmail() {
+    navigator.clipboard.writeText(SITE.email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3500);
+    });
+  }
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b-[3px] border-black">
@@ -45,15 +55,25 @@ export default function Navbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href={`mailto:${SITE.email}`}
+          <button
+            onClick={copyEmail}
             className="btn-pill btn-pill-outline text-sm py-2 px-5"
           >
             Contact
-          </a>
+          </button>
           <a href="/volunteer" className="btn-pill btn-pill-filled text-sm py-2 px-5">
             Volunteer
           </a>
+          {isSignedIn && (
+            <UserButton
+              userProfileUrl="/profile"
+              appearance={{
+                elements: {
+                  avatarBox: "w-9 h-9 border-2 border-black",
+                },
+              }}
+            />
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -91,16 +111,30 @@ export default function Navbar() {
             >
               Volunteer
             </a>
-            <a
-              href={`mailto:${SITE.email}`}
-              onClick={() => setMobileOpen(false)}
+            <button
+              onClick={() => { setMobileOpen(false); copyEmail(); }}
               className="btn-pill btn-pill-outline text-center"
             >
               Contact
-            </a>
+            </button>
           </div>
         </div>
       )}
+
+      {/* Copy-email toast */}
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-300 ${
+          copied ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
+        }`}
+      >
+        <div className="flex items-center gap-3 bg-black text-white text-sm px-5 py-3 rounded-full shadow-lg border border-white/10">
+          <span className="text-green-400 font-bold">✓</span>
+          <span>
+            Email copied! Send a note to{" "}
+            <span className="font-semibold text-yellow-300">{SITE.email}</span>
+          </span>
+        </div>
+      </div>
     </nav>
   );
 }

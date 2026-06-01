@@ -33,7 +33,7 @@ export const ROLES = [
   },
   {
     id: "advocate",
-    title: "Advocate",
+    title: "Ambassador",
     description:
       "Create content, translate materials, speak at events, spread the word.",
     emoji: "megaphone",
@@ -253,7 +253,7 @@ export const ROLE_DETAILS = [
   },
   {
     id: "advocate",
-    title: "Advocate",
+    title: "Ambassador",
     tagline: "Be the voice of Build for Public.",
     commitment: "~1 post / week",
     accentClass: "accent-yellow",

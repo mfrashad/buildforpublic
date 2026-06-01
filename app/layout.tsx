@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { PostHogProvider } from "./PostHogProvider";
 
@@ -53,9 +54,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${geist.variable}`}>
       <body className="antialiased">
-        <PostHogProvider>
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-        </PostHogProvider>
+        <ClerkProvider>
+          <PostHogProvider>
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+          </PostHogProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
