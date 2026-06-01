@@ -4,8 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Star1, Star6, Star3 } from "@/app/components/decorations/Stars";
+import dynamic from "next/dynamic";
 import BrickPhysics, { BrickDef } from "@/app/components/decorations/bricks/BrickPhysics";
-import BrickAssembly from "@/app/components/decorations/bricks/BrickAssembly";
+
+const BrickAssembly = dynamic(
+  () => import("@/app/components/decorations/bricks/BrickAssembly"),
+  { ssr: false },
+);
 
 // Floating bricks scattered around the edges of the hero — draggable on desktop
 const HERO_BRICKS: BrickDef[] = [
@@ -68,8 +73,8 @@ export default function Hero() {
         <div className="grid lg:grid-cols-[1.3fr_1fr] items-center">
 
           {/* Brick assembly column — desktop only, loops continuously */}
-          <div className="hidden lg:flex items-center justify-center lg:-translate-x-[75px] lg:-translate-y-[75px]">
-            <BrickAssembly loop autoPlay size={480} />
+          <div className="hidden lg:flex items-center justify-center lg:-translate-x-[75px] lg:-translate-y-[30px]">
+            <BrickAssembly loop autoPlay size={240} />
           </div>
 
           {/* Text column — pull left into animation's whitespace (original hero proportions) */}
@@ -100,10 +105,10 @@ export default function Hero() {
 
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://join.slack.com/t/buildforpublic/shared_invite/TODO"
+                href="/join"
                 className="btn-primary btn-primary-yellow"
               >
-                I&apos;m ready to build
+                Join the community
               </a>
               <Link href="/manifesto" className="btn-pill btn-pill-outline">
                 Read our manifesto
