@@ -1,14 +1,5 @@
 app/brand
 app/community
-app/directory
 app/join
 app/request
-app/resources
 app/submit
-convex/members.ts
-convex/eventRsvps.ts
-convex/communityProjects.ts
-convex/opportunities.ts
-convex/projectRequests.ts
-convex/seed.ts
-convex/auth.config.ts
