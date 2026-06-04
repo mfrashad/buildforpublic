@@ -113,7 +113,6 @@ interface FormData {
   organizerMode: OrgMode | "";
   organizerCity: string;
   organizerExperience: string;
-  acknowledgesUnpaid: boolean;
   referralSource: string;
   notes: string;
 }
@@ -142,7 +141,6 @@ const INITIAL: FormData = {
   organizerMode: "",
   organizerCity: "",
   organizerExperience: "",
-  acknowledgesUnpaid: false,
   referralSource: "",
   notes: "",
 };
@@ -176,7 +174,6 @@ function validate(d: FormData): Errors {
     e.advocateFormats = "Select at least one format";
   if (d.roles.includes("organizer") && !d.organizerMode)
     e.organizerMode = "Please select a mode";
-  if (!d.acknowledgesUnpaid) e.acknowledgesUnpaid = "You must check this box to apply";
   return e;
 }
 
@@ -365,7 +362,6 @@ export default function VolunteerForm() {
         about: d.about.trim(),
         motivation: d.motivation.trim(),
         roles: d.roles,
-        acknowledgesUnpaid: d.acknowledgesUnpaid,
         referralSource: d.referralSource || undefined,
         notes: d.notes || undefined,
         ...(d.roles.includes("builder")
@@ -766,29 +762,6 @@ export default function VolunteerForm() {
               className={inputBase}
               placeholder="Questions, comments, or anything we should know..."
             />
-          </div>
-          <div id="field-acknowledgesUnpaid" className="flex items-start gap-3 pt-2">
-            <input
-              id="acknowledgesUnpaid"
-              type="checkbox"
-              checked={d.acknowledgesUnpaid}
-              onChange={(e) => set("acknowledgesUnpaid", e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-black accent-yellow flex-shrink-0 cursor-pointer"
-            />
-            <div>
-              <label
-                htmlFor="acknowledgesUnpaid"
-                className="text-sm text-black/60 cursor-pointer leading-relaxed"
-              >
-                I understand this role is{" "}
-                <span className="text-black font-medium">
-                  unpaid and volunteer-run
-                </span>
-                , and I&apos;m committing 3–7 hours per week.{" "}
-                <span className="text-clay">*</span>
-              </label>
-              <ErrMsg msg={errors.acknowledgesUnpaid} />
-            </div>
           </div>
         </div>
       </div>

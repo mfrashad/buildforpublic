@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Star1, Star6, Star3 } from "@/app/components/decorations/Stars";
 import dynamic from "next/dynamic";
@@ -110,9 +109,6 @@ export default function Hero() {
               >
                 Join the community
               </a>
-              <Link href="/manifesto" className="btn-pill btn-pill-outline">
-                Read our manifesto
-              </Link>
             </div>
           </div>
 
