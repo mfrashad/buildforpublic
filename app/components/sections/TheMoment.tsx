@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import BrickPhysics, { BrickDef } from "@/app/components/decorations/bricks/BrickPhysics";
+import StackExplainerModal from "@/app/components/sections/StackExplainerModal";
 
 const FALLING_BRICKS: BrickDef[] = [
   { type: "cube",  color: "yellow", size: 72, visualTilt: -14 },
@@ -29,6 +30,7 @@ export default function TheMoment() {
   const tippingRef = useRef<HTMLSpanElement>(null);
   const inView = useInView(tippingRef, { once: true, amount: 0.8 });
   const [fixed, setFixed] = useState(false);
+  const [explainerOpen, setExplainerOpen] = useState(false);
 
   return (
     <section className="band band-yellow section-padding px-6 relative overflow-hidden" aria-labelledby="moment-heading">
@@ -84,7 +86,23 @@ export default function TheMoment() {
             {" "}and concentrating power in the hands of a few.
           </p>
           <p>
-            Right now, most of the technology that dictates our lives is driven by private interest, designed to capture attention and maximize profit rather than serve the public. We cannot rely on a few corporations to build everything our society needs from AI, and we cannot afford the risk that they won't.
+            Right now, most of the technology that dictates our lives is driven by{" "}
+            <span className="group relative inline">
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={() => setExplainerOpen(true)}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setExplainerOpen(true)}
+                className="-mx-0.5 px-0.5 rounded-[3px] underline underline-offset-2 decoration-black/30 hover:bg-black hover:text-white hover:no-underline transition-all duration-150 cursor-pointer"
+              >
+                private interest, designed to capture attention and maximize profit rather than serve the public
+              </span>
+              <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-72 bg-black text-white text-xs leading-relaxed px-3 py-2 z-50 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                How tech got captured by private interest, and what public tech looks like. Click to explore.
+                <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black" />
+              </span>
+            </span>
+            . We cannot rely on a few corporations to build everything our society needs from AI, and we cannot afford the risk that they won&apos;t.
           </p>
           <p className="font-bold text-black">
             If left entirely to commercial incentives, AI will widen social divides and leave the most critical societal problems under-resourced. We desperately need a parallel ecosystem —{" "}
@@ -106,6 +124,7 @@ export default function TheMoment() {
           </p>
         </div>
       </div>
+      <StackExplainerModal open={explainerOpen} onClose={() => setExplainerOpen(false)} />
     </section>
   );
 }
