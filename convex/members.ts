@@ -15,6 +15,10 @@ export const create = mutation({
     twitter: v.optional(v.string()),
     instagram: v.optional(v.string()),
     isPublic: v.optional(v.boolean()),
+    currentStatus: v.optional(v.union(v.literal("student"), v.literal("working"))),
+    university: v.optional(v.string()),
+    company: v.optional(v.string()),
+    position: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     if (!/^\S+@\S+\.\S+$/.test(args.email))
@@ -47,6 +51,10 @@ export const create = mutation({
       instagram: args.instagram || undefined,
       isPublic: args.isPublic !== false,
       clerkId,
+      currentStatus: args.currentStatus,
+      university: args.university || undefined,
+      company: args.company || undefined,
+      position: args.position || undefined,
     });
 
     return { ok: true, id };

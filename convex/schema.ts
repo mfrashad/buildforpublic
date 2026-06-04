@@ -121,6 +121,10 @@ export default defineSchema({
     instagram: v.optional(v.string()),
     isPublic: v.optional(v.boolean()),
     clerkId: v.optional(v.string()),
+    currentStatus: v.optional(v.union(v.literal("student"), v.literal("working"))),
+    university: v.optional(v.string()),
+    company: v.optional(v.string()),
+    position: v.optional(v.string()),
   })
     .index("by_email", ["email"])
     .index("by_public", ["isPublic"])

@@ -47,6 +47,10 @@ interface FormData {
   twitter: string;
   instagram: string;
   isPublic: boolean;
+  currentStatus: "student" | "working" | "";
+  university: string;
+  company: string;
+  position: string;
 }
 
 type Errors = Partial<Record<keyof FormData, string>>;
@@ -107,6 +111,10 @@ export default function CompleteProfileForm() {
     twitter: "",
     instagram: "",
     isPublic: true,
+    currentStatus: "",
+    university: "",
+    company: "",
+    position: "",
   });
 
   function set<K extends keyof FormData>(k: K, v: FormData[K]) {
@@ -164,6 +172,10 @@ export default function CompleteProfileForm() {
         twitter: d.twitter || undefined,
         instagram: d.instagram || undefined,
         isPublic: d.isPublic,
+        currentStatus: d.currentStatus || undefined,
+        university: d.currentStatus === "student" ? d.university || undefined : undefined,
+        company: d.currentStatus === "working" ? d.company || undefined : undefined,
+        position: d.currentStatus === "working" ? d.position || undefined : undefined,
       });
       setStatus("success");
     } catch (err) {
@@ -230,6 +242,58 @@ export default function CompleteProfileForm() {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Current status */}
+      <div className="space-y-4">
+        <div>
+          <Label text="Current status" />
+          <select
+            value={d.currentStatus}
+            onChange={(e) => set("currentStatus", e.target.value as FormData["currentStatus"])}
+            className={inputBase}
+          >
+            <option value="">Select…</option>
+            <option value="student">Student</option>
+            <option value="working">Working</option>
+          </select>
+        </div>
+        {d.currentStatus === "student" && (
+          <div>
+            <Label text="University" />
+            <input
+              type="text"
+              value={d.university}
+              onChange={(e) => set("university", e.target.value)}
+              className={inputBase}
+              placeholder="Universiti Malaya"
+            />
+          </div>
+        )}
+        {d.currentStatus === "working" && (
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div>
+              <Label text="Company" />
+              <input
+                type="text"
+                value={d.company}
+                onChange={(e) => set("company", e.target.value)}
+                className={inputBase}
+                placeholder="Acme Sdn Bhd"
+              />
+            </div>
+            <div>
+              <Label text="Position" />
+              <input
+                type="text"
+                value={d.position}
+                onChange={(e) => set("position", e.target.value)}
+                className={inputBase}
+                placeholder="Software Engineer"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Skills */}
