@@ -1,0 +1,55 @@
+{
+  "mymp": {
+    "og": "/resource-images/og/mymp.png",
+    "favicon": "/resource-images/favicons/mymp.ico"
+  },
+  "sedekah": {
+    "og": "/resource-images/og/sedekah.png",
+    "favicon": "/resource-images/favicons/sedekah.png"
+  },
+  "lepakmasjid": {
+    "og": "/resource-images/og/lepakmasjid.png"
+  },
+  "pasarmalam": {
+    "og": "/resource-images/og/pasarmalam.png",
+    "favicon": "/resource-images/favicons/pasarmalam.png"
+  },
+  "openstreetmap": {
+    "og": "/resource-images/og/openstreetmap.png",
+    "favicon": "/resource-images/favicons/openstreetmap.png"
+  },
+  "signal": {
+    "og": "/resource-images/og/signal.png",
+    "favicon": "/resource-images/favicons/signal.png"
+  },
+  "wikipedia": {
+    "og": "/resource-images/og/wikipedia.png",
+    "favicon": "/resource-images/favicons/wikipedia.png"
+  },
+  "khanacademy": {
+    "favicon": "/resource-images/favicons/khanacademy.ico",
+    "og": "/resource-images/og/khanacademy.png"
+  },
+  "hotosm": {
+    "favicon": "/resource-images/favicons/hotosm.png",
+    "og": "/resource-images/og/hotosm.png"
+  },
+  "letsencrypt": {
+    "og": "/resource-images/og/letsencrypt.png",
+    "favicon": "/resource-images/favicons/letsencrypt.ico"
+  },
+  "tor": {
+    "og": "/resource-images/og/tor.png",
+    "favicon": "/resource-images/favicons/tor.ico"
+  },
+  "publiclab": {
+    "og": "/resource-images/og/publiclab.png"
+  },
+  "mesolitica": {
+    "og": "/resource-images/og/mesolitica.png"
+  },
+  "datagov": {
+    "og": "/resource-images/og/datagov.png",
+    "favicon": "/resource-images/favicons/datagov.png"
+  }
+}
