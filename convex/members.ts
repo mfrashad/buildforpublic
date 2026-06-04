@@ -26,20 +26,13 @@ export const create = mutation({
     if (!args.name.trim())
       throw new ConvexError("Name is required.");
 
-    // Prevent duplicate email registrations
-    const existing = await ctx.db
-      .query("members")
-      .withIndex("by_email", (q) => q.eq("email", args.email.trim().toLowerCase()))
-      .unique();
-    if (existing) throw new ConvexError("This email is already registered.");
-
-    // Link to Clerk identity if the user is authenticated
     const identity = await ctx.auth.getUserIdentity();
     const clerkId = identity?.tokenIdentifier ?? undefined;
+    const email = args.email.trim().toLowerCase();
 
-    const id = await ctx.db.insert("members", {
+    const fields = {
       name: args.name.trim(),
-      email: args.email.trim().toLowerCase(),
+      email,
       country: args.country.trim(),
       city: args.city || undefined,
       bio: args.bio?.trim() || undefined,
@@ -55,8 +48,21 @@ export const create = mutation({
       university: args.university || undefined,
       company: args.company || undefined,
       position: args.position || undefined,
-    });
+    };
 
+    // Upsert — find by clerkId first, fall back to email
+    const byClerk = clerkId
+      ? await ctx.db.query("members").withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId)).unique()
+      : null;
+    const existing = byClerk
+      ?? await ctx.db.query("members").withIndex("by_email", (q) => q.eq("email", email)).unique();
+
+    if (existing) {
+      await ctx.db.patch(existing._id, fields);
+      return { ok: true, id: existing._id };
+    }
+
+    const id = await ctx.db.insert("members", fields);
     return { ok: true, id };
   },
 });
