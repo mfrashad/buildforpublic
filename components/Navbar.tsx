@@ -61,8 +61,8 @@ export default function Navbar() {
           >
             Contact
           </button>
-          <a href="/volunteer" className="btn-pill btn-pill-filled text-sm py-2 px-5">
-            Volunteer
+          <a href="/join" className="btn-pill btn-pill-filled text-sm py-2 px-5">
+            Join
           </a>
           {isSignedIn && (
             <UserButton
@@ -105,11 +105,11 @@ export default function Navbar() {
 
           <div className="pt-4 flex flex-col gap-3">
             <a
-              href="/volunteer"
+              href="/join"
               onClick={() => setMobileOpen(false)}
               className="btn-pill btn-pill-filled text-center"
             >
-              Volunteer
+              Join
             </a>
             <button
               onClick={() => { setMobileOpen(false); copyEmail(); }}
