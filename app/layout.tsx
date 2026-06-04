@@ -72,7 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${geist.variable}`}>
       <body className="antialiased">
-        <ClerkProvider>
+        <ClerkProvider signUpForceRedirectUrl="/join/complete">
           <PostHogProvider>
             <ConvexClientProvider>{children}</ConvexClientProvider>
           </PostHogProvider>
