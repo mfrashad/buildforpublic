@@ -1,7 +1,10 @@
-const BELIEFS = [
+import type { ReactNode } from "react";
+import OpenTooltip from "@/app/components/OpenTooltip";
+
+const BELIEFS: { title: string; body: ReactNode; accent: string }[] = [
   {
     title: "Open by default.",
-    body: "Every project is encouraged to be open and built in public. The point isn't just sharing code. It's so the next person can pick it up, fork it, and ship something better. Public knowledge compounds when it's shared.",
+    body: <>Every project is encouraged to be <OpenTooltip /> and built in public. The point isn&apos;t just sharing code. It&apos;s so the next person can pick it up, fork it, and ship something better. Public knowledge compounds when it&apos;s shared.</>,
     accent: "#fff200",
   },
   {
