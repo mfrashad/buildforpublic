@@ -34,14 +34,15 @@ export default function TheMoment() {
 
   return (
     <section className="band band-yellow section-padding px-6 relative overflow-hidden" aria-labelledby="moment-heading">
-      {/* Falling bricks that pile on an invisible floor */}
-      <BrickPhysics
-        bricks={FALLING_BRICKS}
-        gravity={0.8}
-        drag
-        respawn
-        className="absolute inset-0 z-0"
-      />
+      <div className="hidden md:block absolute inset-0 z-0">
+        <BrickPhysics
+          bricks={FALLING_BRICKS}
+          gravity={0.8}
+          drag
+          respawn
+          className="absolute inset-0"
+        />
+      </div>
       <div className="max-w-2xl mx-auto relative z-10">
         <h2
           id="moment-heading"
