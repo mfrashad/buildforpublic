@@ -53,6 +53,16 @@ export const create = mutation({
   },
 });
 
+export const getByClerkId = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, { clerkId }) => {
+    return await ctx.db
+      .query("members")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .unique();
+  },
+});
+
 // Public-safe member shape — strips email
 type PublicMember = {
   _id: string;

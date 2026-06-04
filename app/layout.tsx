@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { PostHogProvider } from "./PostHogProvider";
+import ProfileGate from "@/app/components/ProfileGate";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -74,7 +75,10 @@ export default function RootLayout({
       <body className="antialiased">
         <ClerkProvider>
           <PostHogProvider>
-            <ConvexClientProvider>{children}</ConvexClientProvider>
+            <ConvexClientProvider>
+              <ProfileGate />
+              {children}
+            </ConvexClientProvider>
           </PostHogProvider>
         </ClerkProvider>
       </body>
