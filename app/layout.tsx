@@ -54,8 +54,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "@maboroshiiii",
-    creator: "@maboroshiiii",
+    site: "@build4public",
+    creator: "@build4public",
     title: "Build for Public",
     description: DESCRIPTION,
   },

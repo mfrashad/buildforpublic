@@ -14,9 +14,9 @@ const PAGE_LINKS: FooterLink[] = [
 ];
 
 const SOCIAL_LINKS: FooterLink[] = [
-  { label: "Slack", href: "https://join.slack.com/t/buildforpublic/shared_invite/TODO" },
-  { label: "Instagram", href: "https://instagram.com/buildforpublic" },
-  { label: "TikTok", href: "https://tiktok.com/@buildforpublic" },
+  { label: "Instagram", href: "https://instagram.com/build4public", target: "_blank" },
+  { label: "X", href: "https://x.com/build4public", target: "_blank" },
+  { label: "TikTok", href: "https://tiktok.com/@buildforpublic", target: "_blank" },
 ];
 
 export default function LandingFooter() {

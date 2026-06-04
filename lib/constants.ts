@@ -5,7 +5,7 @@ export const SITE = {
     "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.",
   email: "m.fathyrashad@gmail.com",
   github: "https://github.com/mfrashad/buildforpublic",
-  twitter: "https://x.com/maboroshiiii",
+  twitter: "https://x.com/build4public",
   tiktok: "https://tiktok.com/@mfrashad",
   discord: "", // update when Discord server is created
 };

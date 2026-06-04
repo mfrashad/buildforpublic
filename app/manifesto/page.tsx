@@ -110,13 +110,13 @@ export default function ManifestoPage() {
           </p>
           <div className="flex flex-wrap gap-3">
             <a
-              href="https://join.slack.com/t/buildforpublic/shared_invite/TODO"
+              href="/volunteer"
               className="btn-primary btn-primary-yellow"
             >
               Join the community
             </a>
             <a
-              href="https://join.slack.com/t/buildforpublic/shared_invite/TODO"
+              href="/volunteer"
               className="btn-pill btn-pill-outline px-8 py-3 text-base"
             >
               Volunteer →
