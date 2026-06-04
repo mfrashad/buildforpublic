@@ -41,7 +41,6 @@ export const create = mutation({
     organizerCity: v.optional(v.string()),
     organizerExperience: v.optional(v.string()),
 
-    acknowledgesUnpaid: v.boolean(),
     referralSource: v.optional(v.string()),
     notes: v.optional(v.string()),
   },
@@ -50,8 +49,6 @@ export const create = mutation({
       throw new ConvexError("Invalid email address.");
     if (args.roles.length === 0)
       throw new ConvexError("At least one role is required.");
-    if (!args.acknowledgesUnpaid)
-      throw new ConvexError("You must acknowledge this is a volunteer role.");
     if (args.about.length < 20)
       throw new ConvexError("Please tell us more about yourself (20 chars min).");
     if (args.motivation.length < 20)
@@ -72,7 +69,6 @@ export const create = mutation({
       about: args.about.trim(),
       motivation: args.motivation.trim(),
       roles: args.roles,
-      acknowledgesUnpaid: args.acknowledgesUnpaid,
       referralSource: args.referralSource || undefined,
       notes: args.notes || undefined,
       status: "new",

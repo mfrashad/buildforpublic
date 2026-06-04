@@ -48,7 +48,6 @@ export default defineSchema({
     organizerCity: v.optional(v.string()),
     organizerExperience: v.optional(v.string()),
 
-    acknowledgesUnpaid: v.boolean(),
     referralSource: v.optional(v.string()),
     notes: v.optional(v.string()),
 
