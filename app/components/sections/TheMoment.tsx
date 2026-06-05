@@ -32,6 +32,12 @@ export default function TheMoment() {
   const inView = useInView(tippingRef, { once: true, amount: 0.8 });
   const [fixed, setFixed] = useState(false);
   const [explainerOpen, setExplainerOpen] = useState(false);
+  const [explainerStep, setExplainerStep] = useState(0);
+
+  function openExplainer(step = 0) {
+    setExplainerStep(step);
+    setExplainerOpen(true);
+  }
 
   return (
     <section className="band band-yellow section-padding px-6 relative overflow-hidden" aria-labelledby="moment-heading">
@@ -84,7 +90,7 @@ export default function TheMoment() {
           <p>
             Right now, most of the technology that dictates our lives is driven by{" "}
             <HoverTooltip
-              onAction={() => setExplainerOpen(true)}
+              onAction={() => openExplainer(0)}
               content="How tech got captured by private interest, and what public tech looks like. Tap to explore."
               triggerClassName="-mx-0.5 px-0.5 rounded-[3px] underline underline-offset-2 decoration-black/30 hover:bg-black hover:text-white hover:no-underline transition-all duration-150 cursor-pointer"
               width="w-72"
@@ -96,8 +102,8 @@ export default function TheMoment() {
           <p className="font-bold text-black">
             If left entirely to commercial incentives, AI will widen social divides and leave the most critical societal problems under-resourced. We desperately need a parallel ecosystem —{" "}
             <HoverTooltip
-              href="https://blog.mozilla.org/en/mozilla/ai/public-ai-counterpoint/"
-              content="Mozilla's case for open, non-commercial AI as a counterweight to Big Tech — and why it matters."
+              onAction={() => openExplainer(5)}
+              content="Mozilla's call for open, non-commercial AI as a counterweight to Big Tech. Tap to explore."
               triggerClassName="-mx-0.5 px-0.5 rounded-[3px] underline underline-offset-2 decoration-black/40 hover:bg-black hover:text-white hover:no-underline transition-all duration-150"
               width="w-60"
             >
@@ -107,7 +113,7 @@ export default function TheMoment() {
           </p>
         </div>
       </div>
-      <StackExplainerModal open={explainerOpen} onClose={() => setExplainerOpen(false)} />
+      <StackExplainerModal open={explainerOpen} onClose={() => setExplainerOpen(false)} initialStep={explainerStep} />
     </section>
   );
 }

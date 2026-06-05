@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import AttentionArt from "@/app/components/illustrations/publicstack/AttentionArt";
 import StackTechArt from "@/app/components/illustrations/publicstack/StackTechArt";
 
-const STEPS = [
+const STEPS: { key: string; label: string; body: ReactNode; art: ReactNode }[] = [
   {
     key: "attention",
     label: "Technology isn't built for you",
@@ -36,22 +36,51 @@ const STEPS = [
     body: "So we need an alternative: technology built around public values from the ground up, asking the hard questions and producing tools that don't spy on us or sell our data. Getting it fully right may never be possible, but it's worth trying, and it's the whole point of Build for Public.",
     art: <StackTechArt variant="public" />,
   },
+  {
+    key: "public-ai",
+    label: "Public AI",
+    body: (
+      <>
+        AI is accelerating fast, and almost all of it is being built by a handful of corporations
+        with commercial incentives. The Mozilla Foundation has made the case that we urgently need a
+        parallel track — Public AI: open, non-commercial models and infrastructure built for the
+        public good, not for profit.
+        <br />
+        <br />
+        Public AI would be transparent, accountable, and accessible to everyone — not locked behind
+        APIs or optimised for engagement. It&apos;s the same argument as public tech, applied to
+        the most powerful technology we&apos;ve ever built.
+        <br />
+        <br />
+        <a
+          href="https://blog.mozilla.org/en/mozilla/ai/public-ai-counterpoint/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline font-medium hover:text-black transition-colors"
+        >
+          Read Mozilla&apos;s call for Public AI →
+        </a>
+      </>
+    ),
+    art: null,
+  },
 ];
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  initialStep?: number;
 }
 
-export default function StackExplainerModal({ open, onClose }: Props) {
-  const [step, setStep] = useState(0);
+export default function StackExplainerModal({ open, onClose, initialStep = 0 }: Props) {
+  const [step, setStep] = useState(initialStep);
   const cardRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
 
-  // Reset to step 0 when modal opens
+  // Reset to initialStep when modal opens
   useEffect(() => {
     if (open) {
-      setStep(0);
+      setStep(initialStep);
       setTimeout(() => cardRef.current?.focus(), 50);
     }
   }, [open]);
