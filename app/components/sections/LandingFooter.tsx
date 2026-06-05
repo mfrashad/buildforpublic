@@ -77,7 +77,7 @@ export default function LandingFooter() {
 
         <div className="border-t border-gray-700 pt-8 flex flex-col sm:flex-row justify-between gap-4">
           <p className="text-xs text-gray-500" style={{ fontFamily: "var(--font-sans)" }}>
-            © 2025 Build for Public. Open-source under MIT.
+            © 2025 Build for Public. Open-source under AGPL v3.
           </p>
           <p className="text-xs text-gray-500" style={{ fontFamily: "var(--font-sans)" }}>
             Built in public. For the public.

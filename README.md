@@ -64,4 +64,4 @@ Single `index.html` with Tailwind CSS (CDN). No framework, no dependencies, no b
 
 ## License
 
-MIT
+[AGPL v3](LICENSE)
