@@ -105,6 +105,17 @@ export const patchImageUrl = mutation({
   },
 });
 
+export const countPublic = query({
+  args: {},
+  handler: async (ctx) => {
+    const docs = await ctx.db
+      .query("members")
+      .withIndex("by_public", (q) => q.eq("isPublic", true))
+      .collect();
+    return docs.length;
+  },
+});
+
 export const listPublic = query({
   args: {},
   handler: async (ctx): Promise<PublicMember[]> => {

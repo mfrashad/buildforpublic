@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useQuery } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 
 type Member = {
@@ -195,9 +196,49 @@ function SkeletonCard() {
   );
 }
 
+function LockedState() {
+  const count = useQuery(api.members.countPublic);
+
+  return (
+    <div className="max-w-md mx-auto text-center py-20 px-6">
+      <div
+        className="w-16 h-16 rounded-full border-2 border-black flex items-center justify-center mx-auto mb-6 text-2xl"
+        style={{ background: "#fff200" }}
+      >
+        🔒
+      </div>
+      <h2
+        className="text-2xl text-black mb-3"
+        style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+      >
+        {count !== undefined ? `${count} builders in here.` : "The community directory."}
+      </h2>
+      <p className="text-black/60 text-sm leading-relaxed mb-8">
+        The directory is only visible to community members.
+        Join or sign in to see who&apos;s building.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/join" className="btn-pill btn-pill-filled px-8 py-2.5 text-sm">
+          Join the community →
+        </a>
+        <a href="/sign-in" className="btn-pill btn-pill-outline px-8 py-2.5 text-sm">
+          Sign in
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export default function MemberDirectory() {
+  const { isLoaded, isSignedIn } = useUser();
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
-  const members = useQuery(api.members.listPublic);
+  const members = useQuery(
+    api.members.listPublic,
+    isLoaded && isSignedIn ? {} : "skip"
+  );
+
+  if (!isLoaded) return null;
+  if (!isSignedIn) return <LockedState />;
 
   const isLoading = members === undefined;
 
