@@ -79,6 +79,7 @@ export default function ProfilePage() {
 
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+  const [github, setGithub] = useState("");
   const [instagram, setInstagram] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
@@ -91,6 +92,7 @@ export default function ProfilePage() {
     if (existing) {
       setName(existing.name ?? user?.fullName ?? "");
       setBio(existing.bio ?? "");
+      setGithub(existing.github ?? "");
       setInstagram(existing.instagram ?? "");
       setLinkedin(existing.linkedin ?? "");
       setTwitter(existing.twitter ?? "");
@@ -114,6 +116,7 @@ export default function ProfilePage() {
       clerkId: user.id,
       name: name.trim() || undefined,
       bio: bio.trim() || undefined,
+      github: github.trim() || undefined,
       instagram: instagram.trim() || undefined,
       linkedin: linkedin.trim() || undefined,
       twitter: twitter.trim() || undefined,
@@ -204,6 +207,16 @@ export default function ProfilePage() {
                 Social links
               </h2>
               <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-black/60 mb-1.5">GitHub</label>
+                  <input
+                    type="text"
+                    value={github}
+                    onChange={(e) => setGithub(e.target.value)}
+                    placeholder="yourusername"
+                    className={inputBase}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-black/60 mb-1.5">LinkedIn</label>
                   <input

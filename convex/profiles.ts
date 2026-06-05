@@ -16,6 +16,7 @@ export const upsert = mutation({
     clerkId: v.string(),
     name: v.optional(v.string()),
     bio: v.optional(v.string()),
+    github: v.optional(v.string()),
     instagram: v.optional(v.string()),
     linkedin: v.optional(v.string()),
     twitter: v.optional(v.string()),
@@ -32,6 +33,7 @@ export const upsert = mutation({
       await ctx.db.patch(existing._id, {
         name: args.name,
         bio: args.bio,
+        github: args.github,
         instagram: args.instagram,
         linkedin: args.linkedin,
         twitter: args.twitter,

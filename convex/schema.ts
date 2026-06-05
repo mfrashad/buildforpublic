@@ -179,6 +179,7 @@ export default defineSchema({
     clerkId: v.string(),
     name: v.optional(v.string()),
     bio: v.optional(v.string()),
+    github: v.optional(v.string()),
     instagram: v.optional(v.string()),
     linkedin: v.optional(v.string()),
     twitter: v.optional(v.string()),
