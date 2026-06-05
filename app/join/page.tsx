@@ -87,7 +87,7 @@ export default function JoinPage() {
               { icon: "🤝", title: "Community directory", body: "Appear on the member map. Connect with builders across Southeast Asia." },
               { icon: "💡", title: "Post your builds", body: "Share your projects on the Projects Board." },
               { icon: "📢", title: "No pitch culture", body: "A community that builds, not networks." },
-              { icon: "🚀", title: "Path to Fellow", body: "Work on NGO projects by applying as a Fellow anytime." },
+              { icon: "🚀", title: "Path to volunteer", body: "Work on NGO projects by applying as a volunteer anytime." },
             ].map(({ icon, title, body }) => (
               <div key={title} className="card p-5">
                 <div className="text-2xl mb-2">{icon}</div>
@@ -100,7 +100,7 @@ export default function JoinPage() {
           <p className="text-center text-sm text-black/40 mt-8">
             Want to work on NGO projects?{" "}
             <a href="/volunteer" className="text-black underline underline-offset-2">
-              Apply as a Fellow
+              Apply as a volunteer
             </a>
           </p>
         </div>

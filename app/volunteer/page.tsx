@@ -8,7 +8,7 @@ import MemberJoinButton from "./MemberJoinButton";
 export const metadata: Metadata = {
   title: "Join Build for Public",
   description:
-    "Two ways to join Build for Public: become a member instantly with Google, or apply as a Fellow to work on NGO projects and lead the community.",
+    "Two ways to join Build for Public: become a member instantly with Google, or apply as a volunteer to work on NGO projects and lead the community.",
 };
 
 const MEMBER_PERKS = [
@@ -110,7 +110,7 @@ export default function JoinPage() {
             </div>
           </div>
 
-          {/* Path B — Fellow */}
+          {/* Path B — Volunteer */}
           <div className="card overflow-hidden flex flex-col">
             <div className="h-2 w-full border-b-2 border-black bg-black" />
             <div className="p-8 flex flex-col flex-1">
@@ -119,7 +119,7 @@ export default function JoinPage() {
                   className="text-2xl text-black"
                   style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
                 >
-                  Fellow
+                  Volunteer
                 </h2>
                 <span className="text-xs font-semibold uppercase tracking-wider px-3 py-1 border-2 border-black rounded-full">
                   Application
@@ -143,7 +143,7 @@ export default function JoinPage() {
                 href="#apply"
                 className="btn-pill btn-pill-filled w-full text-center block"
               >
-                Apply as Fellow →
+                Apply as a volunteer →
               </a>
               <p className="text-xs text-black/40 text-center mt-3">
                 We review applications within 1–2 weeks.
@@ -160,17 +160,17 @@ export default function JoinPage() {
           <div className="card-flat p-6 sm:p-8 border-l-4 border-clay">
             <p className="text-sm text-black/60 leading-relaxed">
               <span className="font-semibold text-black">Members</span> can attend events, contribute to open-source, and build their own tools.{" "}
-              <span className="font-semibold text-black">Fellows</span> are vetted and work directly with NGOs — they&apos;re the backbone of the community.
-              A member can apply to become a Fellow at any time. Showing up consistently and shipping something is the strongest application signal.
+              <span className="font-semibold text-black">Volunteers</span> are vetted and work directly with NGOs — they&apos;re the backbone of the community.
+              A member can apply to become a volunteer at any time. Showing up consistently and shipping something is the strongest application signal.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── Fellow roles ── */}
+      {/* ── Volunteer roles ── */}
       <section id="apply" className="section-padding pt-0 px-6 scroll-mt-20">
         <div className="max-w-4xl mx-auto">
-          <h2 className="heading-section text-black mb-3">Fellow roles</h2>
+          <h2 className="heading-section text-black mb-3">Volunteer roles</h2>
           <p className="text-lg text-black/60 mb-10">
             Pick the role that fits your skills and schedule. You can apply for more than one.
           </p>
@@ -206,7 +206,7 @@ export default function JoinPage() {
       {/* ── Application form ── */}
       <section className="section-padding pt-0 px-6">
         <div className="max-w-2xl mx-auto">
-          <h2 className="heading-section text-black mb-3">Fellow application</h2>
+          <h2 className="heading-section text-black mb-3">Volunteer application</h2>
           <p className="text-lg text-black/60 mb-12">
             Applications are reviewed on a rolling basis. We aim to reply within 1–2 weeks.
           </p>
