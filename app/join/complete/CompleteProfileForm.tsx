@@ -162,6 +162,7 @@ export default function CompleteProfileForm() {
       await create({
         name: user.fullName || user.firstName || "Member",
         email: user.primaryEmailAddress?.emailAddress ?? "",
+        imageUrl: user.imageUrl || undefined,
         country: d.country.trim(),
         city: d.city || undefined,
         bio: d.bio || undefined,

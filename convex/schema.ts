@@ -121,6 +121,7 @@ export default defineSchema({
     twitter: v.optional(v.string()),
     instagram: v.optional(v.string()),
     isPublic: v.optional(v.boolean()),
+    imageUrl: v.optional(v.string()),
     clerkId: v.optional(v.string()),
     currentStatus: v.optional(v.union(v.literal("student"), v.literal("working"))),
     university: v.optional(v.string()),

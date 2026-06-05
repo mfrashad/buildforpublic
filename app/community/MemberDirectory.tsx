@@ -12,6 +12,7 @@ type Member = {
   city?: string;
   bio?: string;
   skills?: string[];
+  imageUrl?: string;
   linkedin?: string;
   github?: string;
   twitter?: string;
@@ -38,12 +39,20 @@ function MemberCard({ member }: { member: Member }) {
   return (
     <article className="card p-5 flex flex-col gap-3">
       <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center flex-shrink-0 text-sm font-bold"
-          style={{ background: accent }}
-        >
-          {getInitials(member.name)}
-        </div>
+        {member.imageUrl ? (
+          <img
+            src={member.imageUrl}
+            alt={member.name}
+            className="w-10 h-10 rounded-full border-2 border-black object-cover flex-shrink-0"
+          />
+        ) : (
+          <div
+            className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center flex-shrink-0 text-sm font-bold"
+            style={{ background: accent }}
+          >
+            {getInitials(member.name)}
+          </div>
+        )}
         <div className="min-w-0">
           <p
             className="text-base text-black truncate"

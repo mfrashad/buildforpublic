@@ -34,15 +34,15 @@ export default function CommunityPage() {
         </div>
       </section>
 
+      {/* ── Next event ── */}
+      <Events />
+
       {/* ── Directory ── */}
-      <section className="section-padding pt-0 px-6">
+      <section className="section-padding px-6">
         <div className="max-w-6xl mx-auto">
           <MemberDirectory />
         </div>
       </section>
-
-      {/* ── Next event ── */}
-      <Events />
 
       <Footer />
     </main>

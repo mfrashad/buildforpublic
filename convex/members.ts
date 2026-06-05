@@ -15,6 +15,7 @@ export const create = mutation({
     twitter: v.optional(v.string()),
     instagram: v.optional(v.string()),
     isPublic: v.optional(v.boolean()),
+    imageUrl: v.optional(v.string()),
     currentStatus: v.optional(v.union(v.literal("student"), v.literal("working"))),
     university: v.optional(v.string()),
     company: v.optional(v.string()),
@@ -43,6 +44,7 @@ export const create = mutation({
       twitter: args.twitter || undefined,
       instagram: args.instagram || undefined,
       isPublic: args.isPublic !== false,
+      imageUrl: args.imageUrl || undefined,
       clerkId,
       currentStatus: args.currentStatus,
       university: args.university || undefined,
@@ -86,6 +88,7 @@ type PublicMember = {
   city?: string;
   bio?: string;
   skills?: string[];
+  imageUrl?: string;
   linkedin?: string;
   github?: string;
   twitter?: string;
@@ -108,6 +111,7 @@ export const listPublic = query({
       city: doc.city,
       bio: doc.bio,
       skills: doc.skills,
+      imageUrl: doc.imageUrl,
       linkedin: doc.linkedin,
       github: doc.github,
       twitter: doc.twitter,
