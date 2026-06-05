@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Build for Public",
-    title: "Build for Public — Open-source tech for the public good",
+    title: "Build for Public - Open Tech for NGOs and the Public Good",
     description: DESCRIPTION,
     url: "https://buildforpublic.com",
     locale: "en_US",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@build4public",
     creator: "@build4public",
-    title: "Build for Public — Open-source tech for the public good",
+    title: "Build for Public - Open Tech for NGOs and the Public Good",
     description: DESCRIPTION,
     images: ["https://buildforpublic.com/og/buildforpublic.png"],
   },
