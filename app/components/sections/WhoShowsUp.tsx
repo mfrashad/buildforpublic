@@ -9,7 +9,7 @@ const PERSONAS = [
     Icon: TerminalIcon,
     title: "Coders building for good.",
     description:
-      "Devs, designers, students, self-taught hackers using their skills for something beyond the bottom line.",
+      "Devs, designers, students, self-taught hackers who want their work to matter beyond a paycheck.",
     accent: "#000",
     bg: "#fff200",
   },
