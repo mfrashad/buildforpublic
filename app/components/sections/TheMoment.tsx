@@ -102,7 +102,7 @@ export default function TheMoment() {
           <p className="font-bold text-black">
             If left entirely to commercial incentives, AI will widen social divides and leave the most critical societal problems under-resourced. We desperately need a parallel ecosystem —{" "}
             <HoverTooltip
-              onAction={() => openExplainer(5)}
+              onAction={() => openExplainer(0)}
               content="Mozilla's call for open, non-commercial AI as a counterweight to Big Tech. Tap to explore."
               triggerClassName="-mx-0.5 px-0.5 rounded-[3px] underline underline-offset-2 decoration-black/40 hover:bg-black hover:text-white hover:no-underline transition-all duration-150"
               width="w-60"
