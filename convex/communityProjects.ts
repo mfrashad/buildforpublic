@@ -33,8 +33,8 @@ export const create = mutation({
       tags: args.tags?.length ? args.tags : undefined,
       skillsNeeded: args.skillsNeeded?.length ? args.skillsNeeded : undefined,
       accent: "orange",
-      status: "published",  // auto-publish — community builds don't gate BFP's NGO reputation
-      officialBFP: false,   // core member can endorse via Convex dashboard
+      status: "draft",  // requires manual approval before appearing on the board
+      officialBFP: false,
     });
 
     return { ok: true, id };

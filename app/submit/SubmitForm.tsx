@@ -105,10 +105,10 @@ function SuccessCard({ title }: { title: string }) {
         ✓
       </div>
       <h3 className="text-2xl text-black mb-3" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
-        Project posted!
+        Project submitted!
       </h3>
       <p className="text-black/60 text-sm leading-relaxed mb-6">
-        &ldquo;{title}&rdquo; is now live on the Projects Board.
+        &ldquo;{title}&rdquo; is under review. We&apos;ll publish it to the Projects Board once we&apos;ve had a look.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <a href="/directory" className="btn-pill btn-pill-filled text-sm px-6 py-2.5">
