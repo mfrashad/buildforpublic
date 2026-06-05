@@ -1,18 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 
 const EVENT_SLUG = "cobuilding-kl-1";
 
 export default function Events({ noBand = false }: { noBand?: boolean }) {
+  const { user, isLoaded, isSignedIn } = useUser();
   const joinWaitlist = useMutation(api.eventRsvps.join);
   const count = useQuery(api.eventRsvps.count, { eventSlug: EVENT_SLUG });
 
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "duplicate">("idle");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && user?.primaryEmailAddress?.emailAddress) {
+      setEmail(user.primaryEmailAddress.emailAddress);
+    }
+  }, [isLoaded, isSignedIn, user]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -78,14 +86,18 @@ export default function Events({ noBand = false }: { noBand?: boolean }) {
                     <p className="text-sm font-semibold text-black" style={{ fontFamily: "var(--font-display)" }}>
                       Get notified when it&apos;s confirmed
                     </p>
-                    <input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="px-3 py-2 border-2 border-black rounded text-sm outline-none focus:ring-2 focus:ring-black/20 w-full"
-                      required
-                    />
+                    {isSignedIn ? (
+                      <p className="text-xs text-black/50">Signing up as <span className="font-medium text-black">{email}</span></p>
+                    ) : (
+                      <input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="px-3 py-2 border-2 border-black rounded text-sm outline-none focus:ring-2 focus:ring-black/20 w-full"
+                        required
+                      />
+                    )}
                     {error && <p className="text-xs text-red-600">{error}</p>}
                     <button type="submit" disabled={status === "loading"} className="btn-primary btn-primary-yellow w-full disabled:opacity-60">
                       {status === "loading" ? "Saving…" : "Join the waitlist →"}
@@ -168,14 +180,18 @@ export default function Events({ noBand = false }: { noBand?: boolean }) {
                   >
                     Get notified when it&apos;s confirmed
                   </p>
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="px-3 py-2 border-2 border-black rounded text-sm outline-none focus:ring-2 focus:ring-black/20 w-full"
-                    required
-                  />
+                  {isSignedIn ? (
+                    <p className="text-xs text-black/50">Signing up as <span className="font-medium text-black">{email}</span></p>
+                  ) : (
+                    <input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="px-3 py-2 border-2 border-black rounded text-sm outline-none focus:ring-2 focus:ring-black/20 w-full"
+                      required
+                    />
+                  )}
                   {error && (
                     <p className="text-xs text-red-600">{error}</p>
                   )}
