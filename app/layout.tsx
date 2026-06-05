@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: "https://buildforpublic.com",
     locale: "en_US",
-    images: [{ url: "https://buildforpublic.com/og/buildforpublic.png", width: 1512, height: 782, alt: "Build for Public — Build in public for the public." }],
+    images: [{ url: "https://buildforpublic.com/og/buildforpublic.png", width: 1600, height: 827, alt: "Build for Public — Build in public for the public." }],
   },
   twitter: {
     card: "summary_large_image",
