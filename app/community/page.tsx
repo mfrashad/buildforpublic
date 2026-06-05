@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MemberDirectory from "./MemberDirectory";
-import Events from "@/app/components/sections/Events";
 
 export const metadata: Metadata = {
   title: "Community — Build for Public",
@@ -35,7 +34,22 @@ export default function CommunityPage() {
       </section>
 
       {/* ── Next event ── */}
-      <Events />
+      <div className="px-6 pb-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3.5 rounded-xl border border-black/15 bg-surface text-sm">
+            <div className="flex items-center gap-3 text-black/60">
+              <span className="text-base">📅</span>
+              <span>
+                <span className="font-medium text-black">Co-building Meetup #1</span>
+                {" · "}Late June · Kuala Lumpur
+              </span>
+            </div>
+            <a href="/#events" className="text-sm font-medium text-black underline underline-offset-2 hover:text-black/60 transition-colors whitespace-nowrap">
+              Join the waitlist →
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* ── Directory ── */}
       <section className="section-padding px-6">
