@@ -186,64 +186,17 @@ function SkeletonCard() {
   );
 }
 
-const DIRECTORY_THRESHOLD = 20;
-
-function LockedState({ count }: { count: number }) {
-  const remaining = DIRECTORY_THRESHOLD - count;
-  const pct = Math.round((count / DIRECTORY_THRESHOLD) * 100);
-
-  return (
-    <div className="max-w-lg mx-auto text-center py-16 px-6">
-      <div
-        className="w-16 h-16 rounded-full border-2 border-black flex items-center justify-center mx-auto mb-6 text-2xl"
-        style={{ background: "#fff200" }}
-      >
-        👀
-      </div>
-      <h2
-        className="text-2xl text-black mb-3"
-        style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
-      >
-        The directory unlocks at {DIRECTORY_THRESHOLD} members.
-      </h2>
-      <p className="text-black/60 text-sm leading-relaxed mb-8">
-        We&apos;re building in public — including the community itself.
-        Once we hit {DIRECTORY_THRESHOLD} members, the full directory goes live.
-        {remaining > 0 && ` ${remaining} more to go.`}
-      </p>
-
-      {/* Progress bar */}
-      <div className="w-full bg-black/10 rounded-full h-3 border border-black/20 mb-2 overflow-hidden">
-        <div
-          className="h-full rounded-full border-r border-black/20 transition-all"
-          style={{ width: `${pct}%`, background: "#fff200" }}
-        />
-      </div>
-      <p className="text-xs text-black/50 mb-8">
-        {count} of {DIRECTORY_THRESHOLD} members
-      </p>
-
-      <a href="/join" className="btn-primary btn-primary-yellow inline-block">
-        Join and be listed →
-      </a>
-    </div>
-  );
-}
-
 export default function MemberDirectory() {
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
   const members = useQuery(api.members.listPublic);
 
   const isLoading = members === undefined;
-  const isLocked = !isLoading && members.length < DIRECTORY_THRESHOLD;
 
   const filtered = useMemo(() => {
     if (!members) return [];
     if (!activeCountry) return members;
     return members.filter((m) => m.country === activeCountry);
   }, [members, activeCountry]);
-
-  if (isLocked) return <LockedState count={members.length} />;
 
   return (
     <div>

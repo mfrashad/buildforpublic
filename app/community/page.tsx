@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MemberDirectory from "./MemberDirectory";
+import Events from "@/app/components/sections/Events";
 
 export const metadata: Metadata = {
   title: "Community — Build for Public",
@@ -39,6 +40,9 @@ export default function CommunityPage() {
           <MemberDirectory />
         </div>
       </section>
+
+      {/* ── Next event ── */}
+      <Events />
 
       <Footer />
     </main>
