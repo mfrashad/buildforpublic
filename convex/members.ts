@@ -108,10 +108,7 @@ export const patchImageUrl = mutation({
 export const countPublic = query({
   args: {},
   handler: async (ctx) => {
-    const docs = await ctx.db
-      .query("members")
-      .withIndex("by_public", (q) => q.eq("isPublic", true))
-      .collect();
+    const docs = await ctx.db.query("members").collect();
     return docs.filter((doc) => doc.name && doc.name !== "Member").length;
   },
 });
