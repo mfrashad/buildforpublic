@@ -5,7 +5,7 @@ export default function OpenTooltip() {
     <HoverTooltip
       content={
         <>
-          We default to AGPL v3 over MIT to protect community members — especially those who
+          We recommend AGPL v3 over MIT to protect community members — especially those who
           don&apos;t know better — from having their work taken, closed off, and sold by companies.
           MIT allows that. AGPL doesn&apos;t.
           <br />
