@@ -112,7 +112,7 @@ export const countPublic = query({
       .query("members")
       .withIndex("by_public", (q) => q.eq("isPublic", true))
       .collect();
-    return docs.length;
+    return docs.filter((doc) => doc.name && doc.name !== "Member").length;
   },
 });
 
@@ -125,7 +125,7 @@ export const listPublic = query({
       .order("desc")
       .take(500);
 
-    return docs.map((doc) => ({
+    return docs.filter((doc) => doc.name && doc.name !== "Member").map((doc) => ({
       _id: doc._id,
       _creationTime: doc._creationTime,
       name: doc.name,
