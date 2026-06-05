@@ -47,7 +47,7 @@ const PROJECTS = [
     builtWith: "Pocket of Pink",
     whoFor: "Anyone supporting or seeking support from Pocket of Pink",
     primaryLink: { label: "Visit", href: "https://pocketofpink.com" },
-    codeLink: null,
+    codeLink: { label: "Code", href: "https://github.com/mfrashad/pocketofpink" },
     image: "/projects/pocketofpink.png",
     status: null,
     accentBg: "#ffc0a1",
