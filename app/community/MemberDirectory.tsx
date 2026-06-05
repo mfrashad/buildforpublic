@@ -237,16 +237,16 @@ export default function MemberDirectory() {
     isLoaded && isSignedIn ? {} : "skip"
   );
 
-  if (!isLoaded) return null;
-  if (!isSignedIn) return <LockedState />;
-
-  const isLoading = members === undefined;
-
   const filtered = useMemo(() => {
     if (!members) return [];
     if (!activeCountry) return members;
     return members.filter((m) => m.country === activeCountry);
   }, [members, activeCountry]);
+
+  if (!isLoaded) return null;
+  if (!isSignedIn) return <LockedState />;
+
+  const isLoading = members === undefined;
 
   return (
     <div>
