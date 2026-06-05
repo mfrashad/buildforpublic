@@ -25,7 +25,7 @@ export default function SubmitPage() {
           </h1>
           <p className="text-lg text-black/60 max-w-2xl mx-auto mb-10 leading-relaxed">
             Built something? Share it with the community. Community Builds appear on
-            the Projects Board — no vetting required. If a core member endorses it,
+            the Projects Board — no vetting required. If a Fellow endorses it,
             it becomes an Official BFP project.
           </p>
         </div>

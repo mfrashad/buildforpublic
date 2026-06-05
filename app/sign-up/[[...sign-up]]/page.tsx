@@ -44,7 +44,7 @@ export default function SignUpPage() {
         <p className="text-center text-sm text-black/40 mt-8">
           Want to work on NGO projects?{" "}
           <a href="/volunteer" className="text-black underline underline-offset-2">
-            Apply as a core member instead
+            Apply as a Fellow instead
           </a>
         </p>
       </section>
