@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/navigation";
+
+const DRAFT_KEY = "bfp_profile_draft";
 
 const SKILLS = [
   "Frontend",
@@ -86,9 +88,32 @@ export default function ProfilePage() {
   const [skills, setSkills] = useState<string[]>([]);
   const [causes, setCauses] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [hasDraft, setHasDraft] = useState(false);
+  const ready = useRef(false);
 
-  // Pre-fill from existing profile or Clerk data
+  // Pre-fill: localStorage draft takes priority, then server data
   useEffect(() => {
+    if (existing === undefined) return;
+    if (ready.current) return; // already initialized
+
+    const raw = typeof window !== "undefined" ? localStorage.getItem(DRAFT_KEY) : null;
+    if (raw) {
+      try {
+        const draft = JSON.parse(raw);
+        setName(draft.name ?? "");
+        setBio(draft.bio ?? "");
+        setGithub(draft.github ?? "");
+        setInstagram(draft.instagram ?? "");
+        setLinkedin(draft.linkedin ?? "");
+        setTwitter(draft.twitter ?? "");
+        setSkills(draft.skills ?? []);
+        setCauses(draft.causes ?? []);
+        setHasDraft(true);
+        ready.current = true;
+        return;
+      } catch {}
+    }
+
     if (existing) {
       setName(existing.name ?? user?.fullName ?? "");
       setBio(existing.bio ?? "");
@@ -101,7 +126,15 @@ export default function ProfilePage() {
     } else if (existing === null && user) {
       setName(user.fullName ?? "");
     }
+    ready.current = true;
   }, [existing, user]);
+
+  // Auto-save draft to localStorage on every change (after initialization)
+  useEffect(() => {
+    if (!ready.current) return;
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ name, bio, github, instagram, linkedin, twitter, skills, causes }));
+    setHasDraft(true);
+  }, [name, bio, github, instagram, linkedin, twitter, skills, causes]);
 
   // Redirect signed-out users
   useEffect(() => {
@@ -123,6 +156,8 @@ export default function ProfilePage() {
       skills: skills.length ? skills : undefined,
       causes: causes.length ? causes : undefined,
     });
+    localStorage.removeItem(DRAFT_KEY);
+    setHasDraft(false);
     setStatus("saved");
     setTimeout(() => setStatus("idle"), 2500);
   }
@@ -287,16 +322,21 @@ export default function ProfilePage() {
             </div>
 
             {/* ── Submit ── */}
-            <div className="flex items-center gap-4">
-              <button
-                type="submit"
-                disabled={status === "saving"}
-                className="btn-pill btn-pill-filled px-10 py-3 disabled:opacity-60"
-              >
-                {status === "saving" ? "Saving…" : "Save profile →"}
-              </button>
-              {status === "saved" && (
-                <span className="text-sm text-green-600 font-medium">✓ Saved</span>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-4">
+                <button
+                  type="submit"
+                  disabled={status === "saving"}
+                  className="btn-pill btn-pill-filled px-10 py-3 disabled:opacity-60"
+                >
+                  {status === "saving" ? "Saving…" : "Save profile →"}
+                </button>
+                {status === "saved" && (
+                  <span className="text-sm text-green-600 font-medium">✓ Saved</span>
+                )}
+              </div>
+              {hasDraft && status !== "saved" && (
+                <p className="text-xs text-black/40">Draft saved locally — hit save to publish.</p>
               )}
             </div>
 
