@@ -88,9 +88,10 @@ export default function RequestPage() {
               <p className="text-sm text-black/60 leading-relaxed">
                 <span className="text-black font-medium">Important to know:</span>{" "}
                 Build for Public is volunteer-run. Timelines are best-effort, not guaranteed.
-                Everything we build is open-source under MIT licence — you keep it forever
-                and can adapt it freely. We&apos;ll need a point of contact for 1–2 short
-                review calls during the build.
+                We recommend building in the open (AGPL v3) — so the wider community can
+                contribute to and improve your project — but keeping it private or closed is
+                fine too. We&apos;ll need a point of contact for 1–2 short review calls during
+                the build.
               </p>
             </div>
           </div>

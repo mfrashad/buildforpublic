@@ -148,12 +148,21 @@ export default defineSchema({
     ),
     country: v.string(),
     problem: v.string(),
-    whoItHelps: v.string(),
+    whoItHelps: v.optional(v.string()),
     currentSolution: v.optional(v.string()),
     idealOutcome: v.optional(v.string()),
     timeline: v.optional(v.string()),
     budget: v.optional(v.string()),
-    acknowledgesOpenSource: v.boolean(),
+    projectType: v.optional(
+      v.union(
+        v.literal("website"),
+        v.literal("custom"),
+        v.literal("other"),
+      ),
+    ),
+    materialsLink: v.optional(v.string()),
+    instagram: v.optional(v.string()),
+    acknowledgesOpenSource: v.optional(v.boolean()),
     referralSource: v.optional(v.string()),
     notes: v.optional(v.string()),
     status: v.union(

@@ -13,6 +13,25 @@ const ORG_TYPES = [
 ] as const;
 
 type OrgType = (typeof ORG_TYPES)[number]["value"];
+type ProjectType = "website" | "custom" | "other" | "";
+
+const PROJECT_TYPES: { value: ProjectType; label: string; description: string }[] = [
+  {
+    value: "website",
+    label: "Website / landing page",
+    description: "A public-facing site to present your org, cause, or campaign.",
+  },
+  {
+    value: "custom",
+    label: "Custom tool, app, or platform",
+    description: "A bespoke system — internal tool, data platform, community app, etc.",
+  },
+  {
+    value: "other",
+    label: "Something else",
+    description: "Not sure yet, or it doesn't fit the above.",
+  },
+];
 
 const REFERRAL_SOURCES = [
   "Word of mouth",
@@ -31,12 +50,15 @@ interface FormData {
   orgWebsite: string;
   orgType: OrgType | "";
   country: string;
+  projectType: ProjectType;
   problem: string;
   whoItHelps: string;
   currentSolution: string;
   idealOutcome: string;
   timeline: string;
   budget: string;
+  materialsLink: string;
+  instagram: string;
   acknowledgesOpenSource: boolean;
   referralSource: string;
   notes: string;
@@ -51,12 +73,15 @@ const INITIAL: FormData = {
   orgWebsite: "",
   orgType: "",
   country: "",
+  projectType: "",
   problem: "",
   whoItHelps: "",
   currentSolution: "",
   idealOutcome: "",
   timeline: "",
   budget: "",
+  materialsLink: "",
+  instagram: "",
   acknowledgesOpenSource: false,
   referralSource: "",
   notes: "",
@@ -69,10 +94,15 @@ function validate(d: FormData): Errors {
   else if (!/^\S+@\S+\.\S+$/.test(d.contactEmail)) e.contactEmail = "Enter a valid email";
   if (!d.orgName.trim()) e.orgName = "Required";
   if (!d.country.trim()) e.country = "Required";
-  if (!d.problem.trim()) e.problem = "Required";
-  else if (d.problem.trim().length < 20) e.problem = "Please describe the problem in more detail (20 chars min)";
-  if (!d.whoItHelps.trim()) e.whoItHelps = "Required";
-  if (!d.acknowledgesOpenSource) e.acknowledgesOpenSource = "You must acknowledge the open-source terms";
+  if (!d.projectType) e.projectType = "Please select what you need";
+  if (!d.problem.trim()) {
+    e.problem = "Required";
+  } else if (d.projectType !== "website" && d.problem.trim().length < 20) {
+    e.problem = "Please describe the problem in more detail (20 chars min)";
+  }
+  if (d.projectType !== "website" && !d.whoItHelps.trim()) {
+    e.whoItHelps = "Required";
+  }
   return e;
 }
 
@@ -154,13 +184,16 @@ export default function RequestForm() {
         orgWebsite: d.orgWebsite || undefined,
         orgType: d.orgType as OrgType || undefined,
         country: d.country.trim(),
+        projectType: d.projectType as "website" | "custom" | "other" || undefined,
         problem: d.problem.trim(),
-        whoItHelps: d.whoItHelps.trim(),
+        whoItHelps: d.whoItHelps || undefined,
         currentSolution: d.currentSolution || undefined,
         idealOutcome: d.idealOutcome || undefined,
         timeline: d.timeline || undefined,
         budget: d.budget || undefined,
-        acknowledgesOpenSource: d.acknowledgesOpenSource,
+        materialsLink: d.materialsLink || undefined,
+        instagram: d.instagram || undefined,
+        acknowledgesOpenSource: d.acknowledgesOpenSource || undefined,
         referralSource: d.referralSource || undefined,
         notes: d.notes || undefined,
       });
@@ -174,6 +207,9 @@ export default function RequestForm() {
   }
 
   if (status === "success") return <SuccessCard />;
+
+  const isWebsite = d.projectType === "website";
+  const isCustom = d.projectType === "custom" || d.projectType === "other";
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-10">
@@ -254,146 +290,258 @@ export default function RequestForm() {
         </div>
       </div>
 
-      {/* ── 2. The problem ── */}
+      {/* ── 2. What do you need? ── */}
       <div>
-        <SectionHeading>The problem</SectionHeading>
-        <div className="space-y-5">
-          <div id="field-problem">
-            <Label text="Describe the problem you want solved" required />
-            <p className="text-xs text-black/60/60 mb-2">
-              Don&apos;t describe the solution — describe the problem. What&apos;s hard, slow, or broken?
-            </p>
-            <div className="relative">
-              <textarea
-                value={d.problem}
-                onChange={(e) => set("problem", e.target.value)}
-                maxLength={1000}
-                rows={4}
-                className={inputBase}
-                placeholder="Example: We track donations from 500+ donors across 3 spreadsheets. Reconciling them at month-end takes 2 days and we make errors..."
-              />
-              <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
-                {d.problem.length}/1000
-              </span>
-            </div>
-            <ErrMsg msg={errors.problem} />
-          </div>
-          <div id="field-whoItHelps">
-            <Label text="Who does this help?" required />
-            <input
-              type="text"
-              value={d.whoItHelps}
-              onChange={(e) => set("whoItHelps", e.target.value)}
-              className={inputBase}
-              placeholder="E.g. our 500 scholarship students, the staff who process applications, rural communities we serve..."
-            />
-            <ErrMsg msg={errors.whoItHelps} />
-          </div>
-          <div>
-            <Label text="How do you handle this today?" />
-            <textarea
-              value={d.currentSolution}
-              onChange={(e) => set("currentSolution", e.target.value)}
-              maxLength={500}
-              rows={3}
-              className={inputBase}
-              placeholder="Manual process, spreadsheets, nothing, an expensive tool that doesn't quite fit..."
-            />
-          </div>
-          <div>
-            <Label text="What does success look like?" />
-            <textarea
-              value={d.idealOutcome}
-              onChange={(e) => set("idealOutcome", e.target.value)}
-              maxLength={500}
-              rows={3}
-              className={inputBase}
-              placeholder="In 6 months, if this is solved, what changes for you or the people you serve?"
-            />
-          </div>
+        <SectionHeading>What do you need?</SectionHeading>
+        <div id="field-projectType" className="grid sm:grid-cols-3 gap-4">
+          {PROJECT_TYPES.map((pt) => {
+            const selected = d.projectType === pt.value;
+            return (
+              <button
+                key={pt.value}
+                type="button"
+                onClick={() => {
+                  set("projectType", pt.value);
+                  // Clear path-specific fields when switching
+                  set("materialsLink", "");
+                  set("instagram", "");
+                  set("whoItHelps", "");
+                  set("currentSolution", "");
+                  set("idealOutcome", "");
+                }}
+                className={[
+                  "text-left p-4 border-2 rounded-xl transition-all duration-150",
+                  selected
+                    ? "border-black bg-black text-white"
+                    : "border-black/20 hover:border-black bg-surface",
+                ].join(" ")}
+              >
+                <p className="font-semibold text-sm mb-1" style={{ fontFamily: "var(--font-display)" }}>
+                  {pt.label}
+                </p>
+                <p className={["text-xs leading-relaxed", selected ? "text-white/70" : "text-black/50"].join(" ")}>
+                  {pt.description}
+                </p>
+              </button>
+            );
+          })}
         </div>
+        <ErrMsg msg={errors.projectType} />
       </div>
 
-      {/* ── 3. Details ── */}
-      <div>
-        <SectionHeading>Details (optional)</SectionHeading>
-        <div className="grid sm:grid-cols-2 gap-5">
-          <div>
-            <Label text="Is there a timeline or deadline?" />
-            <input
-              type="text"
-              value={d.timeline}
-              onChange={(e) => set("timeline", e.target.value)}
-              className={inputBase}
-              placeholder="E.g. before our annual gala in August, or no deadline"
-            />
-          </div>
-          <div>
-            <Label text="Is there any budget?" />
-            <input
-              type="text"
-              value={d.budget}
-              onChange={(e) => set("budget", e.target.value)}
-              className={inputBase}
-              placeholder="E.g. none, small grant ~RM500, open to discussion"
-            />
-          </div>
-          <div>
-            <Label text="How did you hear about us?" />
-            <select
-              value={d.referralSource}
-              onChange={(e) => set("referralSource", e.target.value)}
-              className={inputBase}
-            >
-              <option value="">Select one...</option>
-              {REFERRAL_SOURCES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <Label text="Anything else?" />
-            <textarea
-              value={d.notes}
-              onChange={(e) => set("notes", e.target.value)}
-              maxLength={500}
-              rows={3}
-              className={inputBase}
-              placeholder="Questions, context, anything we should know..."
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ── 4. Acknowledgement ── */}
-      <div id="field-acknowledgesOpenSource" className="flex items-start gap-3 pt-2">
-        <input
-          id="acknowledgesOpenSource"
-          type="checkbox"
-          checked={d.acknowledgesOpenSource}
-          onChange={(e) => set("acknowledgesOpenSource", e.target.checked)}
-          className="mt-0.5 w-4 h-4 rounded border-black accent-yellow flex-shrink-0 cursor-pointer"
-        />
+      {/* ── 3a. Website path ── */}
+      {isWebsite && (
         <div>
-          <label
-            htmlFor="acknowledgesOpenSource"
-            className="text-sm text-black/60 cursor-pointer leading-relaxed"
-          >
-            I understand that Build for Public is{" "}
-            <span className="text-black font-medium">volunteer-run</span>, that
-            everything built will be{" "}
-            <span className="text-black font-medium">open-source under MIT licence</span>,
-            and that{" "}
-            <span className="text-black font-medium">
-              timelines are best-effort, not guaranteed
-            </span>
-            . <span className="text-clay">*</span>
-          </label>
-          <ErrMsg msg={errors.acknowledgesOpenSource} />
+          <SectionHeading>About your site</SectionHeading>
+
+          {/* Content readiness note */}
+          <div className="card-flat p-4 mb-6 border-l-4 border-l-black bg-bp-yellow/20">
+            <p className="text-sm leading-relaxed text-black">
+              <span className="font-semibold">Before you submit</span> — to build a good site we need{" "}
+              <span className="font-medium">real copy</span> (text about your org, mission, pillars, and what
+              you want to say) and <span className="font-medium">quality photos</span>. Without these it&apos;s
+              very hard to scope and design something worth building. If you don&apos;t have a doc yet, write
+              one first and link it below.
+            </p>
+          </div>
+
+          <div className="space-y-5">
+            <div id="field-problem">
+              <Label text="What's your organisation about, and what do you want the site to do?" required />
+              <p className="text-xs text-black/60 mb-2">
+                Who are you, what&apos;s your mission, and what should a visitor understand or do after seeing the site?
+              </p>
+              <div className="relative">
+                <textarea
+                  value={d.problem}
+                  onChange={(e) => set("problem", e.target.value)}
+                  maxLength={1000}
+                  rows={4}
+                  className={inputBase}
+                  placeholder="E.g. We're a Malaysian youth climate org. We need a landing page to explain our mission, showcase our projects, and get people to sign up as volunteers..."
+                />
+                <span className="absolute bottom-2.5 right-3 text-xs text-black/40 select-none pointer-events-none">
+                  {d.problem.length}/1000
+                </span>
+              </div>
+              <ErrMsg msg={errors.problem} />
+            </div>
+
+            <div>
+              <Label text="Link to your copy & photos" />
+              <p className="text-xs text-black/60 mb-2">
+                Share a Google Doc, Notion page, Drive folder, or anything that has the text and images for the site.
+                The more complete this is, the faster we can move.
+              </p>
+              <input
+                type="url"
+                value={d.materialsLink}
+                onChange={(e) => set("materialsLink", e.target.value)}
+                className={inputBase}
+                placeholder="https://docs.google.com/... or https://notion.so/..."
+              />
+            </div>
+
+            <div>
+              <Label text="Instagram page (if you have one)" />
+              <p className="text-xs text-black/60 mb-2">
+                Useful for grabbing photos and understanding your visual style.
+              </p>
+              <input
+                type="text"
+                value={d.instagram}
+                onChange={(e) => set("instagram", e.target.value)}
+                className={inputBase}
+                placeholder="@yourorg or https://instagram.com/yourorg"
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ── 3b. Custom tool / other path ── */}
+      {isCustom && (
+        <div>
+          <SectionHeading>The problem</SectionHeading>
+          <div className="space-y-5">
+            <div id="field-problem">
+              <Label text="Describe the problem you want solved" required />
+              <p className="text-xs text-black/60 mb-2">
+                Don&apos;t describe the solution — describe the problem. What&apos;s hard, slow, or broken?
+              </p>
+              <div className="relative">
+                <textarea
+                  value={d.problem}
+                  onChange={(e) => set("problem", e.target.value)}
+                  maxLength={1000}
+                  rows={4}
+                  className={inputBase}
+                  placeholder="Example: We track donations from 500+ donors across 3 spreadsheets. Reconciling them at month-end takes 2 days and we make errors..."
+                />
+                <span className="absolute bottom-2.5 right-3 text-xs text-black/40 select-none pointer-events-none">
+                  {d.problem.length}/1000
+                </span>
+              </div>
+              <ErrMsg msg={errors.problem} />
+            </div>
+            <div id="field-whoItHelps">
+              <Label text="Who does this help?" required />
+              <input
+                type="text"
+                value={d.whoItHelps}
+                onChange={(e) => set("whoItHelps", e.target.value)}
+                className={inputBase}
+                placeholder="E.g. our 500 scholarship students, the staff who process applications, rural communities we serve..."
+              />
+              <ErrMsg msg={errors.whoItHelps} />
+            </div>
+            <div>
+              <Label text="How do you handle this today?" />
+              <textarea
+                value={d.currentSolution}
+                onChange={(e) => set("currentSolution", e.target.value)}
+                maxLength={500}
+                rows={3}
+                className={inputBase}
+                placeholder="Manual process, spreadsheets, nothing, an expensive tool that doesn't quite fit..."
+              />
+            </div>
+            <div>
+              <Label text="What does success look like?" />
+              <textarea
+                value={d.idealOutcome}
+                onChange={(e) => set("idealOutcome", e.target.value)}
+                maxLength={500}
+                rows={3}
+                className={inputBase}
+                placeholder="In 6 months, if this is solved, what changes for you or the people you serve?"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 4. Details (shown once a project type is selected) ── */}
+      {d.projectType && (
+        <div>
+          <SectionHeading>Details (optional)</SectionHeading>
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div>
+              <Label text="Is there a timeline or deadline?" />
+              <input
+                type="text"
+                value={d.timeline}
+                onChange={(e) => set("timeline", e.target.value)}
+                className={inputBase}
+                placeholder="E.g. before our annual gala in August, or no deadline"
+              />
+            </div>
+            <div>
+              <Label text="Is there any budget?" />
+              <input
+                type="text"
+                value={d.budget}
+                onChange={(e) => set("budget", e.target.value)}
+                className={inputBase}
+                placeholder="E.g. none, small grant ~RM500, open to discussion"
+              />
+            </div>
+            <div>
+              <Label text="How did you hear about us?" />
+              <select
+                value={d.referralSource}
+                onChange={(e) => set("referralSource", e.target.value)}
+                className={inputBase}
+              >
+                <option value="">Select one...</option>
+                {REFERRAL_SOURCES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <Label text="Anything else?" />
+              <textarea
+                value={d.notes}
+                onChange={(e) => set("notes", e.target.value)}
+                maxLength={500}
+                rows={3}
+                className={inputBase}
+                placeholder="Questions, context, anything we should know..."
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── 5. Open-source recommendation ── */}
+      {d.projectType && (
+        <div id="field-acknowledgesOpenSource" className="flex items-start gap-3 pt-2">
+          <input
+            id="acknowledgesOpenSource"
+            type="checkbox"
+            checked={d.acknowledgesOpenSource}
+            onChange={(e) => set("acknowledgesOpenSource", e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded border-black accent-yellow flex-shrink-0 cursor-pointer"
+          />
+          <div>
+            <label
+              htmlFor="acknowledgesOpenSource"
+              className="text-sm text-black/60 cursor-pointer leading-relaxed"
+            >
+              I understand this is{" "}
+              <span className="text-black font-medium">volunteer-run</span> and{" "}
+              <span className="text-black font-medium">timelines are best-effort, not guaranteed</span>.
+              We recommend building in the{" "}
+              <span className="text-black font-medium">open (AGPL v3 licence)</span> so the wider
+              community can contribute to your project — but{" "}
+              <span className="text-black font-medium">keeping it private or closed is fine too</span>.
+            </label>
+          </div>
+        </div>
+      )}
 
       {serverError && (
         <div className="card-flat p-4 border border-red-500/30 rounded-xl">

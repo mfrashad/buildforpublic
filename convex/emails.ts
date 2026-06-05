@@ -58,8 +58,11 @@ export const sendProjectRequestNotification = internalAction({
     contactEmail: v.string(),
     orgName: v.string(),
     country: v.string(),
+    projectType: v.optional(v.string()),
     problem: v.string(),
-    whoItHelps: v.string(),
+    whoItHelps: v.optional(v.string()),
+    materialsLink: v.optional(v.string()),
+    instagram: v.optional(v.string()),
   },
   handler: async (_ctx, args) => {
     const apiKey = process.env.RESEND_API_KEY;
@@ -68,16 +71,26 @@ export const sendProjectRequestNotification = internalAction({
       return;
     }
 
+    const typeLabel = args.projectType === "website"
+      ? "Website / landing page"
+      : args.projectType === "custom"
+      ? "Custom tool / app / platform"
+      : args.projectType === "other"
+      ? "Other"
+      : "Not specified";
+
     const html = `
       <h2>New project request — Build for Public</h2>
       <p><strong>Contact:</strong> ${args.contactName} (${args.contactEmail})</p>
       <p><strong>Organisation:</strong> ${args.orgName}</p>
       <p><strong>Country:</strong> ${args.country}</p>
+      <p><strong>Project type:</strong> ${typeLabel}</p>
       <hr />
-      <p><strong>Problem:</strong></p>
+      <p><strong>${args.projectType === "website" ? "About the org / site goal" : "Problem"}:</strong></p>
       <p>${args.problem}</p>
-      <p><strong>Who it helps:</strong></p>
-      <p>${args.whoItHelps}</p>
+      ${args.whoItHelps ? `<p><strong>Who it helps:</strong></p><p>${args.whoItHelps}</p>` : ""}
+      ${args.materialsLink ? `<p><strong>Materials link (copy + photos):</strong> <a href="${args.materialsLink}">${args.materialsLink}</a></p>` : ""}
+      ${args.instagram ? `<p><strong>Instagram:</strong> ${args.instagram}</p>` : ""}
     `;
 
     const res = await fetch("https://api.resend.com/emails", {
