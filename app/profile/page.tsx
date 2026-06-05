@@ -74,6 +74,7 @@ export default function ProfilePage() {
   const { user, isLoaded, isSignedIn } = useUser();
   const router = useRouter();
   const upsert = useMutation(api.profiles.upsert);
+  const patchImageUrl = useMutation(api.members.patchImageUrl);
   const existing = useQuery(
     api.profiles.getByClerkId,
     isLoaded && isSignedIn ? { clerkId: user!.id } : "skip"
@@ -145,7 +146,8 @@ export default function ProfilePage() {
     e.preventDefault();
     if (!user) return;
     setStatus("saving");
-    await upsert({
+    await Promise.all([
+      upsert({
       clerkId: user.id,
       name: name.trim() || undefined,
       bio: bio.trim() || undefined,
@@ -153,9 +155,13 @@ export default function ProfilePage() {
       instagram: instagram.trim() || undefined,
       linkedin: linkedin.trim() || undefined,
       twitter: twitter.trim() || undefined,
-      skills: skills.length ? skills : undefined,
-      causes: causes.length ? causes : undefined,
-    });
+        skills: skills.length ? skills : undefined,
+        causes: causes.length ? causes : undefined,
+      }),
+      user.imageUrl
+        ? patchImageUrl({ clerkId: user.id, imageUrl: user.imageUrl })
+        : Promise.resolve(),
+    ]);
     localStorage.removeItem(DRAFT_KEY);
     setHasDraft(false);
     setStatus("saved");

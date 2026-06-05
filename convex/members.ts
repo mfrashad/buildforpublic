@@ -94,6 +94,17 @@ type PublicMember = {
   twitter?: string;
 };
 
+export const patchImageUrl = mutation({
+  args: { clerkId: v.string(), imageUrl: v.string() },
+  handler: async (ctx, { clerkId, imageUrl }) => {
+    const doc = await ctx.db
+      .query("members")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .unique();
+    if (doc) await ctx.db.patch(doc._id, { imageUrl });
+  },
+});
+
 export const listPublic = query({
   args: {},
   handler: async (ctx): Promise<PublicMember[]> => {
