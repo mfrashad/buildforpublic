@@ -478,6 +478,12 @@ export default function RequestForm() {
             </div>
             <div>
               <Label text="Is there any budget?" />
+              <p className="text-xs text-black/60 mb-2">
+                We don&apos;t charge for our work — all building is volunteer-run and free. This is
+                only to cover real operational costs like hosting, domain registration, and third-party
+                services. Even a &ldquo;free&rdquo; project still needs a domain (~RM50/yr) and likely
+                a server. If there&apos;s no budget at all, that&apos;s fine — just let us know.
+              </p>
               <input
                 type="text"
                 value={d.budget}
