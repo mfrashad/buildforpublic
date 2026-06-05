@@ -1,67 +1,81 @@
-# AI for Good Malaysia
+<p align="center">
+  <img src="public/og/buildforpublic.png" alt="Build for Public" width="720" />
+</p>
 
-Open-source AI projects, community, and advocacy for social impact in Southeast Asia and beyond.
+<h1 align="center">Build for Public</h1>
+<p align="center"><em>Build in public for the public.</em></p>
 
-**Live site:** [aiforgood-two.vercel.app](https://aiforgood-two.vercel.app)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL%20v3-blue.svg" alt="AGPL v3 License" /></a>
+  <img src="https://img.shields.io/badge/Next.js-15-black" alt="Next.js 15" />
+  <img src="https://img.shields.io/badge/Convex-backend-orange" alt="Convex" />
+  <a href="https://buildforpublic.com"><img src="https://img.shields.io/badge/live-buildforpublic.com-000?logo=vercel" alt="Live site" /></a>
+</p>
+
+---
+
+**Live site:** [buildforpublic.com](https://buildforpublic.com)
 
 ## What is this?
 
-AI for Good is a hub connecting builders and communities for social impact. The people who need AI most — social impact orgs, NGOs, educators — are rarely in the room where it's being built. We're changing that.
+Build for Public is an open-source movement shipping tech for the public good. We connect volunteer builders — developers, designers, and advocates — with NGOs, nonprofits, and community organisations that need software but can't afford to commission it.
 
-Open-source social impact projects already exist: pasarmalam.app, sedekah.je, wikiimpact. Each built by one person, grown by contributors. They prove the model works, but they stay isolated. No shared infrastructure, no way to build on each other's work.
+AI is handing humanity almost unimaginable power. But right now, most of it is driven by private interest, designed to capture attention and maximise profit rather than serve the public. We need a parallel ecosystem — one that runs on non-commercial incentives, where technology is accessible, transparent, and built for everyone.
 
-We're building that infrastructure.
+Every project we build is encouraged to be open and built in public. We champion a culture of keeping the tools we build public, free, and open.
 
-## Three Initiatives
+## What we do
 
-### 1. Community *(coming soon)*
+### Volunteer builders
+Developers, designers, students, and self-taught hackers who want their work to matter beyond a paycheck. We form teams, take on real NGO problems, and ship tools that serve communities private capital won't touch.
 
-Biweekly sessions connecting builders to NGOs and social impact orgs. Part workshop, part co-working, part open hangout. We form teams, match real needs to builders, and ship projects that matter.
+### NGO partnerships
+We work with NGOs, nonprofits, public-sector orgs, and community groups facing problems that technology could help solve. Free, open-source, built together — all we ask is a point of contact for a few short review calls.
 
-### 2. Advocacy *(active)*
+### Projects board
+A public directory of open opportunities — NGO requests, project ideas, open-source projects, and community builds. Anyone can browse, pick up, and contribute.
 
-Educational content making AI accessible to everyone. Talks, short-form videos, blogs, and infographics advocating for responsible AI, AI safety, and open-source AI for social good. Content in English and Bahasa Malaysia.
+## Projects
 
-- 20+ speaking engagements at meetups, conferences, and government briefings
-- Featured on Bernama TV, RTM TV1, Era.fm, and Kosmo
-- 5M+ combined content views
-
-### 3. Open Source Projects *(active)*
-
-A growing collection of open-source projects that use AI for social good. Each project ships reusable components — datasets, APIs, templates — so the next builder inherits, not rebuilds.
-
-**Current projects:**
-
-| Project | Description | Links |
-|---------|-------------|-------|
-| [aiadoption](https://github.com/mfrashad/aiadoption) | Interactive visualization + open data API for AI adoption across 16 countries | [Live](https://aiadoption-gray.vercel.app) · [API](https://aiadoption-gray.vercel.app/api/v1/countries.json) |
-
-## Get Involved
-
-We're looking for builders, designers, writers, and anyone who wants to use their skills for social good.
-
-| Role | What you'd do |
-|------|---------------|
-| **Builder** | Contribute code to open-source projects. Ship tools that help real orgs. |
-| **Advocate** | Create content, translate materials, speak at events, spread the word. |
-| **Organizer** | Help run meetups, connect with NGOs, coordinate build cycles. |
-
-Reach out: rashad@aiforgood.my
-
-## Run locally
-
-No build step — just serve the HTML file:
-
-```bash
-python3 -m http.server 8090
-# or
-npx serve .
-```
+| Project | Description |
+|---------|-------------|
+| [OpenNGO](https://open-ngo.vercel.app) | A public directory of Malaysian NGOs with structured data, search, and an open API |
+| [Bookshelf](https://bookshelf.buildforpublic.com) | Turn your reading library into a shareable poster |
+| [Pocket of Pink](https://pocketofpink.com) | Gender empowerment for young people through art and education |
+| [AI Adoption by Country](https://aiadoption-gray.vercel.app) | Interactive visualization + open data tracking AI adoption across 16 countries |
 
 ## Tech stack
 
-Single `index.html` with Tailwind CSS (CDN). No framework, no dependencies, no build step.
+| Layer | Tech |
+|-------|------|
+| Framework | Next.js 15 (App Router) |
+| Backend | [Convex](https://convex.dev) |
+| Auth | [Clerk](https://clerk.com) |
+| Styling | Tailwind CSS |
+| Animations | Framer Motion |
+| Email | Resend |
+| Hosting | Vercel |
+
+## Get involved
+
+**Builders** — volunteer your skills to ship public-interest tech. [Apply here →](https://buildforpublic.com/volunteer)
+
+**NGOs & community orgs** — have a problem technology could help with? [Submit a request →](https://buildforpublic.com/request)
+
+**Follow us** — [@build4public](https://x.com/build4public) on X · [@build4public](https://instagram.com/build4public) on Instagram
+
+## Run locally
+
+```bash
+git clone https://github.com/mfrashad/buildforpublic
+cd buildforpublic
+npm install
+npx convex dev   # runs the Convex backend
+npm run dev      # runs the Next.js frontend
+```
+
+You'll need a `.env.local` with your Convex, Clerk, and Resend credentials.
 
 ## License
 
-[AGPL v3](LICENSE)
+[AGPL v3](LICENSE) — we recommend this licence for public-interest projects so the community can always contribute. Private/closed is fine for orgs with operational or safety reasons.
