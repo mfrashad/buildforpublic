@@ -17,7 +17,7 @@ const geist = Geist({
 });
 
 const DESCRIPTION =
-  "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.";
+  "A movement of volunteer builders shipping open-source software for NGOs, nonprofits, and communities that private capital won't serve.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://buildforpublic.com"),
@@ -47,19 +47,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Build for Public",
-    title: "Build for Public",
+    title: "Build for Public — Open-source tech for the public good",
     description: DESCRIPTION,
     url: "https://buildforpublic.com",
     locale: "en_US",
-    images: [{ url: "/og/buildforpublic.png", width: 1512, height: 782, alt: "Build for Public" }],
+    images: [{ url: "https://buildforpublic.com/og/buildforpublic.png", width: 1512, height: 782, alt: "Build for Public — Build in public for the public." }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@build4public",
     creator: "@build4public",
-    title: "Build for Public",
+    title: "Build for Public — Open-source tech for the public good",
     description: DESCRIPTION,
-    images: ["/og/buildforpublic.png"],
+    images: ["https://buildforpublic.com/og/buildforpublic.png"],
   },
   alternates: {
     canonical: "https://buildforpublic.com",
