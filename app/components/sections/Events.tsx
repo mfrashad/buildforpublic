@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
+import MemberAvatarStack from "@/components/MemberAvatarStack";
 
 const EVENT_SLUG = "cobuilding-kl-1";
 
@@ -68,9 +69,9 @@ export default function Events({ noBand = false }: { noBand?: boolean }) {
                   Pick a public-interest project from the board, form a team, and build for a few hours.
                   All skill levels welcome — designers, researchers, and non-coders too.
                 </p>
-                {count !== undefined && count > 0 && (
-                  <p className="mt-3 text-xs text-black/40 font-medium">{count} {count === 1 ? "person" : "people"} on the waitlist</p>
-                )}
+                <div className="mt-4">
+                  <MemberAvatarStack />
+                </div>
               </div>
               <div className="flex-shrink-0 w-full sm:w-72">
                 {isDone ? (

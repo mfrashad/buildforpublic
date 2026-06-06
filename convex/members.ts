@@ -88,6 +88,7 @@ type PublicMember = {
   city?: string;
   bio?: string;
   skills?: string[];
+  causes?: string[];
   imageUrl?: string;
   linkedin?: string;
   github?: string;
@@ -102,6 +103,28 @@ export const patchImageUrl = mutation({
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
       .unique();
     if (doc) await ctx.db.patch(doc._id, { imageUrl });
+  },
+});
+
+export const listPreview = query({
+  args: {},
+  handler: async (ctx) => {
+    const docs = await ctx.db
+      .query("members")
+      .withIndex("by_public", (q) => q.eq("isPublic", true))
+      .order("desc")
+      .take(500);
+
+    const valid = docs.filter((doc) => doc.name && doc.name !== "Member");
+    const total = valid.length;
+
+    const preview = valid.slice(0, 8).map((doc) => ({
+      _id: doc._id,
+      firstName: doc.name.split(" ")[0],
+      imageUrl: doc.imageUrl,
+    }));
+
+    return { total, preview };
   },
 });
 
@@ -130,6 +153,7 @@ export const listPublic = query({
       city: doc.city,
       bio: doc.bio,
       skills: doc.skills,
+      causes: doc.causes,
       imageUrl: doc.imageUrl,
       linkedin: doc.linkedin,
       github: doc.github,

@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
+import MemberAvatarStack from "@/components/MemberAvatarStack";
 
 type Member = {
   _id: string;
@@ -13,6 +14,7 @@ type Member = {
   city?: string;
   bio?: string;
   skills?: string[];
+  causes?: string[];
   imageUrl?: string;
   linkedin?: string;
   github?: string;
@@ -31,11 +33,10 @@ function getInitials(name: string) {
 const ACCENT_COLORS = ["#fff200", "#94e8ff", "#6ff5b6", "#ffc0a1", "#e8d5ff"];
 
 function getAccent(id: string) {
-  const index = id.charCodeAt(id.length - 1) % ACCENT_COLORS.length;
-  return ACCENT_COLORS[index];
+  return ACCENT_COLORS[id.charCodeAt(id.length - 1) % ACCENT_COLORS.length];
 }
 
-function MemberCard({ member }: { member: Member }) {
+function MemberCard({ member, activeCause }: { member: Member; activeCause: string | null }) {
   const accent = getAccent(member._id);
   return (
     <article className="card p-5 flex flex-col gap-3">
@@ -72,20 +73,30 @@ function MemberCard({ member }: { member: Member }) {
       )}
 
       {member.skills && member.skills.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {member.skills.slice(0, 4).map((skill) => (
-            <span
-              key={skill}
-              className="text-xs px-2 py-0.5 bg-surface border border-black/20 rounded-full text-black/60"
-            >
-              {skill}
-            </span>
-          ))}
-          {member.skills.length > 4 && (
-            <span className="text-xs px-2 py-0.5 text-black/40">
-              +{member.skills.length - 4}
-            </span>
-          )}
+        <p className="text-xs text-black/40">
+          {member.skills.join(", ")}
+        </p>
+      )}
+
+      {/* Causes pinned to bottom-right */}
+      {member.causes && member.causes.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 justify-end mt-auto pt-1">
+          {member.causes.map((cause) => {
+            const isActive = activeCause === cause;
+            return (
+              <span
+                key={cause}
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{
+                  border: "1px solid rgba(0,0,0,0.2)",
+                  color: isActive ? "rgba(0,0,0,0.8)" : "rgba(0,0,0,0.4)",
+                  fontWeight: isActive ? 600 : 400,
+                }}
+              >
+                {cause}
+              </span>
+            );
+          })}
         </div>
       )}
 
@@ -127,53 +138,98 @@ function MemberCard({ member }: { member: Member }) {
   );
 }
 
-// Country dot for the simple map view
-function CountryMap({
+function FilterBar({
   members,
+  activeCause,
   activeCountry,
-  onSelect,
+  onCause,
+  onCountry,
 }: {
   members: Member[];
+  activeCause: string | null;
   activeCountry: string | null;
-  onSelect: (country: string | null) => void;
+  onCause: (c: string | null) => void;
+  onCountry: (c: string | null) => void;
 }) {
-  const byCountry = useMemo(() => {
+  // Tally causes across all members (each member counted once per cause)
+  const byCause = useMemo(() => {
     const map: Record<string, number> = {};
     members.forEach((m) => {
-      map[m.country] = (map[m.country] || 0) + 1;
+      (m.causes ?? []).forEach((c) => { map[c] = (map[c] || 0) + 1; });
     });
     return Object.entries(map).sort((a, b) => b[1] - a[1]);
   }, [members]);
 
+  // Tally countries, filtered by active cause
+  const causeFiltered = useMemo(
+    () => activeCause ? members.filter((m) => m.causes?.includes(activeCause)) : members,
+    [members, activeCause]
+  );
+  const byCountry = useMemo(() => {
+    const map: Record<string, number> = {};
+    causeFiltered.forEach((m) => { map[m.country] = (map[m.country] || 0) + 1; });
+    return Object.entries(map).sort((a, b) => b[1] - a[1]);
+  }, [causeFiltered]);
+
   return (
-    <div className="card-flat p-6 mb-8">
-      <p
-        className="text-sm font-semibold text-black/60 uppercase tracking-wider mb-4"
-        style={{ fontFamily: "var(--font-sans)" }}
-      >
-        Members by country
-      </p>
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => onSelect(null)}
-          className={`btn-pill text-sm py-1.5 px-4 transition-all ${
-            activeCountry === null ? "btn-pill-filled" : "btn-pill-outline"
-          }`}
-        >
-          All ({members.length})
-        </button>
-        {byCountry.map(([country, count]) => (
+    <div className="card-flat p-6 mb-8 space-y-5">
+      {/* Cause filter */}
+      <div>
+        <p className="text-xs font-semibold text-black/50 uppercase tracking-wider mb-3">
+          Filter by cause
+        </p>
+        <div className="flex flex-wrap gap-2">
           <button
-            key={country}
-            onClick={() => onSelect(activeCountry === country ? null : country)}
+            onClick={() => { onCause(null); onCountry(null); }}
             className={`btn-pill text-sm py-1.5 px-4 transition-all ${
-              activeCountry === country ? "btn-pill-filled" : "btn-pill-outline"
+              activeCause === null ? "btn-pill-filled" : "btn-pill-outline"
             }`}
           >
-            {country} ({count})
+            All ({members.length})
           </button>
-        ))}
+          {byCause.map(([cause, count]) => (
+            <button
+              key={cause}
+              onClick={() => { onCause(activeCause === cause ? null : cause); onCountry(null); }}
+              className={`btn-pill text-sm py-1.5 px-4 transition-all ${
+                activeCause === cause ? "btn-pill-filled" : "btn-pill-outline"
+              }`}
+            >
+              {cause} ({count})
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Country filter — secondary */}
+      {byCountry.length > 1 && (
+        <div>
+          <p className="text-xs font-semibold text-black/50 uppercase tracking-wider mb-3">
+            Filter by location
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => onCountry(null)}
+              className={`btn-pill text-sm py-1.5 px-4 transition-all ${
+                activeCountry === null ? "btn-pill-filled" : "btn-pill-outline"
+              }`}
+            >
+              All
+            </button>
+            {byCountry.map(([country, count]) => (
+              <button
+                key={country}
+                onClick={() => onCountry(activeCountry === country ? null : country)}
+                className={`btn-pill text-sm py-1.5 px-4 transition-all ${
+                  activeCountry === country ? "btn-pill-filled" : "btn-pill-outline"
+                }`}
+              >
+                {country} ({count})
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -201,11 +257,8 @@ function LockedState() {
 
   return (
     <div className="max-w-md mx-auto text-center py-20 px-6">
-      <div
-        className="w-16 h-16 rounded-full border-2 border-black flex items-center justify-center mx-auto mb-6 text-2xl"
-        style={{ background: "#fff200" }}
-      >
-        🔒
+      <div className="mb-8">
+        <MemberAvatarStack center />
       </div>
       <h2
         className="text-2xl text-black mb-3"
@@ -231,17 +284,32 @@ function LockedState() {
 
 export default function MemberDirectory() {
   const { isLoaded, isSignedIn } = useUser();
+  const [activeCause, setActiveCause] = useState<string | null>(null);
   const [activeCountry, setActiveCountry] = useState<string | null>(null);
+
   const members = useQuery(
     api.members.listPublic,
     isLoaded && isSignedIn ? {} : "skip"
   );
 
+  // Apply both filters
   const filtered = useMemo(() => {
     if (!members) return [];
-    if (!activeCountry) return members;
-    return members.filter((m) => m.country === activeCountry);
-  }, [members, activeCountry]);
+    return members.filter((m) => {
+      if (activeCause && !m.causes?.includes(activeCause)) return false;
+      if (activeCountry && m.country !== activeCountry) return false;
+      return true;
+    });
+  }, [members, activeCause, activeCountry]);
+
+  // Sort by primary cause alphabetically
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const ca = a.causes?.[0] ?? "zzz";
+      const cb = b.causes?.[0] ?? "zzz";
+      return ca.localeCompare(cb);
+    });
+  }, [filtered]);
 
   if (!isLoaded) return null;
   if (!isSignedIn) return <LockedState />;
@@ -250,59 +318,56 @@ export default function MemberDirectory() {
 
   return (
     <div>
-      {/* Country filter */}
-      {!isLoading && members.length > 0 && (
-        <CountryMap
-          members={members}
+      {!isLoading && members!.length > 0 && (
+        <FilterBar
+          members={members!}
+          activeCause={activeCause}
           activeCountry={activeCountry}
-          onSelect={setActiveCountry}
+          onCause={setActiveCause}
+          onCountry={setActiveCountry}
         />
       )}
 
-      {/* Stats bar */}
-      {!isLoading && members.length > 0 && (
+      {/* Stats */}
+      {!isLoading && members!.length > 0 && (
         <div className="flex items-center gap-2 mb-6">
-          <p className="text-sm text-black/60" style={{ fontFamily: "var(--font-sans)" }}>
-            {activeCountry
-              ? `${filtered.length} member${filtered.length !== 1 ? "s" : ""} in ${activeCountry}`
-              : `${members.length} member${members.length !== 1 ? "s" : ""} from ${
-                  [...new Set(members.map((m) => m.country))].length
-                } countries`}
+          <p className="text-sm text-black/60">
+            {filtered.length} member{filtered.length !== 1 ? "s" : ""}
+            {activeCause ? ` interested in ${activeCause}` : ""}
+            {activeCountry ? ` in ${activeCountry}` : ""}
           </p>
         </div>
       )}
 
-      {/* Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {isLoading && (
-          <>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonCard key={i} />
-            ))}
-          </>
-        )}
+      {/* Empty state */}
+      {!isLoading && filtered.length === 0 && (
+        <div className="text-center py-16">
+          <p className="text-xl text-black mb-3" style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}>
+            No members match this filter
+          </p>
+          <p className="text-black/60 text-sm mb-6">Try a different cause or location.</p>
+          <button
+            onClick={() => { setActiveCause(null); setActiveCountry(null); }}
+            className="btn-pill btn-pill-outline"
+          >
+            Clear filters
+          </button>
+        </div>
+      )}
 
-        {!isLoading && filtered.length === 0 && (
-          <div className="col-span-full text-center py-16">
-            <p
-              className="text-xl text-black mb-3"
-              style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
-            >
-              {activeCountry ? `No members in ${activeCountry} yet` : "No members yet"}
-            </p>
-            <p className="text-black/60 text-sm mb-6">
-              Be the first to join and appear on the directory.
-            </p>
-            <a href="/join" className="btn-pill btn-pill-filled">
-              Join the community →
-            </a>
-          </div>
-        )}
+      {/* Loading skeletons */}
+      {isLoading && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      )}
 
-        {filtered.map((member) => (
-          <MemberCard key={member._id} member={member} />
-        ))}
-      </div>
+      {/* Flat grid — sorted by primary cause */}
+      {!isLoading && sorted.length > 0 && (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {sorted.map((m) => <MemberCard key={m._id} member={m} activeCause={activeCause} />)}
+        </div>
+      )}
     </div>
   );
 }

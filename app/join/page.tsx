@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CompleteProfileForm from "./complete/CompleteProfileForm";
+import MemberAvatarStack from "@/components/MemberAvatarStack";
 
 export default function JoinPage() {
   const { isSignedIn, isLoaded, user } = useUser();
@@ -64,17 +65,20 @@ export default function JoinPage() {
           <h1 className="heading-display text-5xl sm:text-6xl text-black mb-6">
             Join the community.
           </h1>
-          <p className="text-lg text-black/60 max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg text-black/60 max-w-xl mx-auto mb-8 leading-relaxed">
             Sign up to attend events, contribute to open-source projects, and
             appear in the member directory.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <a href="/sign-up" className="btn-primary btn-primary-yellow text-base px-10 py-3">
               Create your account →
             </a>
             <a href="/sign-in" className="btn-pill btn-pill-outline text-base px-8 py-3">
               Sign in
             </a>
+          </div>
+          <div className="flex justify-center">
+            <MemberAvatarStack center />
           </div>
         </div>
 

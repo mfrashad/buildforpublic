@@ -1,6 +1,48 @@
 import { internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
+export const wipeSeedMembers = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("members").collect();
+    const seeds = all.filter((m) => m.email?.endsWith("@example.com"));
+    for (const m of seeds) await ctx.db.delete(m._id);
+    console.log(`Wiped ${seeds.length} seed members.`);
+    return { wiped: seeds.length };
+  },
+});
+
+export const seedMembers = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const members = [
+      { name: "Aisha Razak", country: "Malaysia", city: "Kuala Lumpur", bio: "Full-stack dev building civic tech tools.", skills: ["React", "Node.js", "PostgreSQL"], causes: ["Civic Tech", "Digital Access"], imageUrl: "https://i.pravatar.cc/150?img=47" },
+      { name: "Marco Tan", country: "Singapore", city: "Singapore", bio: "Product designer focused on public-interest software.", skills: ["Figma", "UX Research", "Design Systems"], causes: ["Open Knowledge", "Education"], imageUrl: "https://i.pravatar.cc/150?img=12" },
+      { name: "Priya Nair", country: "Malaysia", city: "Petaling Jaya", bio: "Data scientist working on open government datasets.", skills: ["Python", "Data Viz", "SQL"], causes: ["Open Knowledge", "Civic Tech"], imageUrl: "https://i.pravatar.cc/150?img=49" },
+      { name: "Hafiz Zainal", country: "Malaysia", city: "Kuala Lumpur", bio: "Backend engineer, ex-GovTech.", skills: ["Go", "Kubernetes", "APIs"], causes: ["Civic Tech", "Digital Access"], imageUrl: "https://i.pravatar.cc/150?img=15" },
+      { name: "Wei Lin Chong", country: "Malaysia", city: "George Town", bio: "Frontend dev and open-source contributor.", skills: ["Vue.js", "TypeScript", "CSS"], causes: ["Education", "AI Literacy"], imageUrl: "https://i.pravatar.cc/150?img=44" },
+      { name: "Danial Fikri", country: "Malaysia", city: "Shah Alam", bio: "Volunteer organiser + software engineer.", skills: ["React", "Firebase", "Community"], causes: ["Poverty", "Human Rights"], imageUrl: "https://i.pravatar.cc/150?img=18" },
+      { name: "Siti Hajar", country: "Malaysia", city: "Johor Bahru", bio: "NGO advocate turned developer.", skills: ["No-code", "Airtable", "Community Organizing"], causes: ["Gender Equality", "Human Rights"], imageUrl: "https://i.pravatar.cc/150?img=48" },
+      { name: "Rajan Pillai", country: "Malaysia", city: "Ipoh", bio: "Mobile engineer building accessibility tools.", skills: ["React Native", "Swift", "A11y"], causes: ["Digital Access", "Health"], imageUrl: "https://i.pravatar.cc/150?img=14" },
+      { name: "Nurul Ain", country: "Malaysia", city: "Kuala Lumpur", bio: "Researcher at the intersection of tech and policy.", skills: ["Research", "Policy", "Data"], causes: ["AI Safety", "AI Literacy"], imageUrl: "https://i.pravatar.cc/150?img=46" },
+      { name: "Zafri Hamdan", country: "Malaysia", city: "Cyberjaya", bio: "Cloud engineer, contributes to open-data infra.", skills: ["AWS", "Terraform", "DevOps"], causes: ["Open Knowledge", "Digital Access"], imageUrl: "https://i.pravatar.cc/150?img=11" },
+      { name: "Lena Chua", country: "Singapore", city: "Singapore", bio: "UX researcher and accessibility advocate.", skills: ["UX Research", "Figma", "Accessibility"], causes: ["Digital Access", "Mental Health"], imageUrl: "https://i.pravatar.cc/150?img=45" },
+      { name: "Farid Ismail", country: "Malaysia", city: "Kuala Lumpur", bio: "Open-source maintainer and civic hacker.", skills: ["Python", "Open Data", "APIs"], causes: ["Civic Tech", "Open Knowledge"], imageUrl: "https://i.pravatar.cc/150?img=19" },
+    ];
+
+    for (const m of members) {
+      await ctx.db.insert("members", {
+        ...m,
+        email: `${m.name.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+        isPublic: true,
+      });
+    }
+
+    console.log(`Seeded ${members.length} mock members.`);
+    return { seeded: members.length };
+  },
+});
+
 /**
  * Seed the opportunities table with initial data so the directory board
  * is not empty at launch. Run once from the Convex dashboard.
