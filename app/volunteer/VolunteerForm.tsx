@@ -189,7 +189,7 @@ function Label({ text, required }: { text: string; required?: boolean }) {
   return (
     <label className="block text-sm font-medium text-black/60 mb-1.5">
       {text}
-      {required && <span className="text-clay ml-0.5">*</span>}
+      {required && <span className="text-black/40 ml-0.5">*</span>}
     </label>
   );
 }
@@ -238,7 +238,7 @@ function RoleCard({
   return (
     <div
       className={`card overflow-hidden transition-all ${
-        selected ? "ring-2 ring-clay/40" : ""
+        selected ? "ring-2 ring-black/40" : ""
       }`}
     >
       {/* Clickable header — toggles selection */}
@@ -247,7 +247,7 @@ function RoleCard({
           <div className="flex items-center gap-2.5">
             <span
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                selected ? "bg-clay border-clay" : "border-black"
+                selected ? "bg-black border-black" : "border-black"
               }`}
             >
               {selected && (
@@ -290,7 +290,7 @@ function RoleCard({
             </li>
           ))}
         </ul>
-        <p className="text-xs text-clay/70 mt-3 ml-7">
+        <p className="text-xs text-black/40 mt-3 ml-7">
           {selected ? "Selected ↑ fill in the details below" : "Click to select this role →"}
         </p>
       </button>

@@ -89,7 +89,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t-2 border-black pt-6 flex flex-wrap justify-between items-center gap-4">
           <p className="text-xs text-black/50">
-            &copy; 2026 Build for Public. Open source under MIT License.
+            &copy; 2026 Build for Public. Open source under AGPL v3.
           </p>
           <p className="text-xs text-black/50">
             Open code. Public good.
