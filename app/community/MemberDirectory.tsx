@@ -38,18 +38,20 @@ function getAccent(id: string) {
 
 function MemberCard({ member, activeCause }: { member: Member; activeCause: string | null }) {
   const accent = getAccent(member._id);
+  const hasSocial = member.linkedin || member.github || member.twitter;
   return (
-    <article className="card p-5 flex flex-col gap-3">
+    <article className="card p-5 flex flex-col gap-4">
+      {/* Header */}
       <div className="flex items-center gap-3">
         {member.imageUrl ? (
           <img
             src={member.imageUrl}
             alt={member.name}
-            className="w-10 h-10 rounded-full border-2 border-black object-cover flex-shrink-0"
+            className="w-11 h-11 rounded-full border-2 border-black object-cover flex-shrink-0"
           />
         ) : (
           <div
-            className="w-10 h-10 rounded-full border-2 border-black flex items-center justify-center flex-shrink-0 text-sm font-bold"
+            className="w-11 h-11 rounded-full border-2 border-black flex items-center justify-center flex-shrink-0 text-sm font-bold"
             style={{ background: accent }}
           >
             {getInitials(member.name)}
@@ -57,83 +59,78 @@ function MemberCard({ member, activeCause }: { member: Member; activeCause: stri
         )}
         <div className="min-w-0">
           <p
-            className="text-base text-black truncate"
-            style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+            className="text-sm text-black truncate"
+            style={{ fontFamily: "var(--font-display)", fontWeight: 700 }}
           >
             {member.name}
           </p>
-          <p className="text-xs text-black/50 truncate">
+          <p className="text-xs text-black/40 truncate mt-0.5">
             {member.city ? `${member.city}, ` : ""}{member.country}
           </p>
         </div>
       </div>
 
+      {/* Bio */}
       {member.bio && (
-        <p className="text-xs text-black/60 leading-relaxed line-clamp-2">{member.bio}</p>
+        <p className="text-xs text-black/60 leading-relaxed line-clamp-3">{member.bio}</p>
       )}
 
-      {member.skills && member.skills.length > 0 && (
-        <p className="text-xs text-black/40">
-          {member.skills.join(", ")}
-        </p>
-      )}
-
-      {/* Causes pinned to bottom-right */}
-      {member.causes && member.causes.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 justify-end mt-auto pt-1">
-          {member.causes.map((cause) => {
-            const isActive = activeCause === cause;
-            return (
-              <span
-                key={cause}
-                className="text-xs px-2 py-0.5 rounded-full"
-                style={{
-                  border: "1px solid rgba(0,0,0,0.2)",
-                  color: isActive ? "rgba(0,0,0,0.8)" : "rgba(0,0,0,0.4)",
-                  fontWeight: isActive ? 600 : 400,
-                }}
-              >
-                {cause}
-              </span>
-            );
-          })}
-        </div>
-      )}
-
-      {(member.linkedin || member.github || member.twitter) && (
-        <div className="flex gap-3 mt-auto pt-2 border-t border-black/10">
-          {member.linkedin && (
-            <a
-              href={member.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-black/50 hover:text-black transition-colors"
-            >
-              LinkedIn ↗
-            </a>
+      {/* Footer */}
+      <div className="mt-auto flex items-end justify-between gap-3 pt-3 border-t border-black/8">
+        {/* Skills + social */}
+        <div className="min-w-0 flex flex-col gap-1.5">
+          {member.skills && member.skills.length > 0 && (
+            <p className="text-[11px] text-black/35 truncate">
+              {member.skills.slice(0, 3).join(", ")}
+              {member.skills.length > 3 && ` +${member.skills.length - 3}`}
+            </p>
           )}
-          {member.github && (
-            <a
-              href={`https://github.com/${member.github.replace("@", "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-black/50 hover:text-black transition-colors"
-            >
-              GitHub ↗
-            </a>
-          )}
-          {member.twitter && (
-            <a
-              href={`https://x.com/${member.twitter.replace("@", "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-black/50 hover:text-black transition-colors"
-            >
-              X ↗
-            </a>
+          {hasSocial && (
+            <div className="flex gap-3">
+              {member.linkedin && (
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer"
+                  className="text-[11px] text-black/40 hover:text-black transition-colors">
+                  LinkedIn ↗
+                </a>
+              )}
+              {member.github && (
+                <a href={`https://github.com/${member.github.replace("@", "")}`} target="_blank" rel="noopener noreferrer"
+                  className="text-[11px] text-black/40 hover:text-black transition-colors">
+                  GitHub ↗
+                </a>
+              )}
+              {member.twitter && (
+                <a href={`https://x.com/${member.twitter.replace("@", "")}`} target="_blank" rel="noopener noreferrer"
+                  className="text-[11px] text-black/40 hover:text-black transition-colors">
+                  X ↗
+                </a>
+              )}
+            </div>
           )}
         </div>
-      )}
+
+        {/* Causes */}
+        {member.causes && member.causes.length > 0 && (
+          <div className="flex flex-wrap gap-1 justify-end flex-shrink-0 max-w-[55%]">
+            {member.causes.slice(0, 3).map((cause) => {
+              const isActive = activeCause === cause;
+              return (
+                <span
+                  key={cause}
+                  className="text-[10px] px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                  style={{
+                    background: isActive ? "#fff200" : "rgba(0,0,0,0.05)",
+                    color: isActive ? "#000" : "rgba(0,0,0,0.45)",
+                    fontWeight: isActive ? 600 : 400,
+                  }}
+                >
+                  {cause}
+                </span>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </article>
   );
 }
