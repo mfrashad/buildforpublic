@@ -378,8 +378,62 @@ export const seedCommunityProjects = internalMutation({
       },
     ];
 
+    const bfpProjects: Parameters<typeof ctx.db.insert<"opportunities">>[1][] = [
+      {
+        kind: "community_project",
+        title: "OpenNGO",
+        summary: "A directory of Malaysia's NGOs, with an API anyone can build on.",
+        description:
+          "Civil society shouldn't be hard to find. OpenNGO is a public directory of Malaysian NGOs with structured data, search, and an open API. Built for journalists, funders, and researchers.",
+        tags: ["Open Data", "API", "NGO", "Malaysia"],
+        link: "https://open-ngo.vercel.app",
+        repoLink: "https://github.com/mfrashad/OpenNGO",
+        accent: "mint",
+        status: "published",
+        featured: false,
+        image: "/og/openngo.png",
+        creator: "Build for Public",
+        stars: 1,
+        officialBFP: true,
+      },
+      {
+        kind: "community_project",
+        title: "Bookshelf",
+        summary: "Turn your reading library into a shareable poster.",
+        description:
+          "Import from Goodreads or Hardcover, pick a visualization style, and download. Built on World Book Day to raise awareness for global literacy — 773 million adults cannot read.",
+        tags: ["Open Source", "Literacy", "Next.js"],
+        link: "https://bookshelf.buildforpublic.com",
+        repoLink: "https://github.com/mfrashad/bookshelf",
+        accent: "yellow",
+        status: "published",
+        featured: false,
+        image: "/projects/bookshelf.png",
+        creator: "Build for Public",
+        stars: 2,
+        officialBFP: true,
+      },
+      {
+        kind: "community_project",
+        title: "AI Adoption by Country",
+        summary: "Open data tracking AI adoption across 16 countries.",
+        description:
+          "Interactive visualization and open data API tracking AI adoption from UAE at 64% to Nigeria at 7%. Data sourced from Microsoft, Stanford HAI, OECD, and 11 other authoritative sources.",
+        tags: ["Open Data", "AI", "Data Viz", "JSON API"],
+        link: "https://aiadoption-gray.vercel.app",
+        repoLink: "https://github.com/mfrashad/aiadoption",
+        accent: "blue",
+        status: "published",
+        featured: false,
+        image: "/projects/aiadoption.png",
+        creator: "Build for Public",
+        stars: 0,
+        officialBFP: true,
+      },
+    ];
+
     let count = 0;
-    for (const p of projects) {
+    for (const p of [...projects, ...bfpProjects]) {
       await ctx.db.insert("opportunities", p);
       count++;
     }
