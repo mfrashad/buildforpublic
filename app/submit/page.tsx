@@ -24,9 +24,8 @@ export default function SubmitPage() {
             Post your project.
           </h1>
           <p className="text-lg text-black/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Built something? Share it with the community. Community Builds appear on
-            the Projects Board — no vetting required. If a volunteer endorses it,
-            it becomes an Official BFP project.
+            Built something? Share it with the community. Every submission is
+            automatically an Official BFP project on the Projects Board.
           </p>
         </div>
       </section>

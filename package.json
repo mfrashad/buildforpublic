@@ -6,7 +6,8 @@
     "dev": "convex dev --start 'next dev --turbopack'",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync-from-prod": "npx convex export --prod --path ./prod-snapshot.zip && npx convex import --replace-all ./prod-snapshot.zip --yes"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.4.2",

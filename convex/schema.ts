@@ -58,6 +58,7 @@ export default defineSchema({
       v.literal("accepted"),
       v.literal("declined"),
     ),
+    hidden: v.optional(v.boolean()),
   })
     .index("by_email", ["email"])
     .index("by_status", ["status"]),
@@ -172,6 +173,7 @@ export default defineSchema({
       v.literal("accepted"),
       v.literal("declined"),
     ),
+    hidden: v.optional(v.boolean()),
   })
     .index("by_status", ["status"])
     .index("by_email", ["contactEmail"]),

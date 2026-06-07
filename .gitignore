@@ -21,6 +21,9 @@ npm-debug.log*
 # vercel
 .vercel
 
+# convex snapshots (contain real user data)
+*.zip
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
