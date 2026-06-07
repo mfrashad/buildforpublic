@@ -100,6 +100,7 @@ export const seedNgoHelped = internalMutation({
         helpedWith: "Website design and development",
         whoFor: "Muslim communities across Sumatera Utara and Aceh",
         website: "https://www.istaidcenter.com",
+        codeLink: "https://github.com/mfrashad/istaid-website",
         accentBg: "#bbf7d0",
         order: 2,
       },
