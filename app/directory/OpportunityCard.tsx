@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type AccentColor = "yellow" | "blue" | "mint" | "peach" | "purple" | "orange";
 
 const ACCENT_BG: Record<AccentColor, string> = {
@@ -36,6 +38,9 @@ export interface OpportunityCardProps {
   skillsNeeded?: string[];
   difficulty?: "beginner" | "intermediate" | "advanced";
   featured?: boolean;
+  image?: string;
+  creator?: string;
+  stars?: number;
 }
 
 export default function OpportunityCard({
@@ -50,16 +55,21 @@ export default function OpportunityCard({
   orgName,
   skillsNeeded,
   difficulty,
+  image,
+  creator,
+  stars,
 }: OpportunityCardProps) {
   const accentBg = ACCENT_BG[accent];
 
   return (
     <article className="card flex flex-col overflow-hidden">
-      {/* Accent header bar */}
-      <div
-        className="h-2 w-full border-b-2 border-black"
-        style={{ background: accentBg }}
-      />
+      {image ? (
+        <div className="relative aspect-video overflow-hidden border-b-2 border-black" style={{ background: accentBg }}>
+          <Image src={image} alt={`${title} screenshot`} fill className="object-cover object-top" sizes="(max-width: 640px) 100vw, 50vw" />
+        </div>
+      ) : (
+        <div className="h-2 w-full border-b-2 border-black" style={{ background: accentBg }} />
+      )}
 
       {/* Kind badge + title area */}
       <div className="p-6 flex flex-col flex-1 bg-white">
@@ -70,11 +80,18 @@ export default function OpportunityCard({
           >
             {KIND_LABEL[kind]}
           </span>
-          {difficulty && (
-            <span className="text-xs text-black/60 font-medium whitespace-nowrap">
-              {DIFFICULTY_LABEL[difficulty]}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {stars !== undefined && (
+              <span className="text-xs font-semibold text-black/60" style={{ fontFamily: "var(--font-sans)" }}>
+                ★ {stars}
+              </span>
+            )}
+            {difficulty && (
+              <span className="text-xs text-black/60 font-medium whitespace-nowrap">
+                {DIFFICULTY_LABEL[difficulty]}
+              </span>
+            )}
+          </div>
         </div>
 
         {orgName && (
@@ -84,6 +101,11 @@ export default function OpportunityCard({
         )}
 
         <h3 className="heading-display text-lg mb-1">{title}</h3>
+        {creator && (
+          <p className="text-xs text-black/50 mb-1" style={{ fontFamily: "var(--font-sans)" }}>
+            by {creator}
+          </p>
+        )}
         <p
           className="text-sm font-semibold mb-3"
           style={{ fontFamily: "var(--font-sans)" }}

@@ -192,3 +192,199 @@ export const seedOpportunities = internalMutation({
     return { seeded: count };
   },
 });
+
+export const wipeCommunityProjects = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db
+      .query("opportunities")
+      .withIndex("by_status_and_kind", (q) =>
+        q.eq("status", "published").eq("kind", "community_project"),
+      )
+      .collect();
+    for (const doc of all) await ctx.db.delete(doc._id);
+    console.log(`Wiped ${all.length} community projects.`);
+    return { wiped: all.length };
+  },
+});
+
+export const seedCommunityProjects = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const existing = await ctx.db
+      .query("opportunities")
+      .withIndex("by_status_and_kind", (q) =>
+        q.eq("status", "published").eq("kind", "community_project"),
+      )
+      .take(1);
+
+    if (existing.length > 0) {
+      console.log("Community projects already seeded — skipping.");
+      return { skipped: true };
+    }
+
+    const projects: Parameters<typeof ctx.db.insert<"opportunities">>[1][] = [
+      {
+        kind: "community_project",
+        title: "md-to-docx",
+        summary: "Convert Markdown to Word documents — TypeScript module.",
+        description:
+          "A powerful TypeScript module that converts Markdown text to Microsoft Word (.docx) documents with support for tables, code blocks, lists, and more. Works in both Node.js and browser environments.",
+        tags: ["TypeScript", "NPM", "Markdown", "Open Source"],
+        repoLink: "https://github.com/MohtashamMurshid/md-to-docx",
+        accent: "blue",
+        status: "published",
+        featured: false,
+        creator: "Mohtasham Murshid",
+        stars: 87,
+      },
+      {
+        kind: "community_project",
+        title: "getdesign",
+        summary: "On-demand design systems extracted from any URL — web, API, CLI, SDK & agent skill.",
+        description:
+          "getdesign opens a site in a real browser, extracts palette, typography, and components, and returns a production-grade design.md grounded in the site's actual CSS. Five surfaces: web, API, CLI, TypeScript SDK, and a portable skill for Claude Code, Codex, and Cursor.",
+        tags: ["Design System", "AI Agent", "Claude Code", "TypeScript"],
+        link: "https://getdesign.app",
+        repoLink: "https://github.com/MohtashamMurshid/getdesign",
+        accent: "purple",
+        status: "published",
+        featured: false,
+        image: "/projects/getdesign.png",
+        creator: "Mohtasham Murshid",
+        stars: 29,
+      },
+      {
+        kind: "community_project",
+        title: "Lepak Masjid",
+        summary: "Find mosques with WiFi, coworking spaces, and facilities in Malaysia.",
+        description:
+          "Directory of Malaysian mosques that offer WiFi, workspaces, sports facilities, religious classes, and activities. Built for remote workers, students, and the community who want to work from the mosque.",
+        tags: ["Malaysia", "Community", "Directory", "Mosque"],
+        link: "https://lepakmasjid.app",
+        repoLink: "https://github.com/muazhazali/lepakmasjid",
+        accent: "mint",
+        status: "published",
+        featured: false,
+        image: "/projects/lepakmasjid.png",
+        creator: "Muaz Hazali",
+        stars: 12,
+      },
+      {
+        kind: "community_project",
+        title: "Cari Pasar Malam",
+        summary: "Find the nearest night market in Malaysia, with hours and location.",
+        description:
+          "Discover Malaysian night markets (pasar malam) near you with operating hours, location info, and map. Supports pasar tani and pasar pagi too.",
+        tags: ["Malaysia", "Night Market", "Directory", "Community"],
+        link: "https://pasarmalam.app",
+        repoLink: "https://github.com/muazhazali/caripasarmalam",
+        accent: "yellow",
+        status: "published",
+        featured: false,
+        image: "/projects/caripasarmalam.png",
+        creator: "Muaz Hazali",
+        stars: 33,
+      },
+      {
+        kind: "community_project",
+        title: "DataAnalyst.my",
+        summary: "The go-to resource to learn data science for Malaysians.",
+        description:
+          "All-in-one resource hub for aspiring data analysts in Malaysia — curated courses, local datasets, SQL patterns, career guides, and community links. Built around Malaysian data and workflows.",
+        tags: ["Malaysia", "Data Science", "Education", "Community"],
+        link: "https://dataanalyst.my",
+        repoLink: "https://github.com/muazhazali/dataanalyst-my",
+        accent: "blue",
+        status: "published",
+        featured: false,
+        image: "/projects/dataanalyst-my.png",
+        creator: "Muaz Hazali",
+        stars: 3,
+      },
+      {
+        kind: "community_project",
+        title: "Commute.my",
+        summary: "Making Klang Valley public transport accessible to everyone.",
+        description:
+          "Route planner and line explorer for RapidKL public transport across the Klang Valley. Plan journeys across LRT, MRT, and Monorail lines. Built for locals and tourists alike.",
+        tags: ["Malaysia", "Transit", "Civic Tech", "Klang Valley"],
+        link: "https://commute.my",
+        repoLink: "https://github.com/commute-my/commute-my",
+        accent: "blue",
+        status: "published",
+        featured: false,
+        image: "/projects/commute-my.png",
+        creator: "CommuteMY",
+        stars: 20,
+      },
+      {
+        kind: "community_project",
+        title: "Claude Pomodoro",
+        summary: "Pixel-art Claude mascot pomodoro timer for Mac, Windows & Linux.",
+        description:
+          "A cute pixel-art Claude mascot pomodoro timer. Native on macOS, Electron on Windows and Linux. Stay focused with a little AI company — sessions, breaks, and that familiar Claude face on your desktop.",
+        tags: ["Desktop App", "Productivity", "Claude", "Electron"],
+        repoLink: "https://github.com/Shawnchee/claude-pomodoro",
+        accent: "peach",
+        status: "published",
+        featured: false,
+        creator: "Shawn Chee",
+        stars: 4,
+      },
+      {
+        kind: "community_project",
+        title: "Frontend God Mode",
+        summary: "Every famous frontend design skill, bundled into one Claude Code skill.",
+        description:
+          "A Claude Code skill that bundles every famous frontend design pattern and technique — animations, layouts, micro-interactions, and more — into a single powerful agent skill.",
+        tags: ["Claude Code", "Frontend", "Design", "Agent Skill"],
+        repoLink: "https://github.com/Shawnchee/frontend-god-mode",
+        accent: "purple",
+        status: "published",
+        featured: false,
+        creator: "Shawn Chee",
+        stars: 10,
+      },
+      {
+        kind: "community_project",
+        title: "GitResume",
+        summary: "Turn a public GitHub repo into polished resume bullets.",
+        description:
+          "Point GitResume at any public GitHub repo, pick the commits that count as your work, and get tight verifiable resume bullets drafted by your LLM of choice — no backend, no analytics, API key stays local.",
+        tags: ["Developer Tool", "Resume", "AI", "GitHub"],
+        link: "https://gitresume-gold.vercel.app",
+        repoLink: "https://github.com/Shawnchee/gitresume",
+        accent: "mint",
+        status: "published",
+        featured: false,
+        image: "/projects/gitresume.png",
+        creator: "Shawn Chee",
+        stars: 1,
+      },
+      {
+        kind: "community_project",
+        title: "Caveman Skill",
+        summary: "Save tokens by making Claude explain code in caveman language.",
+        description:
+          "A Claude Code skill that strips back over-engineered thinking by making Claude explain code in caveman language — simple words, raw logic, no jargon. Reduce LLM overthinking and save tokens.",
+        tags: ["Claude Code", "Agent Skill", "Developer Tool"],
+        repoLink: "https://github.com/Shawnchee/caveman-skill",
+        accent: "orange",
+        status: "published",
+        featured: false,
+        creator: "Shawn Chee",
+        stars: 65,
+      },
+    ];
+
+    let count = 0;
+    for (const p of projects) {
+      await ctx.db.insert("opportunities", p);
+      count++;
+    }
+
+    console.log(`Seeded ${count} community projects.`);
+    return { seeded: count };
+  },
+});

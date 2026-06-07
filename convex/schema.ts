@@ -102,6 +102,9 @@ export default defineSchema({
     ),
     featured: v.optional(v.boolean()),
     officialBFP: v.optional(v.boolean()),
+    image: v.optional(v.string()),
+    creator: v.optional(v.string()),
+    stars: v.optional(v.number()),
     submitterName: v.optional(v.string()),
     submitterEmail: v.optional(v.string()),
     submitterRequestId: v.optional(v.string()),
@@ -198,4 +201,20 @@ export default defineSchema({
   })
     .index("by_event", ["eventSlug"])
     .index("by_email_and_event", ["email", "eventSlug"]),
+
+  ngoHelped: defineTable({
+    name: v.string(),
+    country: v.string(),
+    flag: v.string(),
+    cause: v.string(),
+    tagline: v.string(),
+    description: v.string(),
+    helpedWith: v.string(),
+    whoFor: v.string(),
+    website: v.string(),
+    codeLink: v.optional(v.string()),
+    accentBg: v.string(),
+    image: v.optional(v.string()),
+    order: v.optional(v.number()),
+  }).index("by_order", ["order"]),
 });

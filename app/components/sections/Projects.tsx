@@ -1,4 +1,5 @@
 import ProjectCard from "@/app/components/ui/ProjectCard";
+import NGOHelpedSection from "@/app/components/sections/NGOHelpedSection";
 import BrickField from "@/app/components/decorations/bricks/BrickField";
 
 // Lighter, edge-only bricks for Projects — don't compete with the project cards
@@ -68,6 +69,7 @@ const PROJECTS = [
   },
 ];
 
+
 export default function Projects() {
   return (
     <section
@@ -86,6 +88,8 @@ export default function Projects() {
             <ProjectCard key={p.name} {...p} />
           ))}
         </div>
+
+        <NGOHelpedSection />
       </div>
     </section>
   );

@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import OpportunityCard, { type OpportunityCardProps } from "./OpportunityCard";
+import NGOCard from "@/app/components/ui/NGOCard";
 
-type KindFilter = "all" | "ngo_request" | "project_idea" | "oss_project" | "community_project";
-
+type KindFilter = "all" | "ngo_request" | "project_idea" | "oss_project" | "community_project" | "ngo_helped";
 
 const TABS: { id: KindFilter; label: string; description: string }[] = [
   {
@@ -18,6 +18,11 @@ const TABS: { id: KindFilter; label: string; description: string }[] = [
     id: "ngo_request",
     label: "NGO Requests",
     description: "Problems NGOs need builders to solve",
+  },
+  {
+    id: "ngo_helped",
+    label: "NGOs Helped",
+    description: "NGOs we've built with — showcasing our international impact",
   },
   {
     id: "project_idea",
@@ -86,6 +91,12 @@ function EmptyState({ kind }: { kind: KindFilter }) {
       cta: "Post your project →",
       href: "/submit",
     },
+    ngo_helped: {
+      heading: "No NGOs helped yet",
+      body: "When Build for Public ships something with an NGO, it'll show up here.",
+      cta: "Submit an NGO request →",
+      href: "/request",
+    },
   };
 
   const { heading, body, cta, href } = messages[kind];
@@ -111,22 +122,35 @@ function EmptyState({ kind }: { kind: KindFilter }) {
 export default function DirectoryBoard() {
   const [activeTab, setActiveTab] = useState<KindFilter>("all");
 
-  // useQuery returns undefined while loading AND when no Convex provider is mounted
+  const isNgoHelpedTab = activeTab === "ngo_helped";
+
   const items = useQuery(
     api.opportunities.listPublished,
-    activeTab === "all" ? {} : { kind: activeTab },
+    isNgoHelpedTab ? "skip" : activeTab === "all" ? {} : { kind: activeTab },
   );
 
-  const isLoading = items === undefined;
-  const isEmpty = !isLoading && items.length === 0;
+  const ngoHelped = useQuery(
+    api.ngoHelped.list,
+    isNgoHelpedTab ? {} : "skip",
+  );
 
-  // Sort featured to top
-  const sorted = isLoading
+  const isLoading = isNgoHelpedTab ? ngoHelped === undefined : items === undefined;
+  const isEmpty = !isLoading && (isNgoHelpedTab ? ngoHelped!.length === 0 : items!.length === 0);
+
+  const sorted = isLoading || isNgoHelpedTab
     ? []
-    : [...items].sort((a, b) => {
+    : [...items!].sort((a, b) => {
+        const aStars = (a as any).stars ?? 0;
+        const bStars = (b as any).stars ?? 0;
+        const aCommunity = a.kind === "community_project";
+        const bCommunity = b.kind === "community_project";
+        // Both community: sort by stars
+        if (aCommunity && bCommunity) return bStars - aStars;
+        // Mixed: featured non-community items first, then community by stars
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        return 0;
+        // Both community or both non-community with same featured: stars desc
+        return bStars - aStars;
       });
 
   return (
@@ -164,12 +188,30 @@ export default function DirectoryBoard() {
 
         {isEmpty && <EmptyState kind={activeTab} />}
 
-        {!isLoading &&
+        {isNgoHelpedTab && !isLoading &&
+          ngoHelped!.map((n) => (
+            <NGOCard
+              key={n._id}
+              name={n.name}
+              country={n.country}
+              flag={n.flag}
+              cause={n.cause}
+              tagline={n.tagline}
+              description={n.description}
+              helpedWith={n.helpedWith}
+              whoFor={n.whoFor}
+              primaryLink={{ label: "Visit", href: n.website }}
+              codeLink={n.codeLink ? { label: "Code", href: n.codeLink } : null}
+              accentBg={n.accentBg}
+              image={n.image}
+            />
+          ))}
+
+        {!isNgoHelpedTab && !isLoading &&
           sorted.map((item) => (
             <OpportunityCard key={item._id} {...(item as OpportunityCardProps)} />
           ))}
       </div>
-
     </div>
   );
 }

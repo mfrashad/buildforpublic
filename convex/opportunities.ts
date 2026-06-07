@@ -17,6 +17,9 @@ type PublicOpportunity = {
   skillsNeeded?: string[];
   difficulty?: "beginner" | "intermediate" | "advanced";
   featured?: boolean;
+  image?: string;
+  creator?: string;
+  stars?: number;
 };
 
 export const listPublished = query({
@@ -65,6 +68,9 @@ export const listPublished = query({
       skillsNeeded: doc.skillsNeeded,
       difficulty: doc.difficulty,
       featured: doc.featured,
+      image: doc.image,
+      creator: doc.creator,
+      stars: doc.stars,
     }));
   },
 });
