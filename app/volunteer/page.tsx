@@ -20,10 +20,10 @@ const MEMBER_PERKS = [
 ];
 
 const CORE_MEMBER_PERKS = [
+  "Join a department: Events, Outreach, Content, Finance, or Tech",
+  "Lead as a Director or contribute as an Officer",
   "Work directly with NGOs on commissioned builds",
-  "Lead projects end-to-end as Person In Charge (PIC)",
   "Run events and onboard new members",
-  "Vouch for Official BFP projects",
   "Shape how the community grows",
 ];
 
@@ -104,8 +104,9 @@ export default function JoinPage() {
                 </span>
               </div>
               <p className="text-sm text-black/60 mb-6 leading-relaxed">
-                For those who want to go deeper — work with NGOs, lead projects,
-                and take on community responsibilities. Vetted. 3–7 hrs/week.
+                For those who want to go deeper — join the core team in a
+                specific role across Events, Outreach, Content, Finance, or
+                Tech. Vetted. 3–8 hrs/week.
               </p>
 
               <ul className="space-y-2.5 mb-8 flex-1">

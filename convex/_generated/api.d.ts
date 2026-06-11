@@ -16,6 +16,7 @@ import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as ngoHelped from "../ngoHelped.js";
 import type * as opportunities from "../opportunities.js";
+import type * as positionsData from "../positionsData.js";
 import type * as profiles from "../profiles.js";
 import type * as projectRequests from "../projectRequests.js";
 import type * as seed from "../seed.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   members: typeof members;
   ngoHelped: typeof ngoHelped;
   opportunities: typeof opportunities;
+  positionsData: typeof positionsData;
   profiles: typeof profiles;
   projectRequests: typeof projectRequests;
   seed: typeof seed;

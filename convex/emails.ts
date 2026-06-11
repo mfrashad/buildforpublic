@@ -5,10 +5,19 @@ export const sendVolunteerNotification = internalAction({
   args: {
     name: v.string(),
     email: v.string(),
-    roles: v.array(v.string()),
+    positions: v.array(v.string()),
     country: v.string(),
     about: v.string(),
     motivation: v.string(),
+    answers: v.optional(
+      v.array(
+        v.object({
+          position: v.string(),
+          question: v.string(),
+          answer: v.string(),
+        }),
+      ),
+    ),
   },
   handler: async (_ctx, args) => {
     const apiKey = process.env.RESEND_API_KEY;
@@ -17,18 +26,26 @@ export const sendVolunteerNotification = internalAction({
       return;
     }
 
-    const rolesStr = args.roles.join(", ");
+    const positionsStr = args.positions.join(", ");
+    const answersHtml = (args.answers ?? [])
+      .map(
+        (a) => `
+      <p><strong>[${a.position}] ${a.question}</strong></p>
+      <p>${a.answer}</p>`,
+      )
+      .join("");
     const html = `
-      <h2>New volunteer application — Build for Public</h2>
+      <h2>New core-team application — Build for Public</h2>
       <p><strong>Name:</strong> ${args.name}</p>
       <p><strong>Email:</strong> ${args.email}</p>
       <p><strong>Country:</strong> ${args.country}</p>
-      <p><strong>Roles:</strong> ${rolesStr}</p>
+      <p><strong>Positions:</strong> ${positionsStr}</p>
       <hr />
       <p><strong>About:</strong></p>
       <p>${args.about}</p>
       <p><strong>Motivation:</strong></p>
       <p>${args.motivation}</p>
+      ${answersHtml ? `<hr />${answersHtml}` : ""}
     `;
 
     const res = await fetch("https://api.resend.com/emails", {
@@ -40,7 +57,7 @@ export const sendVolunteerNotification = internalAction({
       body: JSON.stringify({
         from: "Build for Public <noreply@buildforpublic.com>",
         to: ["m.fathyrashad@gmail.com"],
-        subject: `New volunteer: ${args.name} (${rolesStr})`,
+        subject: `New core-team application: ${args.name} (${positionsStr})`,
         html,
       }),
     });

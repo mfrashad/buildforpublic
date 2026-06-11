@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import VolunteersTab from "./tabs/VolunteersTab";
+import RecruitmentTab from "./tabs/RecruitmentTab";
 import ProjectRequestsTab from "./tabs/ProjectRequestsTab";
 import OpportunitiesTab from "./tabs/OpportunitiesTab";
 import EventsTab from "./tabs/EventsTab";
@@ -14,7 +14,7 @@ type Tab = "overview" | "volunteers" | "project-requests" | "opportunities" | "e
 
 const NAV: { id: Tab; label: string; icon: string }[] = [
   { id: "overview", label: "Overview", icon: "◈" },
-  { id: "volunteers", label: "Volunteers", icon: "✦" },
+  { id: "volunteers", label: "Recruitment", icon: "✦" },
   { id: "project-requests", label: "Project Requests", icon: "⊞" },
   { id: "opportunities", label: "Opportunities", icon: "◎" },
   { id: "events", label: "Event RSVPs", icon: "⊛" },
@@ -203,7 +203,7 @@ export default function AdminDashboard() {
         {/* ── Content ── */}
         <main className="flex-1 min-w-0 p-6 lg:p-8">
           {activeTab === "overview" && <OverviewTab />}
-          {activeTab === "volunteers" && <VolunteersTab />}
+          {activeTab === "volunteers" && <RecruitmentTab />}
           {activeTab === "project-requests" && <ProjectRequestsTab />}
           {activeTab === "opportunities" && <OpportunitiesTab />}
           {activeTab === "events" && <EventsTab />}

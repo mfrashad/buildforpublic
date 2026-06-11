@@ -3,33 +3,14 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import {
+  MAX_POSITIONS_PER_APPLICATION,
+  OPEN_POSITIONS,
+  byDepartment,
+  getPosition,
+  type Position,
+} from "@/lib/positions";
 
-const BUILDER_SKILLS = [
-  "Frontend",
-  "Backend",
-  "AI / ML",
-  "Mobile",
-  "Design",
-  "Product",
-  "Vibe coding / AI tools",
-  "Other",
-];
-
-const BUILDER_LEVELS = [
-  { value: "experienced", label: "Experienced dev" },
-  { value: "vibe-coder", label: "Vibe coder / AI-assisted" },
-  { value: "learning", label: "Just learning / getting started" },
-  { value: "unsure", label: "Not sure yet" },
-];
-
-const ADVOCATE_FORMATS = [
-  "Short-form video",
-  "Blog / article",
-  "Tweet / thread",
-  "Infographic",
-  "Other",
-];
-const ADVOCATE_LANGUAGES = ["English", "Bahasa Malaysia", "Both", "Other"];
 const REFERRAL_SOURCES = [
   "Twitter / X",
   "TikTok",
@@ -40,56 +21,7 @@ const REFERRAL_SOURCES = [
   "Other",
 ];
 
-type Role = "builder" | "advocate" | "organizer";
-type BuilderIdea = "have" | "match" | "either";
-type OrgMode = "in-person" | "online" | "both";
-
-const ROLE_INFO: {
-  id: Role;
-  title: string;
-  commitment: string;
-  description: string;
-  expectations: string[];
-}[] = [
-  {
-    id: "builder",
-    title: "Builder",
-    commitment: "3–7 hrs / week",
-    description:
-      "Build open-source AI tools that solve real social problems — for NGOs, underserved communities, and local causes in Southeast Asia. Not random open source; tools that actually matter.",
-    expectations: [
-      "Take ownership of one project end-to-end as PIC (Person In Charge)",
-      "Projects come from NGO needs, local problems, or your own idea",
-      "All levels welcome — experienced devs, vibe coders, and total beginners",
-      "No GitHub account required to apply",
-    ],
-  },
-  {
-    id: "advocate",
-    title: "Ambassador",
-    commitment: "~1 post / week",
-    description:
-      "Be the voice of Build for Public. Create content that educates people on AI for social good, raises awareness of AI safety and impact issues, or promotes what the community is building.",
-    expectations: [
-      "1 post/week in any format: video, blog, tweet, infographic",
-      "Topics: AI social impact / safety, OR promoting Build for Public's work",
-      "English or Bahasa Malaysia — pick whatever suits you",
-      "No prior audience needed — just consistency and heart",
-    ],
-  },
-  {
-    id: "organizer",
-    title: "Organizer",
-    commitment: "1+ event/month or online admin",
-    description:
-      "Keep the community alive and connected — through events, Discord, or day-to-day operations. Pick the mode that fits your schedule.",
-    expectations: [
-      "In-person: host or co-organize ≥1 meetup per month",
-      "Online: Discord moderation, event calendar, posters, logistics",
-      "Pick one or both modes — flexibility welcome",
-    ],
-  },
-];
+const HOURS_OPTIONS = ["<3 hrs", "3–5 hrs", "5–8 hrs", "8+ hrs"];
 
 interface FormData {
   name: string;
@@ -98,26 +30,19 @@ interface FormData {
   country: string;
   city: string;
   linkedin: string;
+  github: string;
   portfolio: string;
   about: string;
   motivation: string;
-  roles: Role[];
-  builderLevel: string;
-  builderIdea: BuilderIdea | "";
-  builderProject: string;
-  builderSkills: string[];
-  builderGithub: string;
-  advocateFormats: string[];
-  advocateLanguages: string[];
-  advocateSamples: string;
-  organizerMode: OrgMode | "";
-  organizerCity: string;
-  organizerExperience: string;
+  positions: string[];
+  answers: Record<string, string>; // key: `${positionId}:${questionIndex}`
+  hoursPerWeek: string;
+  canCommit: boolean;
   referralSource: string;
   notes: string;
 }
 
-type Errors = Partial<Record<keyof FormData, string>>;
+type Errors = Partial<Record<string, string>>;
 
 const INITIAL: FormData = {
   name: "",
@@ -126,31 +51,28 @@ const INITIAL: FormData = {
   country: "",
   city: "",
   linkedin: "",
+  github: "",
   portfolio: "",
   about: "",
   motivation: "",
-  roles: [],
-  builderLevel: "",
-  builderIdea: "",
-  builderProject: "",
-  builderSkills: [],
-  builderGithub: "",
-  advocateFormats: [],
-  advocateLanguages: [],
-  advocateSamples: "",
-  organizerMode: "",
-  organizerCity: "",
-  organizerExperience: "",
+  positions: [],
+  answers: {},
+  hoursPerWeek: "",
+  canCommit: false,
   referralSource: "",
   notes: "",
 };
 
-function toggle<T extends string>(arr: T[], item: T): T[] {
-  return arr.includes(item) ? arr.filter((x) => x !== item) : [...arr, item];
-}
-
 function isUrl(s: string) {
   return !s || /^https?:\/\/.+/.test(s);
+}
+
+function answerKey(positionId: string, questionIndex: number) {
+  return `${positionId}:${questionIndex}`;
+}
+
+function requiresPortfolio(d: FormData) {
+  return d.positions.some((id) => getPosition(id)?.requiresPortfolio);
 }
 
 function validate(d: FormData): Errors {
@@ -167,13 +89,20 @@ function validate(d: FormData): Errors {
   if (!d.motivation.trim()) e.motivation = "Required";
   else if (d.motivation.trim().length < 20)
     e.motivation = "Please write at least 20 characters";
-  if (d.roles.length === 0) e.roles = "Please select at least one role";
-  if (d.roles.includes("builder") && !d.builderIdea)
-    e.builderIdea = "Please select an option";
-  if (d.roles.includes("advocate") && d.advocateFormats.length === 0)
-    e.advocateFormats = "Select at least one format";
-  if (d.roles.includes("organizer") && !d.organizerMode)
-    e.organizerMode = "Please select a mode";
+  if (d.positions.length === 0) e.positions = "Please select at least one position";
+  for (const id of d.positions) {
+    const pos = getPosition(id);
+    if (!pos) continue;
+    pos.roleQuestions.forEach((_, qi) => {
+      const key = answerKey(id, qi);
+      const answer = (d.answers[key] ?? "").trim();
+      if (!answer) e[key] = "Required";
+      else if (answer.length < 20) e[key] = "Please write at least 20 characters";
+    });
+  }
+  if (requiresPortfolio(d) && !d.portfolio.trim())
+    e.portfolio = "A portfolio link is required for Content positions";
+  if (!d.canCommit) e.canCommit = "We ask core members to commit 3–6 months";
   return e;
 }
 
@@ -224,14 +153,20 @@ function PillToggle({
   );
 }
 
-function RoleCard({
-  role,
+const ORDINALS = ["1st", "2nd", "3rd"];
+
+function PositionCard({
+  position,
   selected,
+  rank,
+  disabled,
   onToggle,
   children,
 }: {
-  role: (typeof ROLE_INFO)[number];
+  position: Position;
   selected: boolean;
+  rank: number; // index in the ranked selection, -1 if not selected
+  disabled: boolean;
   onToggle: () => void;
   children?: React.ReactNode;
 }) {
@@ -239,10 +174,15 @@ function RoleCard({
     <div
       className={`card overflow-hidden transition-all ${
         selected ? "ring-2 ring-black/40" : ""
-      }`}
+      } ${disabled ? "opacity-50" : ""}`}
     >
       {/* Clickable header — toggles selection */}
-      <button type="button" onClick={onToggle} className="w-full text-left p-5">
+      <button
+        type="button"
+        onClick={onToggle}
+        disabled={disabled}
+        className={`w-full text-left p-5 ${disabled ? "cursor-not-allowed" : ""}`}
+      >
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-2.5">
             <span
@@ -272,30 +212,42 @@ function RoleCard({
               className="text-base text-black"
               style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
             >
-              {role.title}
+              {position.title}
             </span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 border border-black/30 rounded-full text-black/50">
+              {position.level}
+            </span>
+            {selected && rank >= 0 && (
+              <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-black text-white">
+                {ORDINALS[rank]} choice
+              </span>
+            )}
           </div>
           <span className="text-xs font-medium text-black/60 bg-white px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
-            {role.commitment}
+            {position.commitment}
           </span>
         </div>
         <p className="text-sm text-black/60 leading-relaxed mb-3 ml-7">
-          {role.description}
+          {position.summary}
         </p>
         <ul className="space-y-1 ml-7">
-          {role.expectations.map((exp, i) => (
+          {position.responsibilities.map((r, i) => (
             <li key={i} className="text-xs text-black/60/60 flex gap-1.5">
               <span className="flex-shrink-0 mt-0.5">—</span>
-              {exp}
+              {r}
             </li>
           ))}
         </ul>
         <p className="text-xs text-black/40 mt-3 ml-7">
-          {selected ? "Selected ↑ fill in the details below" : "Click to select this role →"}
+          {selected
+            ? `Your ${ORDINALS[rank]} choice ↑ answer the questions below`
+            : disabled
+              ? `Maximum ${MAX_POSITIONS_PER_APPLICATION} positions`
+              : "Click to select this position →"}
         </p>
       </button>
 
-      {/* Expandable details — only when selected */}
+      {/* Role-specific questions — only when selected */}
       {selected && children && (
         <div className="border-t border-black px-5 pb-6 pt-5 space-y-5 bg-white">
           {children}
@@ -326,7 +278,7 @@ function SuccessCard() {
 }
 
 export default function VolunteerForm() {
-  const create = useMutation(api.volunteers.create);
+  const apply = useMutation(api.volunteers.apply);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
@@ -335,6 +287,32 @@ export default function VolunteerForm() {
   function set<K extends keyof FormData>(k: K, v: FormData[K]) {
     setD((prev) => ({ ...prev, [k]: v }));
     if (errors[k]) setErrors((prev) => ({ ...prev, [k]: undefined }));
+  }
+
+  function setAnswer(key: string, value: string) {
+    setD((prev) => ({ ...prev, answers: { ...prev.answers, [key]: value } }));
+    if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  }
+
+  function togglePosition(id: string) {
+    setD((prev) => ({
+      ...prev,
+      positions: prev.positions.includes(id)
+        ? prev.positions.filter((p) => p !== id)
+        : prev.positions.length < MAX_POSITIONS_PER_APPLICATION
+          ? [...prev.positions, id]
+          : prev.positions,
+    }));
+    if (errors.positions) setErrors((prev) => ({ ...prev, positions: undefined }));
+  }
+
+  function movePosition(from: number, to: number) {
+    setD((prev) => {
+      const next = [...prev.positions];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return { ...prev, positions: next };
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -351,42 +329,33 @@ export default function VolunteerForm() {
     setStatus("submitting");
     setServerError(null);
     try {
-      await create({
+      const positionAnswers = d.positions.flatMap((id) => {
+        const pos = getPosition(id);
+        if (!pos) return [];
+        return pos.roleQuestions.map((question, qi) => ({
+          positionId: id,
+          question,
+          answer: (d.answers[answerKey(id, qi)] ?? "").trim(),
+        }));
+      });
+
+      await apply({
         name: d.name.trim(),
         email: d.email.trim(),
         phone: d.phone || undefined,
         country: d.country.trim(),
         city: d.city || undefined,
         linkedin: d.linkedin || undefined,
+        github: d.github || undefined,
         portfolio: d.portfolio || undefined,
         about: d.about.trim(),
         motivation: d.motivation.trim(),
-        roles: d.roles,
+        positions: d.positions,
+        positionAnswers,
+        hoursPerWeek: d.hoursPerWeek || undefined,
+        canCommit: d.canCommit,
         referralSource: d.referralSource || undefined,
         notes: d.notes || undefined,
-        ...(d.roles.includes("builder")
-          ? {
-              builderLevel: d.builderLevel || undefined,
-              builderIdea: d.builderIdea as BuilderIdea,
-              builderProject: d.builderProject || undefined,
-              builderSkills: d.builderSkills.length ? d.builderSkills : undefined,
-              builderGithub: d.builderGithub || undefined,
-            }
-          : {}),
-        ...(d.roles.includes("advocate")
-          ? {
-              advocateFormats: d.advocateFormats.length ? d.advocateFormats : undefined,
-              advocateLanguages: d.advocateLanguages.length ? d.advocateLanguages : undefined,
-              advocateSamples: d.advocateSamples || undefined,
-            }
-          : {}),
-        ...(d.roles.includes("organizer")
-          ? {
-              organizerMode: d.organizerMode as OrgMode,
-              organizerCity: d.organizerCity || undefined,
-              organizerExperience: d.organizerExperience || undefined,
-            }
-          : {}),
       });
       setStatus("success");
     } catch (err) {
@@ -398,6 +367,9 @@ export default function VolunteerForm() {
   }
 
   if (status === "success") return <SuccessCard />;
+
+  const atMax = d.positions.length >= MAX_POSITIONS_PER_APPLICATION;
+  const portfolioRequired = requiresPortfolio(d);
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-10">
@@ -469,8 +441,21 @@ export default function VolunteerForm() {
             />
             <ErrMsg msg={errors.linkedin} />
           </div>
-          <div className="sm:col-span-2" id="field-portfolio">
-            <Label text="Portfolio / GitHub / personal site" />
+          <div>
+            <Label text="GitHub username" />
+            <input
+              type="text"
+              value={d.github}
+              onChange={(e) => set("github", e.target.value)}
+              className={inputBase}
+              placeholder="yourusername"
+            />
+          </div>
+          <div id="field-portfolio">
+            <Label
+              text="Portfolio / personal site"
+              required={portfolioRequired}
+            />
             <input
               type="url"
               value={d.portfolio}
@@ -478,6 +463,12 @@ export default function VolunteerForm() {
               className={inputBase}
               placeholder="https://..."
             />
+            {portfolioRequired && (
+              <p className="text-xs text-black/60/50 mt-1.5">
+                Required for Content positions — link your past content
+                (Instagram, TikTok, Behance, Drive, etc.)
+              </p>
+            )}
             <ErrMsg msg={errors.portfolio} />
           </div>
         </div>
@@ -505,7 +496,10 @@ export default function VolunteerForm() {
             <ErrMsg msg={errors.about} />
           </div>
           <div id="field-motivation">
-            <Label text="Why do you want to join?" required />
+            <Label
+              text="Why do you want to join? What's your understanding of what we do?"
+              required
+            />
             <div className="relative">
               <textarea
                 value={d.motivation}
@@ -513,7 +507,7 @@ export default function VolunteerForm() {
                 maxLength={1000}
                 rows={4}
                 className={inputBase}
-                placeholder="What draws you to Build for Public? What would you like to contribute or learn?"
+                placeholder="What draws you to Build for Public? What do you hope to contribute during your time in this role?"
               />
               <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
                 {d.motivation.length}/1000
@@ -524,216 +518,167 @@ export default function VolunteerForm() {
         </div>
       </div>
 
-      {/* ── 3. Role selection — each card expands with its own detail form ── */}
-      <div id="field-roles">
-        <SectionHeading>Which role(s) are you applying for?</SectionHeading>
+      {/* ── 3. Position selection — each card expands with its role questions ── */}
+      <div id="field-positions">
+        <SectionHeading>Which position(s) are you applying for?</SectionHeading>
         <p className="text-sm text-black/60 mb-5">
-          Click a card to select it. You can pick more than one. Each role expands
-          with a few quick questions once selected.
+          Select up to {MAX_POSITIONS_PER_APPLICATION} positions in order of
+          preference — your first pick is your 1st choice. Each position
+          expands with two quick questions once selected.
         </p>
-        <div className="space-y-4">
-
-          {/* Builder */}
-          <RoleCard
-            role={ROLE_INFO[0]}
-            selected={d.roles.includes("builder")}
-            onToggle={() => set("roles", toggle(d.roles, "builder"))}
-          >
-            <div>
-              <Label text="How would you describe your current level?" />
-              <div className="flex flex-wrap gap-2.5">
-                {BUILDER_LEVELS.map((lvl) => (
-                  <PillToggle
-                    key={lvl.value}
-                    label={lvl.label}
-                    active={d.builderLevel === lvl.value}
-                    onClick={() =>
-                      set("builderLevel", d.builderLevel === lvl.value ? "" : lvl.value)
-                    }
-                  />
-                ))}
-              </div>
-              <p className="text-xs text-black/60/50 mt-2">
-                No wrong answer — we match projects to where you&apos;re at.
+        {d.positions.length > 0 && (
+          <div className="card-flat p-4 mb-5">
+            <p className="text-xs font-semibold text-black/40 uppercase tracking-widest mb-2.5">
+              Your ranking
+            </p>
+            <div className="space-y-1.5">
+              {d.positions.map((id, i) => (
+                <div key={id} className="flex items-center gap-2.5 text-sm">
+                  <span className="w-16 flex-shrink-0 text-xs font-semibold text-black/50">
+                    {ORDINALS[i]} choice
+                  </span>
+                  <span className="text-black font-medium">
+                    {getPosition(id)?.title ?? id}
+                  </span>
+                  <span className="flex items-center gap-1 ml-auto">
+                    {i > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => movePosition(i, i - 1)}
+                        title="Move up"
+                        className="text-xs w-6 h-6 border border-black/20 rounded-md text-black/50 hover:text-black hover:border-black transition-colors"
+                      >
+                        ↑
+                      </button>
+                    )}
+                    {i < d.positions.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => movePosition(i, i + 1)}
+                        title="Move down"
+                        className="text-xs w-6 h-6 border border-black/20 rounded-md text-black/50 hover:text-black hover:border-black transition-colors"
+                      >
+                        ↓
+                      </button>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="space-y-8">
+          {byDepartment(OPEN_POSITIONS).map((group) => (
+            <div key={group.department}>
+              <p className="text-xs font-semibold text-black/40 uppercase tracking-widest mb-3">
+                {group.department}
               </p>
-            </div>
-
-            <div id="field-builderIdea">
-              <Label
-                text="Do you have a project idea, or would you like to be matched to one?"
-                required
-              />
-              <div className="flex flex-wrap gap-3">
-                {(
-                  [
-                    { value: "have" as BuilderIdea, label: "I have an idea" },
-                    { value: "match" as BuilderIdea, label: "Match me to a project" },
-                    { value: "either" as BuilderIdea, label: "Either works" },
-                  ]
-                ).map((opt) => (
-                  <PillToggle
-                    key={opt.value}
-                    label={opt.label}
-                    active={d.builderIdea === opt.value}
-                    onClick={() => set("builderIdea", opt.value)}
-                  />
-                ))}
-              </div>
-              <ErrMsg msg={errors.builderIdea} />
-            </div>
-
-            {d.builderIdea === "have" && (
-              <div>
-                <Label text="Describe your project idea" />
-                <textarea
-                  value={d.builderProject}
-                  onChange={(e) => set("builderProject", e.target.value)}
-                  maxLength={1000}
-                  rows={3}
-                  className={inputBase}
-                  placeholder="Who it helps, what problem it solves, rough idea of scope — even a rough idea is fine..."
-                />
-              </div>
-            )}
-
-            <div>
-              <Label text="Skills / tools you work with" />
-              <div className="flex flex-wrap gap-2.5">
-                {BUILDER_SKILLS.map((skill) => (
-                  <PillToggle
-                    key={skill}
-                    label={skill}
-                    active={d.builderSkills.includes(skill)}
-                    onClick={() => set("builderSkills", toggle(d.builderSkills, skill))}
-                  />
-                ))}
+              <div className="space-y-4">
+                {group.positions.map((pos) => {
+                  const rank = d.positions.indexOf(pos.id);
+                  const selected = rank >= 0;
+                  return (
+                    <PositionCard
+                      key={pos.id}
+                      position={pos}
+                      selected={selected}
+                      rank={rank}
+                      disabled={!selected && atMax}
+                      onToggle={() => togglePosition(pos.id)}
+                    >
+                      {pos.roleQuestions.map((q, qi) => {
+                        const key = answerKey(pos.id, qi);
+                        const value = d.answers[key] ?? "";
+                        return (
+                          <div key={key} id={`field-${key}`}>
+                            <Label text={q} required />
+                            <div className="relative">
+                              <textarea
+                                value={value}
+                                onChange={(e) => setAnswer(key, e.target.value)}
+                                maxLength={1000}
+                                rows={3}
+                                className={inputBase}
+                                placeholder="Your answer..."
+                              />
+                              <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
+                                {value.length}/1000
+                              </span>
+                            </div>
+                            <ErrMsg msg={errors[key]} />
+                          </div>
+                        );
+                      })}
+                    </PositionCard>
+                  );
+                })}
               </div>
             </div>
-
-            <div>
-              <Label text="GitHub username (optional)" />
-              <input
-                type="text"
-                value={d.builderGithub}
-                onChange={(e) => set("builderGithub", e.target.value)}
-                className={inputBase}
-                placeholder="yourusername — skip if you don't have one yet"
-              />
-              <p className="text-xs text-black/60/50 mt-1.5">
-                No GitHub? No problem — we&apos;ll help you get set up if needed.
-              </p>
-            </div>
-          </RoleCard>
-
-          {/* Advocate */}
-          <RoleCard
-            role={ROLE_INFO[1]}
-            selected={d.roles.includes("advocate")}
-            onToggle={() => set("roles", toggle(d.roles, "advocate"))}
-          >
-            <div id="field-advocateFormats">
-              <Label text="Preferred content formats" required />
-              <div className="flex flex-wrap gap-2.5">
-                {ADVOCATE_FORMATS.map((fmt) => (
-                  <PillToggle
-                    key={fmt}
-                    label={fmt}
-                    active={d.advocateFormats.includes(fmt)}
-                    onClick={() =>
-                      set("advocateFormats", toggle(d.advocateFormats, fmt))
-                    }
-                  />
-                ))}
-              </div>
-              <ErrMsg msg={errors.advocateFormats} />
-            </div>
-
-            <div>
-              <Label text="Languages you create content in" />
-              <div className="flex flex-wrap gap-2.5">
-                {ADVOCATE_LANGUAGES.map((lang) => (
-                  <PillToggle
-                    key={lang}
-                    label={lang}
-                    active={d.advocateLanguages.includes(lang)}
-                    onClick={() =>
-                      set("advocateLanguages", toggle(d.advocateLanguages, lang))
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <Label text="Link to past content or portfolio (optional)" />
-              <input
-                type="url"
-                value={d.advocateSamples}
-                onChange={(e) => set("advocateSamples", e.target.value)}
-                className={inputBase}
-                placeholder="https://..."
-              />
-            </div>
-          </RoleCard>
-
-          {/* Organizer */}
-          <RoleCard
-            role={ROLE_INFO[2]}
-            selected={d.roles.includes("organizer")}
-            onToggle={() => set("roles", toggle(d.roles, "organizer"))}
-          >
-            <div id="field-organizerMode">
-              <Label text="Which mode suits you?" required />
-              <div className="flex flex-wrap gap-3">
-                {(
-                  [
-                    { value: "in-person" as OrgMode, label: "In-person events" },
-                    { value: "online" as OrgMode, label: "Online admin" },
-                    { value: "both" as OrgMode, label: "Both" },
-                  ]
-                ).map((opt) => (
-                  <PillToggle
-                    key={opt.value}
-                    label={opt.label}
-                    active={d.organizerMode === opt.value}
-                    onClick={() => set("organizerMode", opt.value)}
-                  />
-                ))}
-              </div>
-              <ErrMsg msg={errors.organizerMode} />
-            </div>
-
-            {(d.organizerMode === "in-person" || d.organizerMode === "both") && (
-              <div>
-                <Label text="Which city would you host meetups in?" />
-                <input
-                  type="text"
-                  value={d.organizerCity}
-                  onChange={(e) => set("organizerCity", e.target.value)}
-                  className={inputBase}
-                  placeholder="Kuala Lumpur"
-                />
-              </div>
-            )}
-
-            <div>
-              <Label text="Any community management or event experience? (optional)" />
-              <textarea
-                value={d.organizerExperience}
-                onChange={(e) => set("organizerExperience", e.target.value)}
-                maxLength={500}
-                rows={3}
-                className={inputBase}
-                placeholder="Previous roles, events organized, communities managed — or just tell us you're keen to start..."
-              />
-            </div>
-          </RoleCard>
-
+          ))}
         </div>
-        <ErrMsg msg={errors.roles} />
+        <ErrMsg msg={errors.positions} />
       </div>
 
-      {/* ── 4. Closing ── */}
+      {/* ── 4. Commitment ── */}
+      <div>
+        <SectionHeading>Commitment</SectionHeading>
+        <div className="space-y-5">
+          <div id="field-canCommit">
+            <button
+              type="button"
+              onClick={() => set("canCommit", !d.canCommit)}
+              className="flex items-start gap-3 text-left"
+            >
+              <span
+                className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${
+                  d.canCommit ? "bg-black border-black" : "border-black"
+                }`}
+              >
+                {d.canCommit && (
+                  <svg
+                    width="10"
+                    height="8"
+                    viewBox="0 0 10 8"
+                    fill="none"
+                    className="text-white"
+                  >
+                    <path
+                      d="M1 4L3.5 6.5L9 1"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </span>
+              <span className="text-sm text-black/70 leading-relaxed">
+                I can commit to this role for at least 3–6 months to ensure the
+                sustainability of our projects.{" "}
+                <span className="text-black/40">*</span>
+              </span>
+            </button>
+            <ErrMsg msg={errors.canCommit} />
+          </div>
+          <div>
+            <Label text="How many hours per week can you contribute?" />
+            <div className="flex flex-wrap gap-2.5">
+              {HOURS_OPTIONS.map((h) => (
+                <PillToggle
+                  key={h}
+                  label={h}
+                  active={d.hoursPerWeek === h}
+                  onClick={() =>
+                    set("hoursPerWeek", d.hoursPerWeek === h ? "" : h)
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── 5. Closing ── */}
       <div>
         <SectionHeading>Final details</SectionHeading>
         <div className="space-y-5">

@@ -14,13 +14,55 @@ export default defineSchema({
     about: v.string(),
     motivation: v.string(),
 
-    roles: v.array(
-      v.union(
-        v.literal("builder"),
-        v.literal("advocate"),
-        v.literal("organizer"),
+    // Legacy generic roles (pre core-team positions). New applications use `positions`.
+    roles: v.optional(
+      v.array(
+        v.union(
+          v.literal("builder"),
+          v.literal("advocate"),
+          v.literal("organizer"),
+        ),
       ),
     ),
+
+    // Core-team positions (IDs from convex/positionsData.ts, validated in mutation)
+    positions: v.optional(v.array(v.string())),
+    positionAnswers: v.optional(
+      v.array(
+        v.object({
+          positionId: v.string(),
+          question: v.string(),
+          answer: v.string(),
+        }),
+      ),
+    ),
+    github: v.optional(v.string()),
+    hoursPerWeek: v.optional(v.string()),
+    canCommit: v.optional(v.boolean()),
+
+    // Recruitment pipeline
+    recruitStatus: v.optional(
+      v.union(
+        v.literal("applied"),
+        v.literal("shortlisted"),
+        v.literal("invite_sent"),
+        v.literal("interview_scheduled"),
+        v.literal("interviewed"),
+        v.literal("offered"),
+        v.literal("accepted"),
+        v.literal("declined"),
+        v.literal("not_shortlisted"),
+      ),
+    ),
+    shortlistedPositions: v.optional(v.array(v.string())),
+    finalOffer: v.optional(v.string()),
+    potential: v.optional(
+      v.union(v.literal("low"), v.literal("moderate"), v.literal("high")),
+    ),
+    interviewer: v.optional(v.string()),
+    interviewSlot: v.optional(v.string()),
+    meetLink: v.optional(v.string()),
+    inviteEmailSentAt: v.optional(v.number()),
 
     builderLevel: v.optional(v.string()),
     builderIdea: v.optional(
@@ -201,6 +243,12 @@ export default defineSchema({
   })
     .index("by_event", ["eventSlug"])
     .index("by_email_and_event", ["email", "eventSlug"]),
+
+  // Admin key/value settings (e.g. invite email template, invite defaults)
+  settings: defineTable({
+    key: v.string(),
+    value: v.string(),
+  }).index("by_key", ["key"]),
 
   ngoHelped: defineTable({
     name: v.string(),

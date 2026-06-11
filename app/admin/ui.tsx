@@ -34,13 +34,21 @@ const STATUS_STYLES: Record<string, string> = {
   draft: "bg-black/10 text-black/60 border-black/10",
   published: "bg-[#6ff5b6] text-black border-black/20",
   archived: "bg-black/20 text-black/50 border-black/10",
+  // Recruitment pipeline
+  applied: "bg-black/10 text-black/60 border-black/10",
+  shortlisted: "bg-blue-50 text-blue-700 border-blue-200",
+  invite_sent: "bg-purple-50 text-purple-700 border-purple-200",
+  interview_scheduled: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  interviewed: "bg-[#94e8ff] text-black border-black/20",
+  offered: "bg-amber-50 text-amber-700 border-amber-300",
+  not_shortlisted: "bg-black/20 text-black/50 border-black/10",
 };
 
 export function StatusBadge({ status }: { status: string }) {
   const style = STATUS_STYLES[status] ?? "bg-black/10 text-black/50";
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${style}`}>
-      {status}
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border whitespace-nowrap ${style}`}>
+      {status.replace(/_/g, " ")}
     </span>
   );
 }

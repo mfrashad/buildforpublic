@@ -1,14 +1,17 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
 
 // ── Auth guard ────────────────────────────────────────────────────────────────
 // Requires the Clerk "convex" JWT template to include: { "role": "{{user.public_metadata.role}}" }
 // Then set publicMetadata.role = "admin" on the owner's Clerk user.
 
-async function requireAdmin(ctx: { auth: { getUserIdentity: () => Promise<any> } }) {
+type AuthCtx = Pick<QueryCtx, "auth"> | Pick<MutationCtx, "auth">;
+
+async function requireAdmin(ctx: AuthCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) throw new ConvexError("Not authenticated.");
-  if ((identity as any).role !== "admin") throw new ConvexError("Not authorized.");
+  if ((identity as { role?: string }).role !== "admin")
+    throw new ConvexError("Not authorized.");
   return identity;
 }
 
@@ -95,11 +98,75 @@ export const setVolunteerNotes = mutation({
   },
 });
 
+export const updateRecruitment = mutation({
+  args: {
+    id: v.id("volunteers"),
+    recruitStatus: v.optional(
+      v.union(
+        v.literal("applied"),
+        v.literal("shortlisted"),
+        v.literal("invite_sent"),
+        v.literal("interview_scheduled"),
+        v.literal("interviewed"),
+        v.literal("offered"),
+        v.literal("accepted"),
+        v.literal("declined"),
+        v.literal("not_shortlisted"),
+      ),
+    ),
+    shortlistedPositions: v.optional(v.array(v.string())),
+    finalOffer: v.optional(v.string()),
+    potential: v.optional(
+      v.union(v.literal("low"), v.literal("moderate"), v.literal("high")),
+    ),
+    interviewer: v.optional(v.string()),
+    interviewSlot: v.optional(v.string()),
+    meetLink: v.optional(v.string()),
+    inviteEmailSentAt: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const { id, ...fields } = args;
+    // Remove undefined values so we only patch what changed
+    const patch = Object.fromEntries(
+      Object.entries(fields).filter(([, v]) => v !== undefined),
+    );
+    await ctx.db.patch(id, patch);
+  },
+});
+
 export const setVolunteerHidden = mutation({
   args: { id: v.id("volunteers"), hidden: v.boolean() },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
     await ctx.db.patch(args.id, { hidden: args.hidden });
+  },
+});
+
+// ── Settings (admin key/value store) ─────────────────────────────────────────
+
+export const getSettings = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    const all = await ctx.db.query("settings").collect();
+    return Object.fromEntries(all.map((s) => [s.key, s.value]));
+  },
+});
+
+export const setSetting = mutation({
+  args: { key: v.string(), value: v.string() },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const existing = await ctx.db
+      .query("settings")
+      .withIndex("by_key", (q) => q.eq("key", args.key))
+      .unique();
+    if (existing) {
+      await ctx.db.patch(existing._id, { value: args.value });
+    } else {
+      await ctx.db.insert("settings", { key: args.key, value: args.value });
+    }
   },
 });
 

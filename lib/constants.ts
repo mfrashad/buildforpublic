@@ -26,31 +26,38 @@ export const NAV_LINKS = [
 
 export const ROLES = [
   {
-    id: "builder",
-    title: "Builder",
+    id: "tech",
+    title: "Tech",
     description:
-      "Contribute code to open-source projects. Ship tools that serve the public interest.",
+      "Build and maintain BFP's tools, and help volunteer builders ship for NGOs.",
     emoji: "wrench",
   },
   {
-    id: "advocate",
-    title: "Ambassador",
+    id: "events",
+    title: "Events",
     description:
-      "Create content, translate materials, speak at events, spread the word.",
-    emoji: "megaphone",
-  },
-  {
-    id: "organizer",
-    title: "Organizer",
-    description:
-      "Host meetups or run the day-to-day: Discord, events, posters, logistics.",
+      "Run our monthly meetups — venues, Luma, food, and flow on the day.",
     emoji: "clipboard",
   },
   {
-    id: "researcher",
-    title: "Researcher",
+    id: "outreach",
+    title: "Outreach",
     description:
-      "Produce data and analysis on AI adoption, public-sector readiness, and open-source infrastructure.",
+      "Connect NGOs with volunteer developers and grow our ecosystem partnerships.",
+    emoji: "megaphone",
+  },
+  {
+    id: "content",
+    title: "Content",
+    description:
+      "Tell the community's story — social media, event coverage, and branding.",
+    emoji: "camera",
+  },
+  {
+    id: "finance",
+    title: "Finance",
+    description:
+      "Manage budgets, grants, and sponsorships with transparent reporting.",
     emoji: "chart",
   },
 ];
@@ -232,81 +239,6 @@ export const AI_COMMUNITIES = [
 
 export const TALKS_DESCRIPTION =
   "20+ speaking engagements at meetups, conferences, and government briefings. Featured on Bernama TV, RTM TV1, Era.fm, and Kosmo.";
-
-export const ROLE_DETAILS = [
-  {
-    id: "builder",
-    title: "Builder",
-    tagline: "Build open-source software for public-interest problems.",
-    commitment: "3–7 hrs / week",
-    accentClass: "accent-blue",
-    responsibilities: [
-      "Take full ownership as PIC (Person In Charge) of one project end-to-end — start a new one, or take over an existing one until it ships.",
-      "Projects tackle real problems: NGO needs, underserved communities, public-sector gaps — not random open source.",
-      "Open-source the work and keep the community updated on your progress.",
-      "Scope, build, iterate, and hand off with documentation when done.",
-    ],
-    whoFits: [
-      "Experienced devs, vibe coders, AI-assisted builders, and curious beginners",
-      "Anyone willing to own a project end-to-end — we'll match your level to the right scope",
-      "People who want their work to reach real users with real needs",
-    ],
-  },
-  {
-    id: "advocate",
-    title: "Ambassador",
-    tagline: "Be the voice of Build for Public.",
-    commitment: "~1 post / week",
-    accentClass: "accent-yellow",
-    responsibilities: [
-      "Publish ~1 piece of content per week in any format: short-form video, blog post, tweet/thread, or infographic.",
-      "Topics: public-interest tech, AI safety awareness, OR marketing Build for Public's projects and events.",
-      "Claim content requests posted by builders when they need launch coverage or a specific topic covered.",
-      "Publish in any language — multilingual reach is a feature, not an afterthought.",
-    ],
-    whoFits: [
-      "Writers, video creators, graphic designers",
-      "Anyone with a platform or learning to build one",
-      "People who want to make public-interest tech topics accessible to everyone",
-    ],
-  },
-  {
-    id: "organizer",
-    title: "Organizer",
-    tagline: "Be the connective tissue — events, Discord, the day-to-day.",
-    commitment: "1+ event / month or online admin",
-    accentClass: "accent-mint",
-    responsibilities: [
-      "In-person: host or co-organize at least one meetup per month. Support PIC launch events, hackathons, and demo nights.",
-      "Online admin: manage Discord (moderation, welcomes), keep the event calendar updated, design event posters and social cards.",
-      "Connect with local AI communities, NGOs, and venues.",
-      "Pick one or both modes — let us know what fits your schedule.",
-    ],
-    whoFits: [
-      "Organized, reliable, and friendly people",
-      "Comfortable with chat-driven async work",
-      "Event planners, community managers, anyone who likes connecting people",
-    ],
-  },
-  {
-    id: "researcher",
-    title: "Researcher",
-    tagline: "Produce the data and analysis that powers our advocacy.",
-    commitment: "3–5 hrs / week",
-    accentClass: "accent-peach",
-    responsibilities: [
-      "Collect, clean, and analyze data on AI adoption, NGO digital readiness, and public-sector AI procurement.",
-      "Produce reports, datasets, and visual summaries the community can publish and cite in advocacy and grant applications.",
-      "Conduct NGO digital-capacity audits — what tools they use, what they're missing, what open-source AI could improve.",
-      "Contribute new datasets and improved methodology to our open data API on AI adoption across 16+ countries.",
-    ],
-    whoFits: [
-      "Grad students, policy researchers, data journalists, or anyone with quantitative skills",
-      "People interested in AI governance, global development, or public-sector technology",
-      "Writers who can turn raw numbers into readable, citable analysis",
-    ],
-  },
-];
 
 export const MANIFESTO_CLAIMS = [
   {

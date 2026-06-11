@@ -1,12 +1,12 @@
 import { ROLES } from "@/lib/constants";
 
 const ROLE_ICONS: Record<string, React.ReactNode> = {
-  builder: (
+  tech: (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-sky">
       <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
     </svg>
   ),
-  advocate: (
+  outreach: (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-clay">
       <path d="M12 6V2H8" />
       <path d="m8 18-4 4V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2Z" />
@@ -16,15 +16,21 @@ const ROLE_ICONS: Record<string, React.ReactNode> = {
       <path d="M12 15v2" />
     </svg>
   ),
-  organizer: (
+  events: (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-olive">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <path d="M3 9h18" />
       <path d="M9 21V9" />
     </svg>
   ),
-  researcher: (
+  content: (
     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-fig">
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+      <circle cx="12" cy="13" r="3" />
+    </svg>
+  ),
+  finance: (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-olive">
       <line x1="18" y1="20" x2="18" y2="10" />
       <line x1="12" y1="20" x2="12" y2="4" />
       <line x1="6" y1="20" x2="6" y2="14" />
@@ -40,12 +46,12 @@ export default function JoinSection() {
           Join the Movement
         </h2>
         <p className="text-lg text-black/60 mb-14 max-w-lg mx-auto">
-          We&apos;re looking for builders, advocates, organizers, and
-          researchers who want to use their skills for social good.
+          Join the core team — Directors and Officers across five
+          departments, using their skills for social good.
         </p>
 
-        {/* Role cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+        {/* Department cards */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-14">
           {ROLES.map((role) => (
             <div key={role.id} className="card p-6 text-center">
               <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center mx-auto mb-4">
