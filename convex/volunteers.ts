@@ -5,7 +5,11 @@ import {
   MAX_POSITIONS_PER_APPLICATION,
   getPosition,
   positionTitle,
+  rankLabel,
+  secondaryChoiceQuestion,
 } from "./positionsData";
+
+const SECONDARY_CHOICE_MIN_LENGTH = 10;
 
 export const apply = mutation({
   args: {
@@ -49,7 +53,7 @@ export const apply = mutation({
     if (args.motivation.length < 20)
       throw new ConvexError("Please share more about your motivation (20 chars min).");
 
-    for (const id of args.positions) {
+    for (const [rank, id] of args.positions.entries()) {
       const position = getPosition(id);
       if (!position) throw new ConvexError(`Unknown position: ${id}`);
       if (position.filled)
@@ -58,6 +62,17 @@ export const apply = mutation({
         throw new ConvexError(
           `A portfolio link is required when applying for ${position.title}.`,
         );
+      if (rank > 0) {
+        const question = secondaryChoiceQuestion(rank, position.title);
+        const answer = args.positionAnswers.find(
+          (a) => a.positionId === id && a.question === question,
+        );
+        if (!answer || answer.answer.trim().length < SECONDARY_CHOICE_MIN_LENGTH)
+          throw new ConvexError(
+            `Please briefly explain why ${position.title} is your ${rankLabel(rank)} choice.`,
+          );
+        continue;
+      }
       for (const question of position.roleQuestions) {
         const answer = args.positionAnswers.find(
           (a) => a.positionId === id && a.question === question,

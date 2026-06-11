@@ -8,6 +8,7 @@ import {
   OPEN_POSITIONS,
   byDepartment,
   getPosition,
+  secondaryChoiceQuestion,
   type Position,
 } from "@/lib/positions";
 
@@ -22,6 +23,7 @@ const REFERRAL_SOURCES = [
 ];
 
 const HOURS_OPTIONS = ["<3 hrs", "3–5 hrs", "5–8 hrs", "8+ hrs"];
+const SECONDARY_CHOICE_MIN_LENGTH = 10;
 
 interface FormData {
   name: string;
@@ -71,6 +73,10 @@ function answerKey(positionId: string, questionIndex: number) {
   return `${positionId}:${questionIndex}`;
 }
 
+function secondaryAnswerKey(positionId: string) {
+  return `${positionId}:secondary`;
+}
+
 function requiresPortfolio(d: FormData) {
   return d.positions.some((id) => getPosition(id)?.requiresPortfolio);
 }
@@ -90,16 +96,26 @@ function validate(d: FormData): Errors {
   else if (d.motivation.trim().length < 20)
     e.motivation = "Please write at least 20 characters";
   if (d.positions.length === 0) e.positions = "Please select at least one position";
-  for (const id of d.positions) {
+  d.positions.forEach((id, rank) => {
     const pos = getPosition(id);
-    if (!pos) continue;
-    pos.roleQuestions.forEach((_, qi) => {
-      const key = answerKey(id, qi);
-      const answer = (d.answers[key] ?? "").trim();
-      if (!answer) e[key] = "Required";
-      else if (answer.length < 20) e[key] = "Please write at least 20 characters";
-    });
-  }
+    if (!pos) return;
+    if (rank === 0) {
+      pos.roleQuestions.forEach((_, qi) => {
+        const key = answerKey(id, qi);
+        const answer = (d.answers[key] ?? "").trim();
+        if (!answer) e[key] = "Required";
+        else if (answer.length < 20)
+          e[key] = "Please write at least 20 characters";
+      });
+      return;
+    }
+
+    const key = secondaryAnswerKey(id);
+    const answer = (d.answers[key] ?? "").trim();
+    if (!answer) e[key] = "Required";
+    else if (answer.length < SECONDARY_CHOICE_MIN_LENGTH)
+      e[key] = `Please write at least ${SECONDARY_CHOICE_MIN_LENGTH} characters`;
+  });
   if (requiresPortfolio(d) && !d.portfolio.trim())
     e.portfolio = "A portfolio link is required for Content positions";
   if (!d.canCommit) e.canCommit = "We ask core members to commit 3–6 months";
@@ -240,7 +256,9 @@ function PositionCard({
         </ul>
         <p className="text-xs text-black/40 mt-3 ml-7">
           {selected
-            ? `Your ${ORDINALS[rank]} choice ↑ answer the questions below`
+            ? rank === 0
+              ? `Your ${ORDINALS[rank]} choice ↑ answer the detailed questions below`
+              : `Your ${ORDINALS[rank]} choice ↑ add a quick backup-choice reason below`
             : disabled
               ? `Maximum ${MAX_POSITIONS_PER_APPLICATION} positions`
               : "Click to select this position →"}
@@ -329,9 +347,18 @@ export default function VolunteerForm() {
     setStatus("submitting");
     setServerError(null);
     try {
-      const positionAnswers = d.positions.flatMap((id) => {
+      const positionAnswers = d.positions.flatMap((id, rank) => {
         const pos = getPosition(id);
         if (!pos) return [];
+        if (rank > 0) {
+          return [
+            {
+              positionId: id,
+              question: secondaryChoiceQuestion(rank, pos.title),
+              answer: (d.answers[secondaryAnswerKey(id)] ?? "").trim(),
+            },
+          ];
+        }
         return pos.roleQuestions.map((question, qi) => ({
           positionId: id,
           question,
@@ -523,8 +550,9 @@ export default function VolunteerForm() {
         <SectionHeading>Which position(s) are you applying for?</SectionHeading>
         <p className="text-sm text-black/60 mb-5">
           Select up to {MAX_POSITIONS_PER_APPLICATION} positions in order of
-          preference — your first pick is your 1st choice. Each position
-          expands with two quick questions once selected.
+          preference — your first pick is your 1st choice. We ask detailed
+          questions for your 1st choice, then one lighter reason for any backup
+          choices.
         </p>
         {d.positions.length > 0 && (
           <div className="card-flat p-4 mb-5">
@@ -586,29 +614,60 @@ export default function VolunteerForm() {
                       disabled={!selected && atMax}
                       onToggle={() => togglePosition(pos.id)}
                     >
-                      {pos.roleQuestions.map((q, qi) => {
-                        const key = answerKey(pos.id, qi);
-                        const value = d.answers[key] ?? "";
-                        return (
-                          <div key={key} id={`field-${key}`}>
-                            <Label text={q} required />
-                            <div className="relative">
-                              <textarea
-                                value={value}
-                                onChange={(e) => setAnswer(key, e.target.value)}
-                                maxLength={1000}
-                                rows={3}
-                                className={inputBase}
-                                placeholder="Your answer..."
-                              />
-                              <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
-                                {value.length}/1000
-                              </span>
-                            </div>
-                            <ErrMsg msg={errors[key]} />
-                          </div>
-                        );
-                      })}
+                      {rank === 0
+                        ? pos.roleQuestions.map((q, qi) => {
+                            const key = answerKey(pos.id, qi);
+                            const value = d.answers[key] ?? "";
+                            return (
+                              <div key={key} id={`field-${key}`}>
+                                <Label text={q} required />
+                                <div className="relative">
+                                  <textarea
+                                    value={value}
+                                    onChange={(e) =>
+                                      setAnswer(key, e.target.value)
+                                    }
+                                    maxLength={1000}
+                                    rows={3}
+                                    className={inputBase}
+                                    placeholder="Your answer..."
+                                  />
+                                  <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
+                                    {value.length}/1000
+                                  </span>
+                                </div>
+                                <ErrMsg msg={errors[key]} />
+                              </div>
+                            );
+                          })
+                        : (() => {
+                            const key = secondaryAnswerKey(pos.id);
+                            const value = d.answers[key] ?? "";
+                            return (
+                              <div key={key} id={`field-${key}`}>
+                                <Label
+                                  text={secondaryChoiceQuestion(rank, pos.title)}
+                                  required
+                                />
+                                <div className="relative">
+                                  <textarea
+                                    value={value}
+                                    onChange={(e) =>
+                                      setAnswer(key, e.target.value)
+                                    }
+                                    maxLength={500}
+                                    rows={2}
+                                    className={inputBase}
+                                    placeholder="One or two sentences is enough..."
+                                  />
+                                  <span className="absolute bottom-2.5 right-3 text-xs text-black/60/40 select-none pointer-events-none">
+                                    {value.length}/500
+                                  </span>
+                                </div>
+                                <ErrMsg msg={errors[key]} />
+                              </div>
+                            );
+                          })()}
                     </PositionCard>
                   );
                 })}

@@ -246,3 +246,11 @@ export function getPosition(id: string): Position | undefined {
 export function positionTitle(id: string): string {
   return getPosition(id)?.title ?? id;
 }
+
+export function rankLabel(rank: number): string {
+  return ["1st", "2nd", "3rd"][rank] ?? `${rank + 1}th`;
+}
+
+export function secondaryChoiceQuestion(rank: number, title: string): string {
+  return `Why is ${title} your ${rankLabel(rank)} choice?`;
+}
