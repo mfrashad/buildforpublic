@@ -447,6 +447,8 @@ interface InviteDefaults {
   senderTitle: string;
   subjectTemplate: string;
   bodyTemplate: string;
+  /** JSON map of positionId → summary override, "" entries fall back to catalog. */
+  positionSummaries: string;
 }
 
 const INVITE_DEFAULTS: InviteDefaults = {
@@ -460,6 +462,7 @@ const INVITE_DEFAULTS: InviteDefaults = {
   senderTitle: "",
   subjectTemplate: DEFAULT_INVITE_SUBJECT_TEMPLATE,
   bodyTemplate: DEFAULT_INVITE_BODY_TEMPLATE,
+  positionSummaries: "{}",
 };
 
 const INVITE_SETTING_KEYS: Record<keyof InviteDefaults, string> = {
@@ -473,7 +476,17 @@ const INVITE_SETTING_KEYS: Record<keyof InviteDefaults, string> = {
   senderTitle: "invite.senderTitle",
   subjectTemplate: "invite.subjectTemplate",
   bodyTemplate: "invite.bodyTemplate",
+  positionSummaries: "invite.positionSummaries",
 };
+
+function parseSummaryOverrides(json: string): Record<string, string> {
+  try {
+    const parsed = JSON.parse(json);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
 
 function inviteDefaultsFromSettings(
   settings: Record<string, string> | undefined,
@@ -541,14 +554,14 @@ function InviteEmailGenerator({
 
   const shortlisted = volunteer.shortlistedPositions ?? [];
   const dateRange = dateRangeLabel(draft.dateFrom, draft.dateTo);
-  const deadline = formatDateTime(draft.deadlineAt);
+  const deadline = formatDate(draft.deadlineAt.slice(0, 10));
   const interviewSlot = formatDateTime(volunteer.interviewSlot ?? "");
   const generated = useMemo(
     () =>
       buildInviteEmail({
         name: volunteer.name,
         email: volunteer.email,
-        positionTitles: shortlisted.map(positionTitle),
+        positionIds: shortlisted,
         bookingLink: draft.bookingLink,
         dateRange,
         deadline,
@@ -560,6 +573,7 @@ function InviteEmailGenerator({
         senderTitle: draft.senderTitle,
         subjectTemplate: draft.subjectTemplate,
         bodyTemplate: draft.bodyTemplate,
+        summaryOverrides: parseSummaryOverrides(draft.positionSummaries),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -633,8 +647,8 @@ function InviteEmailGenerator({
         <div>
           <p className="text-xs text-black/40 font-medium mb-1">Booking deadline</p>
           <input
-            type="datetime-local"
-            value={draft.deadlineAt}
+            type="date"
+            value={draft.deadlineAt.slice(0, 10)}
             onChange={(e) => setDefault("deadlineAt", e.target.value)}
             className={smallInput}
             onClick={(e) => e.stopPropagation()}
@@ -723,6 +737,7 @@ function InviteEmailGenerator({
               ...prev,
               subjectTemplate: DEFAULT_INVITE_SUBJECT_TEMPLATE,
               bodyTemplate: DEFAULT_INVITE_BODY_TEMPLATE,
+              positionSummaries: "{}",
             }));
           }}
           className="text-xs px-3 py-1.5 border border-black/20 rounded-lg text-black/60 hover:text-black hover:border-black transition-colors font-medium"
@@ -771,6 +786,42 @@ function InviteEmailGenerator({
                 {token}
               </button>
             ))}
+          </div>
+          <div>
+            <p className="text-xs text-black/40 font-medium mb-1">
+              Position descriptions — shown next to each shortlisted position
+              in {"{{positionsList}}"}
+            </p>
+            <div className="space-y-2">
+              {POSITIONS.map((p) => {
+                const overrides = parseSummaryOverrides(draft.positionSummaries);
+                return (
+                  <div key={p.id} className="flex items-center gap-2">
+                    <span className="w-36 shrink-0 text-xs text-black/50">
+                      {p.title}
+                    </span>
+                    <input
+                      type="text"
+                      value={overrides[p.id] ?? p.summary}
+                      onChange={(e) => {
+                        const next = {
+                          ...overrides,
+                          [p.id]: e.target.value,
+                        };
+                        // Identical-to-catalog entries drop out so catalog edits flow through
+                        if (e.target.value === p.summary) delete next[p.id];
+                        setDefault(
+                          "positionSummaries",
+                          JSON.stringify(next),
+                        );
+                      }}
+                      className={smallInput}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

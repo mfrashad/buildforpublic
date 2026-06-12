@@ -1,3 +1,5 @@
+import { getPosition, positionTitle } from "@/lib/positions";
+
 export const DEFAULT_INVITE_SUBJECT_TEMPLATE =
   "Build for Public - Interview Invitation";
 
@@ -21,6 +23,10 @@ During the interview, we'll discuss:
 - Your skills and experience relevant to the role
 - What to expect from the position and the community
 - Any questions you might have for us
+
+In case you'd like a refresher on who we are: Build for Public is a community of volunteer builders shipping open-source software for NGOs, nonprofits, and communities that private capital won't serve.
+- Website: https://buildforpublic.com
+- The LinkedIn post you likely found us through: https://www.linkedin.com/posts/mfathyrashad_build-for-public-open-source-tech-for-the-share-7468574544933535744-B2am/
 
 Please try to schedule your interview by {{deadline}}. If you are unable to find a suitable slot, just reply directly to this email, and we'll do our best to accommodate you.
 
@@ -51,7 +57,7 @@ export const INVITE_TEMPLATE_TOKENS = [
 export interface InviteEmailInput {
   name: string;
   email?: string;
-  positionTitles: string[];
+  positionIds: string[];
   bookingLink: string;
   dateRange: string;
   deadline: string;
@@ -63,6 +69,8 @@ export interface InviteEmailInput {
   senderTitle: string;
   subjectTemplate?: string;
   bodyTemplate?: string;
+  /** Per-position summary overrides (positionId → text); falls back to the catalog summary. */
+  summaryOverrides?: Record<string, string>;
 }
 
 function or(value: string | undefined, placeholder: string) {
@@ -70,14 +78,26 @@ function or(value: string | undefined, placeholder: string) {
 }
 
 function renderTemplate(template: string, input: InviteEmailInput) {
-  const positions = input.positionTitles.length
-    ? input.positionTitles
+  const titles = input.positionIds.length
+    ? input.positionIds.map(positionTitle)
     : ["[Position]"];
+  // "- Title — one-sentence description" per shortlisted position
+  const overrides = input.summaryOverrides ?? {};
+  const positionsList = input.positionIds.length
+    ? input.positionIds
+        .map((id) => {
+          const position = getPosition(id);
+          if (!position) return `- ${id}`;
+          const summary = overrides[id]?.trim() || position.summary;
+          return `- ${position.title} — ${summary}`;
+        })
+        .join("\n")
+    : "- [Position]";
   const replacements: Record<string, string> = {
     "{{name}}": or(input.name, "[Applicant's Name]"),
     "{{email}}": or(input.email, "[Applicant Email]"),
-    "{{positions}}": positions.join(", "),
-    "{{positionsList}}": positions.map((t) => `- ${t}`).join("\n"),
+    "{{positions}}": titles.join(", "),
+    "{{positionsList}}": positionsList,
     "{{bookingLink}}": or(input.bookingLink, "[Insert Calendly/Booking Link]"),
     "{{dateRange}}": or(input.dateRange, "[Insert Date Range]"),
     "{{deadline}}": or(input.deadline, "[Insert Deadline Date/Time]"),
