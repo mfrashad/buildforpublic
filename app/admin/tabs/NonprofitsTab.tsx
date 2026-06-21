@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -45,6 +45,13 @@ const STATUSES = [
   "no_response",
   "declined",
 ];
+
+function fmtFollowers(n?: number): string {
+  if (n === undefined || n === null) return "—";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
+  return String(n);
+}
 
 // ── Outreach sub-view ─────────────────────────────────────────────────────────
 
@@ -175,6 +182,16 @@ function OutreachView() {
                   <Td>
                     <div className={r.hidden ? "opacity-40" : ""}>
                       <p className="font-medium text-black">{r.orgName}</p>
+                      {(r.cause || r.followers != null) && (
+                        <p className="text-[11px] text-black/40 mt-0.5">
+                          {[
+                            r.cause?.replace(/-/g, " "),
+                            r.followers != null ? `${fmtFollowers(r.followers)} followers` : null,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      )}
                       {r.description && (
                         <p className="text-xs text-black/50 mt-0.5 line-clamp-2 max-w-md">
                           {r.description}
@@ -323,6 +340,8 @@ function BrowseLeadsView() {
   const [search, setSearch] = useState("");
   const [hasInstagram, setHasInstagram] = useState(false);
   const [websiteStatus, setWebsiteStatus] = useState("");
+  const [causeFilter, setCauseFilter] = useState("");
+  const [sortBy, setSortBy] = useState("followers");
 
   // Debounce the search so we don't refetch (and flash the skeleton) on every
   // keystroke — the query arg only updates 250ms after typing stops.
@@ -341,10 +360,27 @@ function BrowseLeadsView() {
 
   const claimed = new Set((outreach ?? []).map((r) => r.leadKey).filter(Boolean));
 
+  const causeOptions = useMemo(() => {
+    const s = new Set<string>();
+    for (const l of leads ?? []) if (l.cause) s.add(l.cause);
+    return [...s].sort().map((c) => ({ value: c, label: c.replace(/-/g, " ") }));
+  }, [leads]);
+
+  const shown = useMemo(() => {
+    let l = [...(leads ?? [])];
+    if (causeFilter) l = l.filter((x) => x.cause === causeFilter);
+    if (sortBy === "followers") {
+      l.sort((a, b) => (b.followers ?? -1) - (a.followers ?? -1));
+    } else {
+      l.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return l;
+  }, [leads, causeFilter, sortBy]);
+
   return (
     <div className="space-y-4">
-      <SectionHeader title="Browse leads" count={leads?.length}>
-        <span className="text-xs text-black/30">from openngo</span>
+      <SectionHeader title="Browse leads" count={shown.length}>
+        <span className="text-xs text-black/30">from openngo · ranked by IG reach</span>
       </SectionHeader>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -353,6 +389,12 @@ function BrowseLeadsView() {
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder="Search by name…"
           className="text-sm border border-black/15 rounded-lg px-3 py-1.5 focus:outline-none focus:border-black/40 w-56"
+        />
+        <FilterSelect
+          label="Cause"
+          value={causeFilter}
+          onChange={setCauseFilter}
+          options={causeOptions}
         />
         <FilterSelect
           label="Website"
@@ -373,25 +415,37 @@ function BrowseLeadsView() {
           />
           Has Instagram
         </label>
+        <label className="flex items-center gap-1.5 text-xs text-black/50">
+          <span className="font-medium">Sort</span>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="text-xs border border-black/15 rounded-md px-2 py-1 bg-white text-black/70 focus:outline-none focus:border-black/40 cursor-pointer"
+          >
+            <option value="followers">IG followers</option>
+            <option value="name">Name</option>
+          </select>
+        </label>
       </div>
 
       {leads === undefined ? (
         <TableSkeleton rows={8} />
-      ) : leads.length === 0 ? (
+      ) : shown.length === 0 ? (
         <EmptyState message="No leads match. Import the openngo CSV or adjust filters." />
       ) : (
         <Table>
           <thead>
             <tr>
               <Th>Non-profit</Th>
+              <Th>Cause</Th>
+              <Th>IG followers</Th>
               <Th>Socials</Th>
               <Th>Website</Th>
-              <Th>Sources</Th>
               <Th>Action</Th>
             </tr>
           </thead>
           <tbody>
-            {leads.map((lead) => {
+            {shown.map((lead) => {
               const added = claimed.has(lead.leadKey);
               return (
                 <Tr key={lead._id}>
@@ -400,6 +454,22 @@ function BrowseLeadsView() {
                     {lead.location && (
                       <p className="text-xs text-black/40">{lead.location}</p>
                     )}
+                  </Td>
+                  <Td>
+                    {lead.cause ? (
+                      <Tag label={lead.cause.replace(/-/g, " ")} />
+                    ) : (
+                      <span className="text-black/25 text-xs">—</span>
+                    )}
+                  </Td>
+                  <Td>
+                    <span
+                      className={`text-sm font-semibold tabular-nums ${
+                        lead.followers ? "text-black" : "text-black/25"
+                      }`}
+                    >
+                      {fmtFollowers(lead.followers)}
+                    </span>
                   </Td>
                   <Td>
                     <SocialLinks
@@ -417,9 +487,6 @@ function BrowseLeadsView() {
                     ) : (
                       <span className="text-black/25 text-xs">—</span>
                     )}
-                  </Td>
-                  <Td>
-                    <span className="text-xs text-black/40">{lead.sources ?? "—"}</span>
                   </Td>
                   <Td>
                     {added ? (

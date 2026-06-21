@@ -325,8 +325,12 @@ export default defineSchema({
     youtube: v.optional(v.string()),
     nSocials: v.optional(v.number()),
     sources: v.optional(v.string()),
+    followers: v.optional(v.number()), // Instagram follower count (for ranking)
+    cause: v.optional(v.string()), // primary cause/category
     importedAt: v.number(),
-  }).index("by_leadKey", ["leadKey"]),
+  })
+    .index("by_leadKey", ["leadKey"])
+    .index("by_followers", ["followers"]),
 
   // ── Non-profit outreach (state) ──────────────────────────────────────────
   // Created when a lead is selected for cold-DMing. Tracks platform, message,
@@ -336,6 +340,8 @@ export default defineSchema({
     leadKey: v.optional(v.string()), // FK to nonprofitLeads (omitted for manual adds)
     orgName: v.string(), // denormalized for display
     description: v.optional(v.string()),
+    followers: v.optional(v.number()), // IG follower count, carried from the lead
+    cause: v.optional(v.string()), // primary cause/category
     // Contact + presence (copied from the lead on add, editable after)
     instagram: v.optional(v.string()),
     facebook: v.optional(v.string()),

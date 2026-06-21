@@ -231,6 +231,8 @@ export const apiDeleteVenue = internalMutation({
 
 const ngoApiFields = {
   description: v.optional(v.string()),
+  followers: v.optional(v.number()),
+  cause: v.optional(v.string()),
   instagram: v.optional(v.string()),
   facebook: v.optional(v.string()),
   twitter: v.optional(v.string()),
@@ -280,6 +282,8 @@ export const apiListNonprofitLeads = internalQuery({
       tiktok: l.tiktok,
       youtube: l.youtube,
       sources: l.sources,
+      followers: l.followers,
+      cause: l.cause,
     }));
   },
 });
@@ -294,6 +298,8 @@ export const apiListNonprofitOutreach = internalQuery({
       leadKey: r.leadKey,
       orgName: r.orgName,
       description: r.description,
+      followers: r.followers,
+      cause: r.cause,
       instagram: r.instagram,
       facebook: r.facebook,
       twitter: r.twitter,
@@ -427,6 +433,8 @@ async function insertNonprofitOutreach(
         website: lead.listedWebsite,
         websiteStatus: lead.websiteStatus,
         location: lead.location,
+        followers: lead.followers,
+        cause: lead.cause,
       }
     : {};
 

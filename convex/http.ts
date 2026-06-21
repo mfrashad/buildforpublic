@@ -66,7 +66,7 @@ function pickVenue(obj: any): any {
 }
 
 const NGO_FIELDS = [
-  "leadKey", "orgName", "description", "instagram", "facebook", "twitter",
+  "leadKey", "orgName", "description", "followers", "cause", "instagram", "facebook", "twitter",
   "linkedin", "tiktok", "youtube", "website", "websiteStatus", "location",
   "email", "phone", "platform", "message", "status", "requirementDocLink",
   "assignedTo", "notes", "hidden",

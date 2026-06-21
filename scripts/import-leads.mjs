@@ -69,6 +69,26 @@ const rows = parseCsv(text);
 const header = rows[0];
 const col = (name) => header.indexOf(name);
 
+// Optional enrichment from the openngo IG follower scrape + cause scoring.
+// ig_followers.json: { "<handle lowercased>": { ok, followers, ... } }
+// ig_candidates.json: [ { leadKey, handle, cause, ... } ]
+function tryLoadJson(rel) {
+  try {
+    return JSON.parse(readFileSync(resolve(__dirname, rel), "utf8"));
+  } catch {
+    return null;
+  }
+}
+const igFollowers = tryLoadJson("../../openngo/data/ig_followers.json") ?? {};
+const igCandidates = tryLoadJson("../../openngo/data/ig_candidates.json") ?? [];
+const causeByLeadKey = new Map(
+  igCandidates.filter((c) => c.cause).map((c) => [c.leadKey, c.cause]),
+);
+function handleFromIg(url) {
+  const m = /instagram\.com\/([^/?#]+)/i.exec(url || "");
+  return m ? m[1].replace(/^@/, "").replace(/\/$/, "").toLowerCase() : "";
+}
+
 const idx = {
   name: col("name"),
   websiteStatus: col("website_status"),
@@ -111,6 +131,13 @@ for (const row of rows.slice(1)) {
   const nSocialsRaw = clean(row[idx.nSocials]);
   const nSocials = nSocialsRaw ? Number(nSocialsRaw) : undefined;
 
+  // Enrichment: IG followers (by handle) + cause (by leadKey)
+  const handle = handleFromIg(instagram);
+  const fRec = handle ? igFollowers[handle] : undefined;
+  const followers =
+    fRec && fRec.ok && typeof fRec.followers === "number" ? fRec.followers : undefined;
+  const cause = causeByLeadKey.get(leadKey) || undefined;
+
   // Drop undefined fields so Convex doesn't try to store them.
   const doc = {
     leadKey,
@@ -126,6 +153,8 @@ for (const row of rows.slice(1)) {
     youtube: clean(row[idx.youtube]),
     nSocials: Number.isFinite(nSocials) ? nSocials : undefined,
     sources: clean(row[idx.sources]),
+    followers,
+    cause,
     importedAt,
   };
   for (const k of Object.keys(doc)) if (doc[k] === undefined) delete doc[k];
