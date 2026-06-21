@@ -13,6 +13,7 @@ import MembersTab from "./tabs/MembersTab";
 import VenuesTab from "./tabs/VenuesTab";
 import NonprofitsTab from "./tabs/NonprofitsTab";
 import ApiAccessTab from "./tabs/ApiAccessTab";
+import AdminsTab from "./tabs/AdminsTab";
 
 type Tab =
   | "overview"
@@ -23,7 +24,8 @@ type Tab =
   | "nonprofits"
   | "events"
   | "members"
-  | "api";
+  | "api"
+  | "admins";
 
 const NAV: { id: Tab; label: string; icon: string }[] = [
   { id: "overview", label: "Overview", icon: "◈" },
@@ -35,6 +37,7 @@ const NAV: { id: Tab; label: string; icon: string }[] = [
   { id: "events", label: "Event RSVPs", icon: "⊛" },
   { id: "members", label: "Members", icon: "⊙" },
   { id: "api", label: "API Access", icon: "⚿" },
+  { id: "admins", label: "Admins", icon: "⚷" },
 ];
 
 // ── Overview ──────────────────────────────────────────────────────────────────
@@ -121,12 +124,12 @@ export default function AdminDashboard() {
     );
   }
 
-  // Client-side gate (UX only — real security is in Convex requireAdmin)
-  const isAdmin = user?.publicMetadata?.role === "admin";
-  // Owner-only sections (Recruitment) — mirrors requireOwner in convex/admin.ts
+  // Client-side gate (UX only — real security is in Convex requireAdmin /
+  // requireOwner). The dashboard is locked to the owner; admins granted via the
+  // Admins tab get admin API access but not the dashboard UI.
   const isOwner = user?.primaryEmailAddress?.emailAddress === OWNER_EMAIL;
 
-  if (!user || !isAdmin) {
+  if (!user || !isOwner) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="border border-black rounded-2xl p-10 text-center max-w-sm shadow-[4px_4px_0_#000]">
@@ -134,7 +137,7 @@ export default function AdminDashboard() {
             Access denied
           </p>
           <p className="text-sm text-black/50 mb-6">
-            {user ? "Your account doesn't have admin access." : "Sign in to continue."}
+            {user ? "This dashboard is restricted to the owner." : "Sign in to continue."}
           </p>
           <div className="flex items-center justify-center gap-3">
             {!user && (
@@ -242,6 +245,7 @@ export default function AdminDashboard() {
           {activeTab === "events" && <EventsTab />}
           {activeTab === "members" && <MembersTab />}
           {activeTab === "api" && <ApiAccessTab />}
+          {activeTab === "admins" && <AdminsTab />}
         </main>
       </div>
     </div>
