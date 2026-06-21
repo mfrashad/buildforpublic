@@ -125,11 +125,12 @@ export default function AdminDashboard() {
   }
 
   // Client-side gate (UX only — real security is in Convex requireAdmin /
-  // requireOwner). The dashboard is locked to the owner; admins granted via the
-  // Admins tab get admin API access but not the dashboard UI.
+  // requireOwner). Admins (Clerk publicMetadata.role === "admin") get the
+  // dashboard; the owner additionally sees owner-only tabs (Recruitment, Admins).
+  const isAdmin = user?.publicMetadata?.role === "admin";
   const isOwner = user?.primaryEmailAddress?.emailAddress === OWNER_EMAIL;
 
-  if (!user || !isOwner) {
+  if (!user || (!isAdmin && !isOwner)) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="border border-black rounded-2xl p-10 text-center max-w-sm shadow-[4px_4px_0_#000]">
@@ -137,7 +138,7 @@ export default function AdminDashboard() {
             Access denied
           </p>
           <p className="text-sm text-black/50 mb-6">
-            {user ? "This dashboard is restricted to the owner." : "Sign in to continue."}
+            {user ? "Your account doesn't have admin access." : "Sign in to continue."}
           </p>
           <div className="flex items-center justify-center gap-3">
             {!user && (
@@ -159,7 +160,9 @@ export default function AdminDashboard() {
     );
   }
 
-  const visibleNav = NAV.filter((n) => n.id !== "volunteers" || isOwner);
+  // Recruitment (volunteer PII) and Admins (role management) are owner-only.
+  const ownerOnlyTabs: Tab[] = ["volunteers", "admins"];
+  const visibleNav = NAV.filter((n) => !ownerOnlyTabs.includes(n.id) || isOwner);
   const activeNav = NAV.find((n) => n.id === activeTab)!;
 
   return (
@@ -245,7 +248,7 @@ export default function AdminDashboard() {
           {activeTab === "events" && <EventsTab />}
           {activeTab === "members" && <MembersTab />}
           {activeTab === "api" && <ApiAccessTab />}
-          {activeTab === "admins" && <AdminsTab />}
+          {activeTab === "admins" && isOwner && <AdminsTab />}
         </main>
       </div>
     </div>
