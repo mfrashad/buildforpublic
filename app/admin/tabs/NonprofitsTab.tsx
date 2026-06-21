@@ -28,7 +28,6 @@ import {
 } from "../ui";
 import {
   AssignedToSelect,
-  CollaboratorsBar,
   FieldInput,
   MessageEditor,
   fmt,
@@ -108,7 +107,6 @@ function OutreachView() {
       />
 
       <SectionHeader title="Active outreach" count={records.length}>
-        <CollaboratorsBar />
         <button
           onClick={() => setShowHidden((v) => !v)}
           className={`text-xs px-3 py-1.5 border rounded-lg transition-colors font-medium ${

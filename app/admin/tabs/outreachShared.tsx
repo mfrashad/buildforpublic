@@ -19,10 +19,33 @@ export function fmt(ts: number) {
 
 const COLLAB_KEY = "outreach_collaborators";
 
+export type AdminUser = { id: string; email: string | null; name: string | null; label: string };
+
 /**
- * Collaborator list for the "Assigned to" dropdown, stored as a comma-separated
- * string in the `settings` table (key `outreach_collaborators`). Falls back to
- * the current admin's name/email when unset.
+ * All users with the admin role (Clerk), used to populate the "Assigned to"
+ * dropdown. Fetched from the admin-accessible /api/admin/team route.
+ */
+export function useAdminUsers() {
+  const [members, setMembers] = useState<AdminUser[]>([]);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/admin/team")
+      .then((r) => (r.ok ? r.json() : { members: [] }))
+      .then((data) => {
+        if (active) setMembers(data.members ?? []);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+  return members;
+}
+
+/**
+ * Legacy collaborator list, stored as a comma-separated string in the `settings`
+ * table (key `outreach_collaborators`). Kept so any names assigned before the
+ * switch to admin-role users remain available; superseded by useAdminUsers.
  */
 export function useCollaborators() {
   const { user } = useUser();
@@ -104,12 +127,12 @@ export function AssignedToSelect({
   value?: string;
   onChange: (v: string | undefined) => void;
 }) {
-  const { collaborators } = useCollaborators();
-  // Include any current value not in the list so it stays selectable.
+  const members = useAdminUsers();
+  const names = members.map((m) => m.label);
+  // Include any current value not in the list (e.g. an old assignment) so it
+  // stays selectable.
   const options =
-    value && !collaborators.includes(value)
-      ? [value, ...collaborators]
-      : collaborators;
+    value && !names.includes(value) ? [value, ...names] : names;
 
   return (
     <select

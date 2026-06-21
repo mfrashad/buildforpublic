@@ -27,7 +27,6 @@ import {
 } from "../ui";
 import {
   AssignedToSelect,
-  CollaboratorsBar,
   FieldInput,
   MessageEditor,
   fmt,
@@ -301,7 +300,6 @@ export default function VenuesTab() {
       />
 
       <SectionHeader title="Venues" count={venues.length}>
-        <CollaboratorsBar />
         <button
           onClick={() => setShowHidden((v) => !v)}
           className={`text-xs px-3 py-1.5 border rounded-lg transition-colors font-medium ${
