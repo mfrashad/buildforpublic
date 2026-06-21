@@ -313,6 +313,32 @@ export const listEventRsvps = query({
   args: {},
   handler: async (ctx) => {
     await requireAdmin(ctx);
-    return await ctx.db.query("eventRsvps").order("desc").collect();
+    const [rsvps, members] = await Promise.all([
+      ctx.db.query("eventRsvps").order("desc").collect(),
+      ctx.db.query("members").collect(),
+    ]);
+    // Auto-match each RSVP to a member record by email (case-insensitive) so we
+    // can show the details we already have (photo, location, work/study).
+    const byEmail = new Map(members.map((m) => [m.email.trim().toLowerCase(), m]));
+    return rsvps.map((r) => {
+      const m = byEmail.get(r.email.trim().toLowerCase());
+      return {
+        ...r,
+        member: m
+          ? {
+              name: m.name,
+              imageUrl: m.imageUrl ?? null,
+              city: m.city ?? null,
+              country: m.country,
+              currentStatus: m.currentStatus ?? null,
+              company: m.company ?? null,
+              university: m.university ?? null,
+              position: m.position ?? null,
+              github: m.github ?? null,
+              linkedin: m.linkedin ?? null,
+            }
+          : null,
+      };
+    });
   },
 });

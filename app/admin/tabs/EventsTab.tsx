@@ -21,6 +21,34 @@ function fmt(ts: number) {
   });
 }
 
+type Member = NonNullable<
+  NonNullable<ReturnType<typeof useQuery<typeof api.admin.listEventRsvps>>>[number]["member"]
+>;
+
+function location(m: Member): string {
+  return [m.city, m.country].filter(Boolean).join(", ");
+}
+
+function workStudy(m: Member): string {
+  if (m.currentStatus === "student") return ["Student", m.university].filter(Boolean).join(" · ");
+  if (m.currentStatus === "working")
+    return ["Working", m.position && m.company ? `${m.position} @ ${m.company}` : m.company].filter(Boolean).join(" · ");
+  return m.company || m.university || "";
+}
+
+function Avatar({ src, name }: { src: string | null; name: string }) {
+  const initials = name.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  if (src) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt="" className="w-7 h-7 rounded-full bg-black/5 object-cover shrink-0" />;
+  }
+  return (
+    <span className="w-7 h-7 rounded-full bg-black/[0.07] text-black/40 text-[10px] font-semibold flex items-center justify-center shrink-0">
+      {initials || "?"}
+    </span>
+  );
+}
+
 export default function EventsTab() {
   const rsvps = useQuery(api.admin.listEventRsvps);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
@@ -48,10 +76,12 @@ export default function EventsTab() {
         .sort((a, b) => a._creationTime - b._creationTime)
         .map((r, i) => ({
           "#": i + 1,
-          name: r.name ?? "",
+          name: r.name ?? r.member?.name ?? "",
           email: r.email,
+          location: r.member ? location(r.member) : "",
+          status: r.member ? workStudy(r.member) : "",
+          member: r.member ? "yes" : "no",
           registered: fmt(r._creationTime),
-          clerkId: r.clerkId ?? "",
         }))
     : [];
 
@@ -90,41 +120,59 @@ export default function EventsTab() {
             <thead>
               <tr>
                 <Th>#</Th>
-                <Th>Name</Th>
+                <Th>Member</Th>
                 <Th>Email</Th>
+                <Th>Location</Th>
+                <Th>Work / Study</Th>
                 <Th>Registered</Th>
-                <Th>Clerk user</Th>
               </tr>
             </thead>
             <tbody>
               {active.items
                 .slice()
                 .sort((a, b) => a._creationTime - b._creationTime)
-                .map((r, i) => (
-                  <Tr key={r._id}>
-                    <Td><span className="text-black/30 text-xs">{i + 1}</span></Td>
-                    <Td>
-                      <span className="text-black/70 text-sm">
-                        {r.name ?? <span className="text-black/25">—</span>}
-                      </span>
-                    </Td>
-                    <Td>
-                      <a
-                        href={`mailto:${r.email}`}
-                        className="text-sm text-black hover:underline"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {r.email}
-                      </a>
-                    </Td>
-                    <Td><span className="text-black/40 text-xs">{fmt(r._creationTime)}</span></Td>
-                    <Td>
-                      {r.clerkId
-                        ? <span className="text-xs text-black/30 font-mono">{r.clerkId.slice(0, 14)}…</span>
-                        : <span className="text-black/20 text-xs">guest</span>}
-                    </Td>
-                  </Tr>
-                ))}
+                .map((r, i) => {
+                  const m = r.member;
+                  const displayName = r.name ?? m?.name ?? "";
+                  return (
+                    <Tr key={r._id}>
+                      <Td><span className="text-black/30 text-xs">{i + 1}</span></Td>
+                      <Td>
+                        <div className="flex items-center gap-2.5">
+                          <Avatar src={m?.imageUrl ?? null} name={displayName} />
+                          <span className="text-black/80 text-sm">
+                            {displayName || <span className="text-black/25">—</span>}
+                            {!m && (
+                              <span className="ml-2 text-[10px] uppercase tracking-wider text-amber-600/80 align-middle">
+                                guest
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      </Td>
+                      <Td>
+                        <a
+                          href={`mailto:${r.email}`}
+                          className="text-sm text-black hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {r.email}
+                        </a>
+                      </Td>
+                      <Td>
+                        <span className="text-black/60 text-sm">
+                          {m && location(m) ? location(m) : <span className="text-black/20">—</span>}
+                        </span>
+                      </Td>
+                      <Td>
+                        <span className="text-black/60 text-sm">
+                          {m && workStudy(m) ? workStudy(m) : <span className="text-black/20">—</span>}
+                        </span>
+                      </Td>
+                      <Td><span className="text-black/40 text-xs">{fmt(r._creationTime)}</span></Td>
+                    </Tr>
+                  );
+                })}
             </tbody>
           </Table>
         </div>
