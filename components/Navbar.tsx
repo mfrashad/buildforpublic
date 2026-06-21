@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
-import { useUser, UserButton } from "@clerk/nextjs";
+import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,6 +61,13 @@ export default function Navbar() {
           >
             Contact
           </button>
+          {isSignedIn === false && (
+            <SignInButton mode="modal" forceRedirectUrl="/post-signin">
+              <button className="btn-pill btn-pill-outline text-sm py-2 px-5">
+                Sign in
+              </button>
+            </SignInButton>
+          )}
           <a href="/volunteer" className="btn-pill btn-pill-filled text-sm py-2 px-5">
             Volunteer
           </a>
@@ -104,6 +111,16 @@ export default function Navbar() {
           ))}
 
           <div className="pt-4 flex flex-col gap-3">
+            {isSignedIn === false && (
+              <SignInButton mode="modal" forceRedirectUrl="/post-signin">
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="btn-pill btn-pill-outline text-center w-full"
+                >
+                  Sign in
+                </button>
+              </SignInButton>
+            )}
             <a
               href="/volunteer"
               onClick={() => setMobileOpen(false)}

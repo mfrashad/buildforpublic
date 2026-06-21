@@ -250,6 +250,134 @@ export default defineSchema({
     value: v.string(),
   }).index("by_key", ["key"]),
 
+  // Per-admin API keys for the outreach HTTP API (one per Clerk admin).
+  apiKeys: defineTable({
+    key: v.string(),
+    clerkId: v.string(), // owner (identity.subject)
+    label: v.optional(v.string()), // owner name/email for display
+    active: v.boolean(),
+  })
+    .index("by_key", ["key"])
+    .index("by_clerkId", ["clerkId"])
+    .index("by_active", ["active"]),
+
+  // ── Venue outreach ───────────────────────────────────────────────────────
+  // Cold-DM tracking for event venues (cafes, coworking/event spaces).
+  venueOutreach: defineTable({
+    name: v.string(),
+    description: v.optional(v.string()), // blurb / why it's a good fit (agent-fillable)
+    contactHandle: v.optional(v.string()), // generic contact (name / DM handle)
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    instagram: v.optional(v.string()), // IG profile (handle or URL)
+    threads: v.optional(v.string()), // Threads profile (handle or URL)
+    website: v.optional(v.string()),
+    googleMaps: v.optional(v.string()), // Google Maps link or place name
+    platform: v.optional(
+      v.union(
+        v.literal("instagram"),
+        v.literal("threads"),
+        v.literal("whatsapp"),
+        v.literal("email"),
+        v.literal("phone"),
+        v.literal("facebook"),
+        v.literal("other"),
+      ),
+    ),
+    // Optional logistics / amenities
+    wifi: v.optional(v.boolean()),
+    plugs: v.optional(v.boolean()),
+    projector: v.optional(v.boolean()),
+    parking: v.optional(v.boolean()),
+    tables: v.optional(v.boolean()),
+    maxOccupant: v.optional(v.number()),
+    message: v.optional(v.string()), // the message we sent
+    eventName: v.optional(v.string()), // which event this venue is for
+    status: v.union(
+      v.literal("to_contact"),
+      v.literal("dm_sent"),
+      v.literal("responded"),
+      v.literal("negotiating"),
+      v.literal("secured"),
+      v.literal("no_response"),
+      v.literal("declined"),
+    ),
+    assignedTo: v.optional(v.string()), // collaborator handling this one
+    notes: v.optional(v.string()),
+    hidden: v.optional(v.boolean()),
+  }).index("by_status", ["status"]),
+
+  // ── Non-profit leads (catalog) ───────────────────────────────────────────
+  // Imported from the openngo leads list (../openngo/data/leads.csv).
+  // Read-only catalog you browse and select from; kept separate from outreach
+  // state so re-importing never clobbers progress.
+  nonprofitLeads: defineTable({
+    leadKey: v.string(), // stable dedupe key (profile_urls | instagram | name)
+    name: v.string(),
+    websiteStatus: v.optional(v.string()), // none / social / free_builder / dead
+    listedWebsite: v.optional(v.string()),
+    location: v.optional(v.string()),
+    instagram: v.optional(v.string()),
+    facebook: v.optional(v.string()),
+    twitter: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+    tiktok: v.optional(v.string()),
+    youtube: v.optional(v.string()),
+    nSocials: v.optional(v.number()),
+    sources: v.optional(v.string()),
+    importedAt: v.number(),
+  }).index("by_leadKey", ["leadKey"]),
+
+  // ── Non-profit outreach (state) ──────────────────────────────────────────
+  // Created when a lead is selected for cold-DMing. Tracks platform, message,
+  // status, and whether we got a requirement doc — collaboratively, so the
+  // assignedTo field prevents two people DMing the same org.
+  nonprofitOutreach: defineTable({
+    leadKey: v.optional(v.string()), // FK to nonprofitLeads (omitted for manual adds)
+    orgName: v.string(), // denormalized for display
+    description: v.optional(v.string()),
+    // Contact + presence (copied from the lead on add, editable after)
+    instagram: v.optional(v.string()),
+    facebook: v.optional(v.string()),
+    twitter: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+    tiktok: v.optional(v.string()),
+    youtube: v.optional(v.string()),
+    website: v.optional(v.string()),
+    websiteStatus: v.optional(v.string()), // none / social / free_builder / dead
+    location: v.optional(v.string()),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    platform: v.optional(
+      v.union(
+        v.literal("instagram"),
+        v.literal("facebook"),
+        v.literal("whatsapp"),
+        v.literal("email"),
+        v.literal("linkedin"),
+        v.literal("twitter"),
+        v.literal("other"),
+      ),
+    ),
+    message: v.optional(v.string()),
+    status: v.union(
+      v.literal("to_contact"),
+      v.literal("dm_sent"),
+      v.literal("responded"),
+      v.literal("in_discussion"),
+      v.literal("requirement_received"),
+      v.literal("secured"),
+      v.literal("no_response"),
+      v.literal("declined"),
+    ),
+    requirementDocLink: v.optional(v.string()), // link to the requirement doc, if received
+    assignedTo: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    hidden: v.optional(v.boolean()),
+  })
+    .index("by_status", ["status"])
+    .index("by_leadKey", ["leadKey"]),
+
   ngoHelped: defineTable({
     name: v.string(),
     country: v.string(),

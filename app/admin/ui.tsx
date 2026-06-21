@@ -42,6 +42,15 @@ const STATUS_STYLES: Record<string, string> = {
   interviewed: "bg-[#94e8ff] text-black border-black/20",
   offered: "bg-amber-50 text-amber-700 border-amber-300",
   not_shortlisted: "bg-black/20 text-black/50 border-black/10",
+  // Outreach pipeline (venues + non-profits)
+  to_contact: "bg-black/10 text-black/60 border-black/10",
+  dm_sent: "bg-purple-50 text-purple-700 border-purple-200",
+  responded: "bg-[#94e8ff] text-black border-black/20",
+  negotiating: "bg-amber-50 text-amber-700 border-amber-300",
+  in_discussion: "bg-amber-50 text-amber-700 border-amber-300",
+  requirement_received: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  secured: "bg-[#6ff5b6] text-black border-black/20",
+  no_response: "bg-black/20 text-black/50 border-black/10",
 };
 
 export function StatusBadge({ status }: { status: string }) {
@@ -413,10 +422,14 @@ export function DeleteButton({ label = "Delete", onClick }: { label?: string; on
 
 // ── Social links ──────────────────────────────────────────────────────────────
 
-type SocialType = "linkedin" | "github" | "twitter" | "instagram" | "website";
+type SocialType = "linkedin" | "github" | "twitter" | "instagram" | "threads" | "website" | "maps";
 
 function socialHref(type: SocialType, value: string): string {
   const v = value.trim();
+  if (type === "maps") {
+    if (/^https?:\/\//i.test(v)) return v;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v)}`;
+  }
   if (/^https?:\/\//i.test(v)) return v;
   const handle = v.replace(/^@/, "");
   switch (type) {
@@ -424,6 +437,7 @@ function socialHref(type: SocialType, value: string): string {
     case "github":    return `https://github.com/${handle}`;
     case "twitter":   return `https://twitter.com/${handle}`;
     case "instagram": return `https://instagram.com/${handle}`;
+    case "threads":   return `https://threads.net/@${handle}`;
     default:          return v.startsWith("//") ? `https:${v}` : `https://${v}`;
   }
 }
@@ -453,6 +467,17 @@ const SOCIAL_ICONS: Record<SocialType, React.ReactNode> = {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
       <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+  ),
+  maps: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
+  ),
+  threads: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+      <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.781 3.631 2.695 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.74-1.757-.5-.586-1.27-.885-2.29-.892h-.029c-.831 0-1.96.227-2.681 1.314L8.353 7.494c.966-1.433 2.535-2.214 4.397-2.214h.039c3.115.02 4.972 1.949 5.155 5.31.105.045.21.092.314.142 1.477.692 2.567 1.748 3.157 3.06.78 1.733.852 4.567-1.498 6.865C18.142 22.973 16.05 24 12.186 24z"/>
     </svg>
   ),
 };

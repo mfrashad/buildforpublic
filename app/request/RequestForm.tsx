@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { BRIEF_SAMPLES } from "@/lib/constants";
 
 const ORG_TYPES = [
   { value: "ngo", label: "NGO (Non-Governmental Organisation)" },
@@ -335,13 +336,32 @@ export default function RequestForm() {
           <SectionHeading>About your site</SectionHeading>
 
           {/* Content readiness note */}
-          <div className="card-flat p-4 mb-6 border-l-4 border-l-black bg-bp-yellow/20">
+          <div className="card-flat p-4 mb-6 border-l-4 border-l-black bg-bp-yellow/20 space-y-3">
             <p className="text-sm leading-relaxed text-black">
-              <span className="font-semibold">Before you submit</span> — to build a good site we need{" "}
-              <span className="font-medium">real copy</span> (text about your org, mission, pillars, and what
-              you want to say) and <span className="font-medium">quality photos</span>. Without these it&apos;s
-              very hard to scope and design something worth building. If you don&apos;t have a doc yet, write
-              one first and link it below.
+              <span className="font-semibold">What helps us build a great site</span> — ideally a short
+              doc with your <span className="font-medium">copy</span> (who you are, your mission, and what
+              each section should say) plus a few <span className="font-medium">quality photos</span>.
+              Not sure what that looks like? Here are two real examples to follow:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {BRIEF_SAMPLES.map((s) => (
+                <a
+                  key={s.url}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 border border-black rounded-lg bg-surface hover:bg-black hover:text-white transition-colors"
+                >
+                  📄 {s.label}
+                </a>
+              ))}
+            </div>
+            <p className="text-sm leading-relaxed text-black/70">
+              <span className="font-semibold text-black">No doc? No problem.</span> If that feels like too
+              much, just point us to a social account you&apos;re happy with — e.g. an active{" "}
+              <span className="font-medium">Instagram</span> — and our volunteers will source your brand
+              style, colours, and photos from there and draft the copy for you. We&apos;ll refine it
+              together.
             </p>
           </div>
 

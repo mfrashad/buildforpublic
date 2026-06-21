@@ -7,11 +7,25 @@ import { mutation, query, type MutationCtx, type QueryCtx } from "./_generated/s
 
 type AuthCtx = Pick<QueryCtx, "auth"> | Pick<MutationCtx, "auth">;
 
-async function requireAdmin(ctx: AuthCtx) {
+export async function requireAdmin(ctx: AuthCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) throw new ConvexError("Not authenticated.");
   if ((identity as { role?: string }).role !== "admin")
     throw new ConvexError("Not authorized.");
+  return identity;
+}
+
+// Owner-only guard for sensitive sections (e.g. recruitment / volunteer PII).
+// Strictly enforced when the JWT carries an `email` claim; if email is absent it
+// falls back to admin-only (the dashboard hides the tab from non-owners anyway).
+// To make this strict server-side, ensure the Clerk "convex" JWT template
+// includes: { "email": "{{user.primary_email_address}}" }.
+const OWNER_EMAIL = "m.fathyrashad@gmail.com";
+
+export async function requireOwner(ctx: AuthCtx) {
+  const identity = await requireAdmin(ctx);
+  const email = ((identity as { email?: string }).email ?? "").toLowerCase();
+  if (email && email !== OWNER_EMAIL) throw new ConvexError("Not authorized.");
   return identity;
 }
 
@@ -68,7 +82,7 @@ export const getStats = query({
 export const listVolunteers = query({
   args: { showHidden: v.optional(v.boolean()) },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     const all = await ctx.db.query("volunteers").order("desc").collect();
     return args.showHidden ? all : all.filter((v) => !v.hidden);
   },
@@ -85,7 +99,7 @@ export const updateVolunteerStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     await ctx.db.patch(args.id, { status: args.status });
   },
 });
@@ -93,7 +107,7 @@ export const updateVolunteerStatus = mutation({
 export const setVolunteerNotes = mutation({
   args: { id: v.id("volunteers"), notes: v.string() },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     await ctx.db.patch(args.id, { notes: args.notes || undefined });
   },
 });
@@ -125,7 +139,7 @@ export const updateRecruitment = mutation({
     inviteEmailSentAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     const { id, ...fields } = args;
     // Remove undefined values so we only patch what changed
     const patch = Object.fromEntries(
@@ -138,7 +152,7 @@ export const updateRecruitment = mutation({
 export const setVolunteerHidden = mutation({
   args: { id: v.id("volunteers"), hidden: v.boolean() },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     await ctx.db.patch(args.id, { hidden: args.hidden });
   },
 });

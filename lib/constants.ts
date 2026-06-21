@@ -1,3 +1,7 @@
+// Owner — sees owner-only admin sections (e.g. Recruitment). Mirrors the
+// server-side OWNER_EMAIL guard in convex/admin.ts.
+export const OWNER_EMAIL = "m.fathyrashad@gmail.com";
+
 export const SITE = {
   name: "Build for Public",
   domain: "buildforpublic.com",
@@ -9,6 +13,19 @@ export const SITE = {
   tiktok: "https://tiktok.com/@mfrashad",
   discord: "", // update when Discord server is created
 };
+
+// Example project briefs we share with NGOs so they know what "good" looks like
+// when describing their project (copy, mission, photos, brand references).
+export const BRIEF_SAMPLES = [
+  {
+    label: "Sample brief 1",
+    url: "https://docs.google.com/document/d/1rRh1Cv2qDn56KEkoCooA3yiSqJXKbxR1TJYFzMCsGJA/edit?usp=sharing",
+  },
+  {
+    label: "Sample brief 2",
+    url: "https://docs.google.com/document/d/10U5fmTA_2K6SX_GrUAqZjdETjj0NPnvuCZetDJsqGKo/edit?usp=sharing",
+  },
+];
 
 export const STATS = [
   { value: "20+", label: "Active Builders" },

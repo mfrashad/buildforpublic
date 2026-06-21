@@ -9,6 +9,7 @@
  */
 
 import type * as admin from "../admin.js";
+import type * as apiKeys from "../apiKeys.js";
 import type * as communityProjects from "../communityProjects.js";
 import type * as emails from "../emails.js";
 import type * as eventRsvps from "../eventRsvps.js";
@@ -16,6 +17,7 @@ import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as ngoHelped from "../ngoHelped.js";
 import type * as opportunities from "../opportunities.js";
+import type * as outreach from "../outreach.js";
 import type * as positionsData from "../positionsData.js";
 import type * as profiles from "../profiles.js";
 import type * as projectRequests from "../projectRequests.js";
@@ -30,6 +32,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  apiKeys: typeof apiKeys;
   communityProjects: typeof communityProjects;
   emails: typeof emails;
   eventRsvps: typeof eventRsvps;
@@ -37,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   members: typeof members;
   ngoHelped: typeof ngoHelped;
   opportunities: typeof opportunities;
+  outreach: typeof outreach;
   positionsData: typeof positionsData;
   profiles: typeof profiles;
   projectRequests: typeof projectRequests;

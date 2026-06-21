@@ -1,24 +1,40 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useUser, SignInButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { OWNER_EMAIL } from "@/lib/constants";
 import RecruitmentTab from "./tabs/RecruitmentTab";
 import ProjectRequestsTab from "./tabs/ProjectRequestsTab";
 import OpportunitiesTab from "./tabs/OpportunitiesTab";
 import EventsTab from "./tabs/EventsTab";
 import MembersTab from "./tabs/MembersTab";
+import VenuesTab from "./tabs/VenuesTab";
+import NonprofitsTab from "./tabs/NonprofitsTab";
+import ApiAccessTab from "./tabs/ApiAccessTab";
 
-type Tab = "overview" | "volunteers" | "project-requests" | "opportunities" | "events" | "members";
+type Tab =
+  | "overview"
+  | "volunteers"
+  | "project-requests"
+  | "opportunities"
+  | "venues"
+  | "nonprofits"
+  | "events"
+  | "members"
+  | "api";
 
 const NAV: { id: Tab; label: string; icon: string }[] = [
   { id: "overview", label: "Overview", icon: "◈" },
   { id: "volunteers", label: "Recruitment", icon: "✦" },
   { id: "project-requests", label: "Project Requests", icon: "⊞" },
   { id: "opportunities", label: "Opportunities", icon: "◎" },
+  { id: "venues", label: "Venues", icon: "⌂" },
+  { id: "nonprofits", label: "NGO Outreach", icon: "✉" },
   { id: "events", label: "Event RSVPs", icon: "⊛" },
   { id: "members", label: "Members", icon: "⊙" },
+  { id: "api", label: "API Access", icon: "⚿" },
 ];
 
 // ── Overview ──────────────────────────────────────────────────────────────────
@@ -107,6 +123,8 @@ export default function AdminDashboard() {
 
   // Client-side gate (UX only — real security is in Convex requireAdmin)
   const isAdmin = user?.publicMetadata?.role === "admin";
+  // Owner-only sections (Recruitment) — mirrors requireOwner in convex/admin.ts
+  const isOwner = user?.primaryEmailAddress?.emailAddress === OWNER_EMAIL;
 
   if (!user || !isAdmin) {
     return (
@@ -118,14 +136,27 @@ export default function AdminDashboard() {
           <p className="text-sm text-black/50 mb-6">
             {user ? "Your account doesn't have admin access." : "Sign in to continue."}
           </p>
-          <a href="/" className="btn-pill btn-pill-filled text-sm px-6 py-2">
-            Go home
-          </a>
+          <div className="flex items-center justify-center gap-3">
+            {!user && (
+              <SignInButton mode="modal" forceRedirectUrl="/post-signin">
+                <button className="btn-pill btn-pill-filled text-sm px-6 py-2">
+                  Sign in
+                </button>
+              </SignInButton>
+            )}
+            <a
+              href="/"
+              className={`btn-pill text-sm px-6 py-2 ${user ? "btn-pill-filled" : "btn-pill-outline"}`}
+            >
+              Go home
+            </a>
+          </div>
         </div>
       </div>
     );
   }
 
+  const visibleNav = NAV.filter((n) => n.id !== "volunteers" || isOwner);
   const activeNav = NAV.find((n) => n.id === activeTab)!;
 
   return (
@@ -149,7 +180,7 @@ export default function AdminDashboard() {
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-30 bg-white pt-14">
           <nav className="p-4 space-y-1">
-            {NAV.map((item) => (
+            {visibleNav.map((item) => (
               <button
                 key={item.id}
                 onClick={() => { setActiveTab(item.id); setMobileOpen(false); }}
@@ -178,7 +209,7 @@ export default function AdminDashboard() {
 
           {/* Nav items */}
           <nav className="flex-1 p-3 space-y-0.5">
-            {NAV.map((item) => (
+            {visibleNav.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
@@ -203,11 +234,14 @@ export default function AdminDashboard() {
         {/* ── Content ── */}
         <main className="flex-1 min-w-0 p-6 lg:p-8">
           {activeTab === "overview" && <OverviewTab />}
-          {activeTab === "volunteers" && <RecruitmentTab />}
+          {activeTab === "volunteers" && isOwner && <RecruitmentTab />}
           {activeTab === "project-requests" && <ProjectRequestsTab />}
           {activeTab === "opportunities" && <OpportunitiesTab />}
+          {activeTab === "venues" && <VenuesTab />}
+          {activeTab === "nonprofits" && <NonprofitsTab />}
           {activeTab === "events" && <EventsTab />}
           {activeTab === "members" && <MembersTab />}
+          {activeTab === "api" && <ApiAccessTab />}
         </main>
       </div>
     </div>
