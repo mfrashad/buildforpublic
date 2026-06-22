@@ -20,7 +20,7 @@ export async function requireAdmin(ctx: AuthCtx) {
 // falls back to admin-only (the dashboard hides the tab from non-owners anyway).
 // To make this strict server-side, ensure the Clerk "convex" JWT template
 // includes: { "email": "{{user.primary_email_address}}" }.
-const OWNER_EMAIL = "m.fathyrashad@gmail.com";
+export const OWNER_EMAIL = "m.fathyrashad@gmail.com";
 
 export async function requireOwner(ctx: AuthCtx) {
   const identity = await requireAdmin(ctx);

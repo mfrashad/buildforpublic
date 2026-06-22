@@ -256,6 +256,7 @@ export default defineSchema({
     clerkId: v.string(), // owner (identity.subject)
     label: v.optional(v.string()), // owner name/email for display
     active: v.boolean(),
+    isOwner: v.optional(v.boolean()), // grants access to owner-only APIs (recruitment)
   })
     .index("by_key", ["key"])
     .index("by_clerkId", ["clerkId"])

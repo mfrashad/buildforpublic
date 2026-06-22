@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { internalQuery, mutation, query } from "./_generated/server";
-import { requireAdmin } from "./admin";
+import { OWNER_EMAIL, requireAdmin } from "./admin";
 
 // Generate a random, hard-to-guess key like `bfp_<48 hex chars>`.
 function randomKey(): string {
@@ -33,18 +33,25 @@ export const generateMyApiKey = mutation({
     const identity = await requireAdmin(ctx);
     const key = randomKey();
     const label = identity.name ?? identity.email ?? identity.subject;
+    // Grant owner-only API access (recruitment) when the JWT carries an email
+    // claim matching the owner. Requires the Clerk "convex" JWT template to
+    // include `email`; without it this stays false and the OWNER_API_SECRET env
+    // secret is the path to the recruitment API.
+    const email = ((identity as { email?: string }).email ?? "").toLowerCase();
+    const isOwner = email === OWNER_EMAIL.toLowerCase();
     const existing = await ctx.db
       .query("apiKeys")
       .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
       .unique();
     if (existing) {
-      await ctx.db.patch(existing._id, { key, label, active: true });
+      await ctx.db.patch(existing._id, { key, label, active: true, isOwner });
     } else {
       await ctx.db.insert("apiKeys", {
         key,
         clerkId: identity.subject,
         label,
         active: true,
+        isOwner,
       });
     }
     return key;
@@ -74,6 +81,18 @@ export const apiKeyIsValid = internalQuery({
       .withIndex("by_key", (q) => q.eq("key", key))
       .unique();
     return !!rec && rec.active;
+  },
+});
+
+/** True if the key is active AND flagged as the owner's (recruitment access). */
+export const apiKeyIsOwner = internalQuery({
+  args: { key: v.string() },
+  handler: async (ctx, { key }) => {
+    const rec = await ctx.db
+      .query("apiKeys")
+      .withIndex("by_key", (q) => q.eq("key", key))
+      .unique();
+    return !!rec && rec.active && rec.isOwner === true;
   },
 });
 

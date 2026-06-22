@@ -21,6 +21,7 @@ import type * as outreach from "../outreach.js";
 import type * as positionsData from "../positionsData.js";
 import type * as profiles from "../profiles.js";
 import type * as projectRequests from "../projectRequests.js";
+import type * as recruitment from "../recruitment.js";
 import type * as seed from "../seed.js";
 import type * as volunteers from "../volunteers.js";
 
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   positionsData: typeof positionsData;
   profiles: typeof profiles;
   projectRequests: typeof projectRequests;
+  recruitment: typeof recruitment;
   seed: typeof seed;
   volunteers: typeof volunteers;
 }>;

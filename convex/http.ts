@@ -2,6 +2,7 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
+import { POSITIONS } from "./positionsData";
 
 const http = httpRouter();
 
@@ -49,6 +50,26 @@ async function authorizeAgent(
   return null; // dev: fully open (no secret, no keys)
 }
 
+// Owner-only authorization for the recruitment API (applicant PII). Accepts the
+// env secret OWNER_API_SECRET, or any active API key flagged isOwner (generated
+// by the owner from the dashboard). Unlike authorizeAgent this is NEVER dev-open:
+// if nothing is configured it stays locked, so PII can't leak by default.
+async function authorizeOwner(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ctx: any,
+  req: Request,
+): Promise<Response | null> {
+  const token = bearerToken(req);
+  if (!token) return json({ error: "Unauthorized" }, 401);
+  const ownerSecret = process.env.OWNER_API_SECRET;
+  if (ownerSecret && token === ownerSecret) return null;
+  const isOwnerKey = await ctx.runQuery(internal.apiKeys.apiKeyIsOwner, {
+    key: token,
+  });
+  if (isOwnerKey) return null;
+  return json({ error: "Unauthorized (owner-only endpoint)" }, 401);
+}
+
 // Whitelist the fields an external caller (e.g. an AI agent) may set on a venue,
 // so unknown keys don't trip Convex's strict argument validation.
 const VENUE_FIELDS = [
@@ -76,6 +97,21 @@ const NGO_FIELDS = [
 function pickNgo(obj: any): any {
   const out: Record<string, unknown> = {};
   for (const k of NGO_FIELDS) if (obj?.[k] !== undefined) out[k] = obj[k];
+  return out;
+}
+
+// Fields an owner caller may update on an applicant's recruitment pipeline.
+// (Applicant identity/answers come from the public form and are read-only here.)
+const RECRUIT_FIELDS = [
+  "recruitStatus", "shortlistedPositions", "finalOffer", "potential",
+  "interviewer", "interviewSlot", "meetLink", "inviteEmailSentAt",
+  "status", "notes", "hidden",
+] as const;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function pickRecruit(obj: any): any {
+  const out: Record<string, unknown> = {};
+  for (const k of RECRUIT_FIELDS) if (obj?.[k] !== undefined) out[k] = obj[k];
   return out;
 }
 
@@ -393,6 +429,100 @@ http.route({
     await ctx.runMutation(internal.outreach.apiDeleteNonprofitOutreach, {
       id: id as Id<"nonprofitOutreach">,
     });
+    return json({ ok: true });
+  }),
+});
+
+// ── Recruitment / core-team API (OWNER-ONLY — applicant PII) ───────────────────
+// Auth: header `Authorization: Bearer <OWNER_API_SECRET>` (env secret) or an
+// owner-flagged dashboard key. Never open, even in dev.
+
+// GET /api/recruitment/positions — the core-team position catalog (org structure).
+// Static reference data: departments, levels, titles, commitment, filled status.
+http.route({
+  path: "/api/recruitment/positions",
+  method: "GET",
+  handler: httpAction(async (ctx, req) => {
+    const authErr = await authorizeOwner(ctx, req);
+    if (authErr) return authErr;
+    const positions = POSITIONS.map((p) => ({
+      id: p.id,
+      department: p.department,
+      level: p.level,
+      title: p.title,
+      commitment: p.commitment,
+      summary: p.summary,
+      responsibilities: p.responsibilities,
+      roleQuestions: p.roleQuestions,
+      requiresPortfolio: p.requiresPortfolio ?? false,
+      filled: p.filled,
+    }));
+    return json({ count: positions.length, positions });
+  }),
+});
+
+// GET /api/recruitment/applicants — list applicants with full recruitment pipeline.
+// Query: ?status=new|contacted|accepted|declined
+//        &recruitStatus=applied|shortlisted|invite_sent|interview_scheduled|interviewed|offered|accepted|declined|not_shortlisted
+//        &position=<positionId>  (matches applied / shortlisted / finalOffer)
+//        &includeHidden=true
+http.route({
+  path: "/api/recruitment/applicants",
+  method: "GET",
+  handler: httpAction(async (ctx, req) => {
+    const authErr = await authorizeOwner(ctx, req);
+    if (authErr) return authErr;
+    const p = new URL(req.url).searchParams;
+
+    // Single applicant by id.
+    const id = p.get("id");
+    if (id) {
+      const applicant = await ctx.runQuery(internal.recruitment.apiGetApplicant, {
+        id: id as Id<"volunteers">,
+      });
+      if (!applicant) return json({ error: "Applicant not found" }, 404);
+      return json({ applicant });
+    }
+
+    const applicants = await ctx.runQuery(
+      internal.recruitment.apiListApplicants,
+      {
+        includeHidden: p.get("includeHidden") === "true" || undefined,
+        status: (p.get("status") as never) ?? undefined,
+        recruitStatus: (p.get("recruitStatus") as never) ?? undefined,
+        position: p.get("position") ?? undefined,
+      },
+    );
+    return json({ count: applicants.length, applicants });
+  }),
+});
+
+// PATCH /api/recruitment/applicants?id=<id> — update an applicant's recruitment
+// pipeline (recruitStatus, shortlistedPositions, finalOffer, potential,
+// interviewer, interviewSlot, meetLink, inviteEmailSentAt, status, notes, hidden).
+http.route({
+  path: "/api/recruitment/applicants",
+  method: "PATCH",
+  handler: httpAction(async (ctx, req) => {
+    const authErr = await authorizeOwner(ctx, req);
+    if (authErr) return authErr;
+    const id = new URL(req.url).searchParams.get("id");
+    if (!id) return json({ error: "Missing ?id= query param" }, 400);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let body: any;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: "Invalid JSON body" }, 400);
+    }
+    try {
+      await ctx.runMutation(internal.recruitment.apiUpdateRecruitment, {
+        id: id as Id<"volunteers">,
+        ...pickRecruit(body),
+      });
+    } catch (e) {
+      return json({ error: e instanceof Error ? e.message : String(e) }, 400);
+    }
     return json({ ok: true });
   }),
 });
