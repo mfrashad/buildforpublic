@@ -21,6 +21,7 @@
     "posthog-js": "^1.372.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-easy-crop": "^6.0.2",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {

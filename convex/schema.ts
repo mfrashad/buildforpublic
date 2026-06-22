@@ -403,7 +403,10 @@ export default defineSchema({
     name: v.optional(v.string()),
     email: v.optional(v.string()), // used to pull the Clerk/Google photo; never exposed publicly
     bio: v.optional(v.string()),
-    imageUrl: v.optional(v.string()), // explicit override or synced-from-Clerk photo
+    // Photo precedence on /about: uploaded → manual URL → Clerk/Google default.
+    imageStorageId: v.optional(v.id("_storage")), // uploaded + cropped photo
+    imageUrl: v.optional(v.string()), // explicit manual URL override
+    clerkImageUrl: v.optional(v.string()), // cached Google/Clerk default (from sync)
     location: v.optional(v.string()),
     linkedin: v.optional(v.string()),
     github: v.optional(v.string()),

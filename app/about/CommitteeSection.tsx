@@ -139,8 +139,6 @@ function FilledCard({ m, all }: { m: Member; all: Member[] }) {
     >
       <p className="font-bold text-black leading-tight">{m.name}</p>
       <p className="text-sm text-black/55 mt-1 leading-snug">{displayRole(m, all)}</p>
-      {m.location && <p className="text-xs text-black/35 mt-1">{m.location}</p>}
-      {m.bio && <p className="text-sm text-black/65 leading-relaxed mt-3">{m.bio}</p>}
       <Socials m={m} />
     </Card>
   );

@@ -16,6 +16,7 @@ const memberFields = {
   email: v.optional(v.string()),
   bio: v.optional(v.string()),
   imageUrl: v.optional(v.string()),
+  clerkImageUrl: v.optional(v.string()),
   location: v.optional(v.string()),
   linkedin: v.optional(v.string()),
   github: v.optional(v.string()),
@@ -44,11 +45,15 @@ export const list = query({
       .order("asc")
       .take(200);
     const visible = all.filter((c) => !c.hidden);
-    // Resolve the photo (explicit override → Clerk/Google photo mirrored in the
-    // members table, matched by email) and strip email from the public payload.
+    // Resolve the photo by precedence: uploaded (storage) → manual URL → cached
+    // Clerk/Google → live Clerk/Google (members table, by email). Strip internal
+    // fields (email, storage id, raw caches) from the public payload.
     const out = [];
     for (const c of visible) {
-      let imageUrl = c.imageUrl;
+      let imageUrl: string | null | undefined;
+      if (c.imageStorageId) imageUrl = await ctx.storage.getUrl(c.imageStorageId);
+      if (!imageUrl) imageUrl = c.imageUrl;
+      if (!imageUrl) imageUrl = c.clerkImageUrl;
       if (!imageUrl && c.email) {
         const m = await ctx.db
           .query("members")
@@ -56,8 +61,8 @@ export const list = query({
           .first();
         imageUrl = m?.imageUrl ?? undefined;
       }
-      const { email: _email, ...rest } = c;
-      out.push({ ...rest, imageUrl });
+      const { email: _e, imageStorageId: _s, clerkImageUrl: _c, ...rest } = c;
+      out.push({ ...rest, imageUrl: imageUrl ?? undefined });
     }
     return out;
   },
@@ -69,11 +74,49 @@ export const listAdmin = query({
   args: {},
   handler: async (ctx) => {
     await requireOwner(ctx);
-    return await ctx.db
+    const rows = await ctx.db
       .query("committee")
       .withIndex("by_order")
       .order("asc")
       .take(200);
+    // Attach the uploaded photo URL (if any) for preview in the editor.
+    return await Promise.all(
+      rows.map(async (c) => ({
+        ...c,
+        uploadedUrl: c.imageStorageId ? await ctx.storage.getUrl(c.imageStorageId) : null,
+      })),
+    );
+  },
+});
+
+// ── Photo upload (Convex storage) ──────────────────────────────────────────────
+
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    await requireOwner(ctx);
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+// Set or clear a member's uploaded photo. Deletes the previous file so storage
+// doesn't accumulate orphans.
+export const setImage = mutation({
+  args: {
+    id: v.id("committee"),
+    imageStorageId: v.optional(v.id("_storage")),
+    clear: v.optional(v.boolean()),
+  },
+  handler: async (ctx, { id, imageStorageId, clear }) => {
+    await requireOwner(ctx);
+    const existing = await ctx.db.get(id);
+    if (!existing) throw new Error("Committee row not found");
+    if (existing.imageStorageId && existing.imageStorageId !== imageStorageId) {
+      await ctx.storage.delete(existing.imageStorageId).catch(() => {});
+    }
+    await ctx.db.patch(id, {
+      imageStorageId: clear ? undefined : imageStorageId,
+    });
   },
 });
 

@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
   const rows = await convex.query(api.committee.listAdmin, {});
   const targets = rows.filter(
-    (r) => r.slotType === "filled" && r.email && (force || !r.imageUrl),
+    (r) => r.slotType === "filled" && r.email && (force || !r.clerkImageUrl),
   );
   if (targets.length === 0) {
     return NextResponse.json({ updated: 0, message: "Nothing to sync." });
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
   for (const r of targets) {
     const img = imageByEmail.get(r.email!.toLowerCase());
     if (img) {
-      await convex.mutation(api.committee.update, { id: r._id, imageUrl: img });
+      await convex.mutation(api.committee.update, { id: r._id, clerkImageUrl: img });
       updated.push(r.name ?? r.email!);
     } else {
       missing.push(r.name ?? r.email!);

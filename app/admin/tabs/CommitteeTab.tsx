@@ -11,6 +11,7 @@ import {
   SectionHeader,
   TableSkeleton,
 } from "../ui";
+import PhotoUploader from "./PhotoUploader";
 
 const DEPARTMENTS = ["Leadership", "Events", "Outreach", "Content", "Finance", "Tech"];
 const SLOT_TYPES = ["filled", "open", "mystery"] as const;
@@ -412,6 +413,18 @@ export default function CommitteeTab() {
                     </div>
                     {editId === c._id && (
                       <div className="px-4 pb-4 pt-1 bg-black/[0.02]">
+                        {c.slotType === "filled" && (
+                          <div className="mb-4">
+                            <span className="text-xs font-medium text-black/40 block mb-2">
+                              Profile photo (uploaded overrides Google/Clerk)
+                            </span>
+                            <PhotoUploader
+                              committeeId={c._id}
+                              currentUrl={c.uploadedUrl ?? c.imageUrl ?? c.clerkImageUrl ?? null}
+                              hasUpload={!!c.imageStorageId}
+                            />
+                          </div>
+                        )}
                         <MemberForm form={editForm} setForm={setEditForm} />
                         <div className="flex justify-end gap-2 mt-4">
                           <button
