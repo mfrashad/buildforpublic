@@ -17,11 +17,11 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Build for Public",
   description:
-    "An open-source movement shipping tech for the public good. We support changemakers and builders to ship public-interest tech together, starting in Southeast Asia.",
+    "Digital volunteering movement shipping tech for non-profits and the public good. We support changemakers and builders to ship public-interest tech together, starting in Southeast Asia.",
   alternates: { canonical: "https://buildforpublic.com" },
   openGraph: {
     title: "Build for Public",
-    description: "An open-source movement shipping tech for the public good.",
+    description: "Digital volunteering movement shipping tech for non-profits and the public good.",
     url: "https://buildforpublic.com",
   },
 };
