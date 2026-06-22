@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
-import { requireAdmin } from "./admin";
+import { requireOwner } from "./admin";
 
 const slotType = v.union(
   v.literal("filled"),
@@ -68,7 +68,7 @@ export const list = query({
 export const listAdmin = query({
   args: {},
   handler: async (ctx) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     return await ctx.db
       .query("committee")
       .withIndex("by_order")
@@ -85,7 +85,7 @@ export const create = mutation({
     ...memberFields,
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     // Default order: append to the end.
     let order = args.order;
     if (order === undefined) {
@@ -117,7 +117,7 @@ export const update = mutation({
     ...memberFields,
   },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     const { id, ...fields } = args;
     await ctx.db.patch(id, definedFields(fields));
   },
@@ -126,7 +126,7 @@ export const update = mutation({
 export const setHidden = mutation({
   args: { id: v.id("committee"), hidden: v.boolean() },
   handler: async (ctx, { id, hidden }) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     await ctx.db.patch(id, { hidden });
   },
 });
@@ -134,7 +134,7 @@ export const setHidden = mutation({
 export const remove = mutation({
   args: { id: v.id("committee") },
   handler: async (ctx, { id }) => {
-    await requireAdmin(ctx);
+    await requireOwner(ctx);
     await ctx.db.delete(id);
   },
 });

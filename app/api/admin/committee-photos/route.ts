@@ -23,8 +23,8 @@ export async function POST(req: Request) {
   const client = await clerkClient();
   const me = await client.users.getUser(userId);
   const myEmail = primaryEmail(me)?.toLowerCase();
-  const isAdmin = (me.publicMetadata as { role?: string })?.role === "admin";
-  if (!isAdmin && myEmail !== OWNER_EMAIL.toLowerCase()) {
+  // Owner-only — the committee is managed solely by the owner.
+  if (myEmail !== OWNER_EMAIL.toLowerCase()) {
     return NextResponse.json({ error: "Not authorized." }, { status: 403 });
   }
 

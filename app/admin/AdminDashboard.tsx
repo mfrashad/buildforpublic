@@ -164,7 +164,7 @@ export default function AdminDashboard() {
   }
 
   // Recruitment (volunteer PII) and Admins (role management) are owner-only.
-  const ownerOnlyTabs: Tab[] = ["volunteers", "admins"];
+  const ownerOnlyTabs: Tab[] = ["volunteers", "committee", "admins"];
   const visibleNav = NAV.filter((n) => !ownerOnlyTabs.includes(n.id) || isOwner);
   const activeNav = NAV.find((n) => n.id === activeTab)!;
 
@@ -250,7 +250,7 @@ export default function AdminDashboard() {
           {activeTab === "nonprofits" && <NonprofitsTab />}
           {activeTab === "events" && <EventsTab />}
           {activeTab === "members" && <MembersTab />}
-          {activeTab === "committee" && <CommitteeTab />}
+          {activeTab === "committee" && isOwner && <CommitteeTab />}
           {activeTab === "api" && <ApiAccessTab />}
           {activeTab === "admins" && isOwner && <AdminsTab />}
         </main>
