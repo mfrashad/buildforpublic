@@ -98,7 +98,7 @@ export default function Hero() {
             </div>
 
             <p className="text-xl sm:text-2xl leading-relaxed text-gray-600 mb-10">
-              Digital volunteering movement shipping tech for non-profits and the{" "}
+              A digital-volunteering movement shipping tech for non-profits and the{" "}
               <span className="highlight">public good.</span>
             </p>
 
