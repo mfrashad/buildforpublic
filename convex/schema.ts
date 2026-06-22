@@ -385,6 +385,39 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_leadKey", ["leadKey"]),
 
+  // ── Committee / org structure ──────────────────────────────────────────────
+  // Dynamic team roster that drives the public /about committee section. Each row
+  // is a "slot": a filled member, an open role (with a volunteer CTA), or a
+  // mystery placeholder (e.g. Finance kept under wraps). Managed from the admin
+  // Committee tab; read publicly (non-hidden) by /about.
+  committee: defineTable({
+    department: v.string(), // Leadership | Events | Outreach | Content | Finance | Tech
+    roleTitle: v.string(), // e.g. "Events Director", "Co-Director", "Officer"
+    positionId: v.optional(v.string()), // optional link to positionsData id
+    slotType: v.union(
+      v.literal("filled"), // a real person — show their card
+      v.literal("open"), // open role — show a "this could be you" CTA
+      v.literal("mystery"), // intentionally hidden — show a teaser placeholder
+    ),
+    // Person (for filled slots)
+    name: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+    location: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+    github: v.optional(v.string()),
+    twitter: v.optional(v.string()),
+    instagram: v.optional(v.string()),
+    website: v.optional(v.string()),
+    isFounder: v.optional(v.boolean()), // shows a "Founding team" badge
+    // Open-slot CTA (defaults applied in the UI if unset)
+    ctaLabel: v.optional(v.string()),
+    ctaLink: v.optional(v.string()),
+    // Ordering: global asc; departments group in first-seen order.
+    order: v.number(),
+    hidden: v.optional(v.boolean()), // hide from /about (and mark in admin)
+  }).index("by_order", ["order"]),
+
   ngoHelped: defineTable({
     name: v.string(),
     country: v.string(),

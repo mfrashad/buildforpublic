@@ -10,6 +10,7 @@
 
 import type * as admin from "../admin.js";
 import type * as apiKeys from "../apiKeys.js";
+import type * as committee from "../committee.js";
 import type * as communityProjects from "../communityProjects.js";
 import type * as emails from "../emails.js";
 import type * as eventRsvps from "../eventRsvps.js";
@@ -34,6 +35,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   apiKeys: typeof apiKeys;
+  committee: typeof committee;
   communityProjects: typeof communityProjects;
   emails: typeof emails;
   eventRsvps: typeof eventRsvps;

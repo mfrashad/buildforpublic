@@ -12,6 +12,7 @@ import EventsTab from "./tabs/EventsTab";
 import MembersTab from "./tabs/MembersTab";
 import VenuesTab from "./tabs/VenuesTab";
 import NonprofitsTab from "./tabs/NonprofitsTab";
+import CommitteeTab from "./tabs/CommitteeTab";
 import ApiAccessTab from "./tabs/ApiAccessTab";
 import AdminsTab from "./tabs/AdminsTab";
 
@@ -24,6 +25,7 @@ type Tab =
   | "nonprofits"
   | "events"
   | "members"
+  | "committee"
   | "api"
   | "admins";
 
@@ -36,6 +38,7 @@ const NAV: { id: Tab; label: string; icon: string }[] = [
   { id: "nonprofits", label: "NGO Outreach", icon: "✉" },
   { id: "events", label: "Event RSVPs", icon: "⊛" },
   { id: "members", label: "Members", icon: "⊙" },
+  { id: "committee", label: "Committee", icon: "❖" },
   { id: "api", label: "API Access", icon: "⚿" },
   { id: "admins", label: "Admins", icon: "⚷" },
 ];
@@ -247,6 +250,7 @@ export default function AdminDashboard() {
           {activeTab === "nonprofits" && <NonprofitsTab />}
           {activeTab === "events" && <EventsTab />}
           {activeTab === "members" && <MembersTab />}
+          {activeTab === "committee" && <CommitteeTab />}
           {activeTab === "api" && <ApiAccessTab />}
           {activeTab === "admins" && isOwner && <AdminsTab />}
         </main>
