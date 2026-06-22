@@ -384,6 +384,35 @@ export const addPuvaan = internalMutation({
   },
 });
 
+// One-off: add open Officer slots so people can apply as officers too.
+// Idempotent. Run with: npx convex run committee:addOpenOfficers  (and --prod)
+export const addOpenOfficers = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("committee").take(200);
+    const wanted = [
+      { department: "Events", roleTitle: "Events Officer", positionId: "events-officer", order: 35 },
+      { department: "Outreach", roleTitle: "Outreach Officer", positionId: "outreach-officer", order: 75 },
+      { department: "Content", roleTitle: "Content Officer", positionId: "content-officer", order: 85 },
+      { department: "Tech", roleTitle: "Tech Officer", positionId: "tech-officer", order: 115 },
+    ];
+    let added = 0;
+    for (const w of wanted) {
+      const exists = all.some(
+        (c) =>
+          c.department === w.department &&
+          c.slotType === "open" &&
+          c.positionId === w.positionId,
+      );
+      if (exists) continue;
+      await ctx.db.insert("committee", { ...w, slotType: "open" });
+      added++;
+    }
+    console.log(`Added ${added} open officer slots.`);
+    return { added };
+  },
+});
+
 // One-off: backfill emails (for Clerk/Google photo matching) and the Co-Founder
 // title onto already-seeded rows. Safe to re-run. Run with:
 //   npx convex run committee:backfill   (and --prod)

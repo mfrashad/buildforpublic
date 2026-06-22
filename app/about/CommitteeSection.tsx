@@ -3,8 +3,22 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc } from "@/convex/_generated/dataModel";
+import { POSITIONS } from "@/convex/positionsData";
 
 type Member = Doc<"committee">;
+
+// Short role descriptions (for the hover tooltip), keyed by position id.
+const SUMMARY: Record<string, string> = Object.fromEntries(
+  POSITIONS.map((p) => [p.id, p.summary]),
+);
+
+function Tooltip({ text }: { text: string }) {
+  return (
+    <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-full mt-2 w-60 rounded-xl bg-black text-white text-xs leading-snug px-3 py-2 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-30">
+      {text}
+    </div>
+  );
+}
 
 // Accent fill for initials avatars / mystery, by department (BFP palette).
 const DEPT_ACCENT: Record<string, string> = {
@@ -88,30 +102,19 @@ function Socials({ m }: { m: Member }) {
 function Card({
   avatar,
   children,
-  href,
+  desc,
 }: {
   avatar: React.ReactNode;
   children: React.ReactNode;
-  href?: string;
+  desc?: string;
 }) {
-  const inner = (
-    <div className="relative w-full rounded-2xl bg-white border border-black shadow-[4px_4px_0_#000] px-5 pt-16 pb-6 text-center h-full">
-      <div className="absolute -top-12 left-1/2 -translate-x-1/2">{avatar}</div>
-      {children}
-    </div>
-  );
   return (
-    <div className="w-64 pt-12">
-      {href ? (
-        <a
-          href={href}
-          className="group block h-full transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_#000]"
-        >
-          {inner}
-        </a>
-      ) : (
-        inner
-      )}
+    <div className="w-64 pt-12 relative group">
+      <div className="relative w-full rounded-2xl bg-white border border-black shadow-[4px_4px_0_#000] px-5 pt-16 pb-6 text-center h-full transition-all group-hover:-translate-y-1 group-hover:shadow-[6px_6px_0_#000]">
+        <div className="absolute -top-12 left-1/2 -translate-x-1/2">{avatar}</div>
+        {children}
+      </div>
+      {desc && <Tooltip text={desc} />}
     </div>
   );
 }
@@ -119,6 +122,7 @@ function Card({
 function FilledCard({ m, all }: { m: Member; all: Member[] }) {
   return (
     <Card
+      desc={m.positionId ? SUMMARY[m.positionId] : undefined}
       avatar={
         m.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -145,11 +149,12 @@ function FilledCard({ m, all }: { m: Member; all: Member[] }) {
 }
 
 function OpenCard({ m, all }: { m: Member; all: Member[] }) {
+  const desc = m.positionId ? SUMMARY[m.positionId] : undefined;
   return (
-    <div className="w-64 pt-12">
+    <div className="w-64 pt-12 relative group">
       <a
         href={m.ctaLink || "/volunteer"}
-        className="group block h-full transition-all hover:-translate-y-1"
+        className="block h-full transition-all group-hover:-translate-y-1"
       >
         <div className="relative w-full rounded-2xl bg-white border-2 border-dashed border-black/30 px-5 pt-16 pb-6 text-center h-full group-hover:border-black transition-colors">
           <div className="absolute -top-12 left-1/2 -translate-x-1/2">
@@ -166,6 +171,7 @@ function OpenCard({ m, all }: { m: Member; all: Member[] }) {
           </p>
         </div>
       </a>
+      {desc && <Tooltip text={desc} />}
     </div>
   );
 }
