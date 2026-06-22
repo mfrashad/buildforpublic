@@ -36,10 +36,10 @@ export const STATS = [
 
 export const NAV_LINKS = [
   { href: "/manifesto", label: "Manifesto" },
-  { href: "/about", label: "About" },
   { href: "/community", label: "Community" },
   { href: "/directory", label: "Projects Board" },
   { href: "/resources", label: "Resources" },
+  { href: "/about", label: "About" },
 ];
 
 export const ROLES = [
