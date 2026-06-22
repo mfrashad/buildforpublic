@@ -202,9 +202,16 @@ export default function CommitteeSection() {
   }
   if (members.length === 0) return null;
 
+  // Filled members first (in their set order), then open roles, then mystery.
+  const rank = (s: Member["slotType"]) => (s === "filled" ? 0 : s === "open" ? 1 : 2);
+  const ordered = members
+    .map((m, i) => ({ m, i }))
+    .sort((a, b) => rank(a.m.slotType) - rank(b.m.slotType) || a.i - b.i)
+    .map((x) => x.m);
+
   return (
     <div className="flex flex-wrap justify-center gap-x-8 gap-y-6 max-w-5xl mx-auto px-6">
-      {members.map((m) =>
+      {ordered.map((m) =>
         m.slotType === "filled" ? (
           <FilledCard key={m._id} m={m} all={members} />
         ) : m.slotType === "open" ? (

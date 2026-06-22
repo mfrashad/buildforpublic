@@ -34,6 +34,17 @@ function definedFields<T extends Record<string, unknown>>(fields: T) {
   );
 }
 
+// Clerk/Google avatar URLs are served full-size (sometimes huge — e.g. a 1000px
+// animated GIF). Request a small cropped version so cards load fast. Our own
+// Convex storage URLs and already-parameterised URLs pass through untouched.
+function sizedAvatar(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (url.includes("img.clerk.com") && !url.includes("?")) {
+    return `${url}?height=256&width=256&fit=crop&quality=85`;
+  }
+  return url;
+}
+
 // ── Public: drives the /about committee section ─────────────────────────────────
 
 export const list = query({
@@ -62,7 +73,7 @@ export const list = query({
         imageUrl = m?.imageUrl ?? undefined;
       }
       const { email: _e, imageStorageId: _s, clerkImageUrl: _c, ...rest } = c;
-      out.push({ ...rest, imageUrl: imageUrl ?? undefined });
+      out.push({ ...rest, imageUrl: sizedAvatar(imageUrl) });
     }
     return out;
   },
