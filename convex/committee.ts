@@ -290,6 +290,46 @@ export const seed = internalMutation({
   },
 });
 
+// One-off: place Puvaan Raaj into the Tech Officer slot (founding team).
+// Idempotent. Run with: npx convex run committee:addPuvaan  (and --prod)
+export const addPuvaan = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("committee").take(200);
+    const data = {
+      department: "Tech",
+      roleTitle: "Tech Officer",
+      positionId: "tech-officer",
+      slotType: "filled" as const,
+      name: "Puvaan Raaj",
+      email: "puvaanraaj2001@gmail.com",
+      location: "Shah Alam",
+      linkedin: "https://www.linkedin.com/in/puvaan-raaj/",
+      website: "https://puvaan.dev",
+      bio: "Software engineer across backend, cloud infrastructure & AI tooling — turns messy manual problems into simple tools people actually use.",
+      isFounder: true,
+    };
+    // Already added?
+    if (all.some((c) => c.name === "Puvaan Raaj")) {
+      return { skipped: true };
+    }
+    // Prefer converting the existing open Tech Officer slot to keep ordering.
+    const openOfficer = all.find(
+      (c) =>
+        c.department === "Tech" &&
+        c.slotType === "open" &&
+        /officer/i.test(c.roleTitle || ""),
+    );
+    if (openOfficer) {
+      await ctx.db.patch(openOfficer._id, data);
+      return { converted: openOfficer._id };
+    }
+    const last = all.reduce((m, c) => Math.max(m, c.order ?? 0), 0);
+    const id = await ctx.db.insert("committee", { ...data, order: last + 10 });
+    return { inserted: id };
+  },
+});
+
 // One-off: backfill emails (for Clerk/Google photo matching) and the Co-Founder
 // title onto already-seeded rows. Safe to re-run. Run with:
 //   npx convex run committee:backfill   (and --prod)
