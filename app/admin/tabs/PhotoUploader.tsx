@@ -49,12 +49,22 @@ export default function PhotoUploader({
   const [zoom, setZoom] = useState(1);
   const [pixels, setPixels] = useState<Area | null>(null);
   const [busy, setBusy] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const onCropComplete = useCallback((_: Area, areaPixels: Area) => setPixels(areaPixels), []);
 
-  function pickFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function loadFile(file: File | undefined | null) {
+    setError(null);
     if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Image is too large (max 10MB).");
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       setSrc(reader.result as string);
@@ -62,7 +72,17 @@ export default function PhotoUploader({
       setZoom(1);
     };
     reader.readAsDataURL(file);
+  }
+
+  function pickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    loadFile(e.target.files?.[0]);
     e.target.value = ""; // allow re-selecting the same file
+  }
+
+  function onDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragging(false);
+    loadFile(e.dataTransfer.files?.[0]);
   }
 
   async function save() {
@@ -94,40 +114,53 @@ export default function PhotoUploader({
   }
 
   return (
-    <div className="flex items-center gap-3">
-      {/* current preview */}
-      {currentUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={currentUrl} alt="" className="w-14 h-14 rounded-full object-cover border border-black/20" />
-      ) : (
-        <div className="w-14 h-14 rounded-full border border-dashed border-black/25 flex items-center justify-center text-black/30 text-xs">
-          none
+    <div>
+      <div className="flex items-center gap-4">
+        {/* current preview */}
+        {currentUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={currentUrl} alt="" className="w-16 h-16 rounded-full object-cover border border-black/20 shrink-0" />
+        ) : (
+          <div className="w-16 h-16 rounded-full border border-dashed border-black/25 flex items-center justify-center text-black/30 text-xs shrink-0">
+            none
+          </div>
+        )}
+
+        {/* drop zone */}
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => fileRef.current?.click()}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileRef.current?.click(); }}
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragEnter={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={onDrop}
+          className={`flex-1 cursor-pointer rounded-xl border-2 border-dashed px-4 py-4 text-center transition-colors ${
+            dragging ? "border-black bg-black/[0.04]" : "border-black/25 hover:border-black/50 bg-black/[0.015]"
+          }`}
+        >
+          <p className="text-sm text-black/70 font-medium">
+            <span className="underline underline-offset-2">Click to upload</span> or drag &amp; drop
+          </p>
+          <p className="text-[11px] text-black/35 mt-0.5">PNG / JPG · up to 10MB · you&apos;ll crop it next</p>
         </div>
-      )}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
+
+        {hasUpload && (
           <button
             type="button"
-            onClick={() => fileRef.current?.click()}
-            className="text-xs px-3 py-1.5 border border-black/20 rounded-lg text-black/60 hover:border-black hover:text-black transition-colors font-medium"
+            onClick={removeUpload}
+            disabled={busy}
+            className="text-xs px-3 py-1.5 border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition-colors font-medium disabled:opacity-50 shrink-0 self-start"
           >
-            {hasUpload ? "Change photo" : "Upload photo"}
+            Remove
           </button>
-          {hasUpload && (
-            <button
-              type="button"
-              onClick={removeUpload}
-              disabled={busy}
-              className="text-xs px-3 py-1.5 border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition-colors font-medium disabled:opacity-50"
-            >
-              Remove
-            </button>
-          )}
-        </div>
-        <span className="text-[11px] text-black/35">
-          {hasUpload ? "Using uploaded photo." : "Falls back to their Google/Clerk photo."}
-        </span>
+        )}
       </div>
+      <p className="text-[11px] text-black/35 mt-1.5">
+        {hasUpload ? "Using uploaded photo." : "No upload — falls back to their Google/Clerk photo."}
+      </p>
+      {error && <p className="text-[11px] text-red-500 mt-1">{error}</p>}
       <input ref={fileRef} type="file" accept="image/*" onChange={pickFile} className="hidden" />
 
       {/* crop modal */}
