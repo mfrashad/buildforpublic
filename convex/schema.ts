@@ -401,8 +401,9 @@ export default defineSchema({
     ),
     // Person (for filled slots)
     name: v.optional(v.string()),
+    email: v.optional(v.string()), // used to pull the Clerk/Google photo; never exposed publicly
     bio: v.optional(v.string()),
-    imageUrl: v.optional(v.string()),
+    imageUrl: v.optional(v.string()), // explicit override or synced-from-Clerk photo
     location: v.optional(v.string()),
     linkedin: v.optional(v.string()),
     github: v.optional(v.string()),

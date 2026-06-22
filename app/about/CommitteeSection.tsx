@@ -6,6 +6,16 @@ import type { Doc } from "@/convex/_generated/dataModel";
 
 type Member = Doc<"committee">;
 
+// Accent fill for initials avatars / mystery, by department (BFP palette).
+const DEPT_ACCENT: Record<string, string> = {
+  Leadership: "var(--color-bp-yellow)",
+  Events: "var(--color-bp-mint)",
+  Outreach: "var(--color-bp-blue)",
+  Content: "var(--color-bp-peach)",
+  Tech: "var(--color-bp-purple)",
+  Finance: "var(--color-bp-orange)",
+};
+
 function initials(name?: string) {
   if (!name) return "?";
   return name
@@ -65,7 +75,7 @@ function Socials({ m }: { m: Member }) {
           href={socialHref(type, value!)}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs font-medium text-white/40 hover:text-white underline underline-offset-2 capitalize"
+          className="text-xs font-medium text-black/40 hover:text-black underline underline-offset-2 capitalize"
         >
           {type}
         </a>
@@ -85,7 +95,7 @@ function Card({
   href?: string;
 }) {
   const inner = (
-    <div className="relative w-full rounded-3xl bg-neutral-900 px-5 pt-16 pb-6 text-center h-full">
+    <div className="relative w-full rounded-2xl bg-white border border-black shadow-[4px_4px_0_#000] px-5 pt-16 pb-6 text-center h-full">
       <div className="absolute -top-12 left-1/2 -translate-x-1/2">{avatar}</div>
       {children}
     </div>
@@ -93,7 +103,10 @@ function Card({
   return (
     <div className="w-64 pt-12">
       {href ? (
-        <a href={href} className="group block h-full transition-transform hover:-translate-y-1">
+        <a
+          href={href}
+          className="group block h-full transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_#000]"
+        >
           {inner}
         </a>
       ) : (
@@ -112,19 +125,22 @@ function FilledCard({ m, all }: { m: Member; all: Member[] }) {
           <img
             src={m.imageUrl}
             alt={m.name ?? ""}
-            className="w-24 h-24 rounded-full object-cover ring-4 ring-neutral-900"
+            className="w-24 h-24 rounded-full object-cover border-2 border-black"
           />
         ) : (
-          <div className="w-24 h-24 rounded-full bg-neutral-700 text-white flex items-center justify-center text-2xl font-bold ring-4 ring-neutral-900">
+          <div
+            className="w-24 h-24 rounded-full border-2 border-black text-black flex items-center justify-center text-2xl font-bold"
+            style={{ background: DEPT_ACCENT[m.department] ?? "var(--color-bp-yellow)" }}
+          >
             {initials(m.name)}
           </div>
         )
       }
     >
-      <p className="font-bold text-white leading-tight">{m.name}</p>
-      <p className="text-sm italic text-white/50 mt-1 leading-snug">{displayRole(m, all)}</p>
-      {m.location && <p className="text-xs text-white/30 mt-1">{m.location}</p>}
-      {m.bio && <p className="text-sm text-white/60 leading-relaxed mt-3">{m.bio}</p>}
+      <p className="font-bold text-black leading-tight">{m.name}</p>
+      <p className="text-sm text-black/55 mt-1 leading-snug">{displayRole(m, all)}</p>
+      {m.location && <p className="text-xs text-black/35 mt-1">{m.location}</p>}
+      {m.bio && <p className="text-sm text-black/65 leading-relaxed mt-3">{m.bio}</p>}
       <Socials m={m} />
     </Card>
   );
@@ -132,20 +148,27 @@ function FilledCard({ m, all }: { m: Member; all: Member[] }) {
 
 function OpenCard({ m, all }: { m: Member; all: Member[] }) {
   return (
-    <Card
-      href={m.ctaLink || "/volunteer"}
-      avatar={
-        <div className="w-24 h-24 rounded-full border-2 border-dashed border-white/30 text-white/40 flex items-center justify-center text-3xl font-light ring-4 ring-neutral-900 bg-neutral-900 group-hover:border-white/60 group-hover:text-white/70 transition-colors">
-          +
+    <div className="w-64 pt-12">
+      <a
+        href={m.ctaLink || "/volunteer"}
+        className="group block h-full transition-all hover:-translate-y-1"
+      >
+        <div className="relative w-full rounded-2xl bg-white border-2 border-dashed border-black/30 px-5 pt-16 pb-6 text-center h-full group-hover:border-black transition-colors">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2">
+            <div className="w-24 h-24 rounded-full border-2 border-dashed border-black/30 bg-white text-black/40 flex items-center justify-center text-3xl font-light group-hover:border-black group-hover:text-black transition-colors">
+              +
+            </div>
+          </div>
+          <p className="font-bold text-black/70 leading-tight group-hover:text-black transition-colors">
+            {m.ctaLabel || "This could be you"}
+          </p>
+          <p className="text-sm text-black/55 mt-1 leading-snug">{displayRole(m, all)}</p>
+          <p className="text-xs font-semibold text-black/50 mt-3 group-hover:text-black transition-colors">
+            Open role — apply →
+          </p>
         </div>
-      }
-    >
-      <p className="font-bold text-white/80 leading-tight">{m.ctaLabel || "This could be you"}</p>
-      <p className="text-sm italic text-white/50 mt-1 leading-snug">{displayRole(m, all)}</p>
-      <p className="text-xs font-medium text-white/40 mt-3 group-hover:text-white/70 transition-colors">
-        Open role — apply →
-      </p>
-    </Card>
+      </a>
+    </div>
   );
 }
 
@@ -153,13 +176,16 @@ function MysteryCard({ m }: { m: Member }) {
   return (
     <Card
       avatar={
-        <div className="w-24 h-24 rounded-full bg-neutral-800 text-white/40 flex items-center justify-center text-3xl font-black ring-4 ring-neutral-900">
+        <div
+          className="w-24 h-24 rounded-full border-2 border-black text-black flex items-center justify-center text-3xl font-black"
+          style={{ background: DEPT_ACCENT[m.department] ?? "var(--color-bp-purple)" }}
+        >
           ?
         </div>
       }
     >
-      <p className="font-bold text-white/70 leading-tight">{m.roleTitle}</p>
-      <p className="text-sm italic text-white/40 mt-1">Revealing soon 👀</p>
+      <p className="font-bold text-black leading-tight">{m.roleTitle}</p>
+      <p className="text-sm text-black/50 mt-1">Revealing soon 👀</p>
     </Card>
   );
 }

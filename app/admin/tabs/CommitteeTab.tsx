@@ -59,6 +59,7 @@ type FormState = {
   slotType: Slot;
   roleTitle: string;
   name: string;
+  email: string;
   bio: string;
   location: string;
   imageUrl: string;
@@ -80,6 +81,7 @@ function emptyForm(department = "Events"): FormState {
     slotType: "filled",
     roleTitle: "",
     name: "",
+    email: "",
     bio: "",
     location: "",
     imageUrl: "",
@@ -102,6 +104,7 @@ function fromDoc(c: Committee): FormState {
     slotType: c.slotType,
     roleTitle: c.roleTitle ?? "",
     name: c.name ?? "",
+    email: c.email ?? "",
     bio: c.bio ?? "",
     location: c.location ?? "",
     imageUrl: c.imageUrl ?? "",
@@ -126,6 +129,7 @@ function toArgs(f: FormState) {
     slotType: f.slotType,
     roleTitle: f.roleTitle.trim(),
     name: s(f.name),
+    email: s(f.email),
     bio: s(f.bio),
     location: s(f.location),
     imageUrl: s(f.imageUrl),
@@ -188,6 +192,12 @@ function MemberForm({
             <Field label="Name" value={form.name} onChange={(v) => set("name", v)} placeholder="Member name" />
             <Field label="Location" value={form.location} onChange={(v) => set("location", v)} placeholder="e.g. Kuala Lumpur" />
           </div>
+          <Field
+            label="Email (pulls their Google/Clerk photo)"
+            value={form.email}
+            onChange={(v) => set("email", v)}
+            placeholder="member@email.com — used to sync their profile photo"
+          />
           <Field label="Bio" value={form.bio} onChange={(v) => set("bio", v)} placeholder="Short public bio for /about" textarea />
           <Field label="Photo URL" value={form.imageUrl} onChange={(v) => set("imageUrl", v)} placeholder="https://…" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -237,6 +247,28 @@ export default function CommitteeTab() {
   const [editForm, setEditForm] = useState<FormState>(emptyForm());
   const [deleteId, setDeleteId] = useState<Id<"committee"> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState<string | null>(null);
+
+  async function handleSyncPhotos() {
+    setSyncing(true);
+    setSyncMsg(null);
+    try {
+      const res = await fetch("/api/admin/committee-photos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ force: false }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Sync failed");
+      const missing = data.missing?.length ? ` · no Clerk photo for: ${data.missing.join(", ")}` : "";
+      setSyncMsg(`Synced ${data.updated} photo(s)${missing}`);
+    } catch (e) {
+      setSyncMsg(e instanceof Error ? e.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   if (rows === undefined) return <TableSkeleton />;
 
@@ -281,6 +313,13 @@ export default function CommitteeTab() {
           ↗ View /about
         </a>
         <button
+          onClick={handleSyncPhotos}
+          disabled={syncing}
+          className="text-xs px-3 py-1.5 border border-black/20 rounded-lg text-black/50 hover:text-black hover:border-black transition-colors font-medium disabled:opacity-50"
+        >
+          {syncing ? "Syncing…" : "↻ Sync photos from Clerk"}
+        </button>
+        <button
           onClick={() => { setAdding((v) => !v); setAddForm(emptyForm()); }}
           className="text-xs px-3 py-1.5 bg-black text-white rounded-lg font-medium hover:bg-black/80 transition-colors"
         >
@@ -292,6 +331,11 @@ export default function CommitteeTab() {
         Controls the committee section on the public <span className="font-medium">/about</span> page.
         Filled = a person&apos;s card · Open = a &quot;this could be you&quot; CTA · Mystery = teaser placeholder.
       </p>
+      {syncMsg && (
+        <p className="text-xs text-black/60 mb-4 -mt-2 bg-black/[0.04] border border-black/10 rounded-lg px-3 py-2">
+          {syncMsg}
+        </p>
+      )}
 
       {adding && (
         <div className="border border-black/15 rounded-xl p-4 mb-6 bg-black/[0.015]">

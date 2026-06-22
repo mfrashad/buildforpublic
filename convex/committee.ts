@@ -13,6 +13,7 @@ const memberFields = {
   roleTitle: v.optional(v.string()),
   positionId: v.optional(v.string()),
   name: v.optional(v.string()),
+  email: v.optional(v.string()),
   bio: v.optional(v.string()),
   imageUrl: v.optional(v.string()),
   location: v.optional(v.string()),
@@ -42,7 +43,23 @@ export const list = query({
       .withIndex("by_order")
       .order("asc")
       .take(200);
-    return all.filter((c) => !c.hidden);
+    const visible = all.filter((c) => !c.hidden);
+    // Resolve the photo (explicit override → Clerk/Google photo mirrored in the
+    // members table, matched by email) and strip email from the public payload.
+    const out = [];
+    for (const c of visible) {
+      let imageUrl = c.imageUrl;
+      if (!imageUrl && c.email) {
+        const m = await ctx.db
+          .query("members")
+          .withIndex("by_email", (q) => q.eq("email", c.email!))
+          .first();
+        imageUrl = m?.imageUrl ?? undefined;
+      }
+      const { email: _email, ...rest } = c;
+      out.push({ ...rest, imageUrl });
+    }
+    return out;
   },
 });
 
@@ -139,10 +156,11 @@ export const seed = internalMutation({
       // Leadership
       {
         department: "Leadership",
-        roleTitle: "Founder",
+        roleTitle: "Co-Founder",
         slotType: "filled",
         name: "Muhammad Fathy Rashad",
-        bio: "Founder of Build for Public — rallying builders to ship open-source tech for NGOs and the public good.",
+        email: "m.fathyrashad@gmail.com",
+        bio: "Co-Founder of Build for Public — rallying builders to ship open-source tech for NGOs and the public good.",
         isFounder: true,
         order: 10,
       },
@@ -153,6 +171,7 @@ export const seed = internalMutation({
         positionId: "events-director",
         slotType: "filled",
         name: "Akhlaq Ahmad",
+        email: "akhlaq.dev@gmail.com",
         location: "Kuala Lumpur",
         bio: "KL-based builder who ships in public and lives in AI tools. Makes our meetups the ones you clear your calendar for.",
         isFounder: true,
@@ -172,6 +191,7 @@ export const seed = internalMutation({
         positionId: "outreach-director",
         slotType: "filled",
         name: "Razali Mohamed Zain",
+        email: "razalizain@gmail.com",
         location: "Kuala Lumpur",
         bio: "20+ years across banking, logistics & tech, and an AI-voice startup co-founder. Our bridge to NGOs and partners.",
         isFounder: true,
@@ -183,6 +203,7 @@ export const seed = internalMutation({
         positionId: "outreach-officer",
         slotType: "filled",
         name: "Muhammad Haddif",
+        email: "haddifhairi@gmail.com",
         location: "Subang Jaya",
         bio: "IT student at UTP who builds from first principles (a chess engine from scratch!). Freelance dev and project lead.",
         isFounder: true,
@@ -194,6 +215,7 @@ export const seed = internalMutation({
         positionId: "outreach-officer",
         slotType: "filled",
         name: "Tan Yan He",
+        email: "lucastyh2009@gmail.com",
         location: "Penang",
         bio: "NGO External Relations lead and seasoned event organiser. NGO-native and a natural connector.",
         isFounder: true,
@@ -220,6 +242,7 @@ export const seed = internalMutation({
         positionId: "content-officer",
         slotType: "filled",
         name: "Nur Mazshuky",
+        email: "mazshuky@gmail.com",
         location: "Semenyih",
         bio: "CS student at Nottingham Malaysia, full-stack & AI builder who loves turning work into stories.",
         isFounder: true,
@@ -231,6 +254,7 @@ export const seed = internalMutation({
         positionId: "content-officer",
         slotType: "filled",
         name: "Alia Raihah",
+        email: "aliaraihah@gmail.com",
         location: "Petaling Jaya",
         bio: "MBA marketer across fintech, robotics & EdTech. Our storytelling and brand firepower.",
         isFounder: true,
@@ -263,5 +287,42 @@ export const seed = internalMutation({
     for (const row of rows) await ctx.db.insert("committee", row as never);
     console.log(`Seeded ${rows.length} committee slots.`);
     return { seeded: rows.length };
+  },
+});
+
+// One-off: backfill emails (for Clerk/Google photo matching) and the Co-Founder
+// title onto already-seeded rows. Safe to re-run. Run with:
+//   npx convex run committee:backfill   (and --prod)
+export const backfill = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const byName: Record<string, string> = {
+      "Muhammad Fathy Rashad": "m.fathyrashad@gmail.com",
+      "Akhlaq Ahmad": "akhlaq.dev@gmail.com",
+      "Razali Mohamed Zain": "razalizain@gmail.com",
+      "Muhammad Haddif": "haddifhairi@gmail.com",
+      "Tan Yan He": "lucastyh2009@gmail.com",
+      "Nur Mazshuky": "mazshuky@gmail.com",
+      "Alia Raihah": "aliaraihah@gmail.com",
+    };
+    const all = await ctx.db.query("committee").take(200);
+    let updated = 0;
+    for (const c of all) {
+      const patch: Record<string, unknown> = {};
+      if (c.name && byName[c.name] && c.email !== byName[c.name]) {
+        patch.email = byName[c.name];
+      }
+      if (c.name === "Muhammad Fathy Rashad" && c.roleTitle !== "Co-Founder") {
+        patch.roleTitle = "Co-Founder";
+        patch.bio =
+          "Co-Founder of Build for Public — rallying builders to ship open-source tech for NGOs and the public good.";
+      }
+      if (Object.keys(patch).length) {
+        await ctx.db.patch(c._id, patch);
+        updated++;
+      }
+    }
+    console.log(`Backfilled ${updated} committee rows.`);
+    return { updated };
   },
 });
