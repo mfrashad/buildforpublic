@@ -193,6 +193,25 @@ export const remove = mutation({
   },
 });
 
+// One-off: Tan Yan He now holds three positions (Outreach, Content, Tech).
+// Reflected as a combined role title on his single committee card.
+export const fixYanHeeRoles = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query("committee").withIndex("by_order").take(200);
+    const m = rows.find((r) => (r.name || "").toLowerCase().includes("yan he"));
+    if (!m) {
+      console.log("Tan Yan He not found — nothing to patch.");
+      return { patched: false };
+    }
+    await ctx.db.patch(m._id, {
+      roleTitle: "Outreach, Content & Tech Officer",
+    });
+    console.log(`Patched Tan Yan He roles: ${m._id}`);
+    return { patched: true, id: m._id };
+  },
+});
+
 // ── Seed (one-time initial founding-team roster) ───────────────────────────────
 // Run with: npx convex run committee:seed   (and --prod for production)
 
