@@ -585,12 +585,16 @@ export default function BrandKit() {
   );
 }
 
-// On-page wordmark — pixel-perfect rendering with the live brand font.
+// On-page wordmark — matches the navbar exactly: one line, single-space gap,
+// px-1 yellow chip. Kept on one line (whitespace-nowrap) so it never stacks.
 function Wordmark({ onDark = false }: { onDark?: boolean }) {
   return (
-    <div className="flex items-center text-4xl sm:text-5xl" style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}>
-      <span style={{ color: onDark ? "#ffffff" : "#000000" }}>Build for</span>
-      <span className="px-2 ml-2" style={{ background: "#fff200", color: "#000000" }}>
+    <div
+      className="flex items-center whitespace-nowrap text-3xl"
+      style={{ fontFamily: "var(--font-display)", fontWeight: 800 }}
+    >
+      <span style={{ color: onDark ? "#ffffff" : "#000000" }}>Build for{" "}</span>
+      <span className="px-1" style={{ background: "#fff200", color: "#000000" }}>
         Public
       </span>
     </div>
