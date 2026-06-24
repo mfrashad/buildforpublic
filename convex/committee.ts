@@ -193,6 +193,29 @@ export const remove = mutation({
   },
 });
 
+// One-off helper: set a committee member's displayed role title by name match.
+// Used to reflect members who hold multiple positions on a single card, e.g.
+//   npx convex run --prod committee:setRoleByName '{"nameContains":"nur maz","roleTitle":"Content & Tech Officer"}'
+export const setRoleByName = internalMutation({
+  args: { nameContains: v.string(), roleTitle: v.string() },
+  handler: async (ctx, { nameContains, roleTitle }) => {
+    const rows = await ctx.db.query("committee").withIndex("by_order").take(200);
+    const needle = nameContains.toLowerCase();
+    const matches = rows.filter((r) => (r.name || "").toLowerCase().includes(needle));
+    if (matches.length === 0) {
+      console.log(`No committee member matching "${nameContains}".`);
+      return { patched: 0 };
+    }
+    if (matches.length > 1) {
+      console.log(`Ambiguous: ${matches.length} match "${nameContains}" — refusing.`);
+      return { patched: 0, ambiguous: matches.map((m) => m.name) };
+    }
+    await ctx.db.patch(matches[0]._id, { roleTitle });
+    console.log(`Patched ${matches[0].name} → "${roleTitle}" (${matches[0]._id})`);
+    return { patched: 1, id: matches[0]._id };
+  },
+});
+
 // One-off: Tan Yan He now holds three positions (Outreach, Content, Tech).
 // Reflected as a combined role title on his single committee card.
 export const fixYanHeeRoles = internalMutation({
