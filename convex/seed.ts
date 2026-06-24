@@ -193,6 +193,69 @@ export const seedOpportunities = internalMutation({
   },
 });
 
+// One-off: add the "Seeder" community build (https://github.com/danielsyauqi/Seeder).
+// Idempotent — skips if a published community_project titled "Seeder" already exists.
+export const addSeeder = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const existing = await ctx.db
+      .query("opportunities")
+      .withIndex("by_status_and_kind", (q) =>
+        q.eq("status", "published").eq("kind", "community_project"),
+      )
+      .collect();
+    if (existing.some((d) => d.title === "Seeder")) {
+      console.log("Seeder already added — skipping.");
+      return { skipped: true };
+    }
+
+    const id = await ctx.db.insert("opportunities", {
+      kind: "community_project",
+      title: "Seeder",
+      summary:
+        "Self-hosted project manager — kanban tasks, client requests, a public client board, and a built-in MCP server.",
+      description:
+        "A foundational project manager for small teams: kanban tasks with categories, multi-tag labels, phases, priorities, assignees and due dates; a separate inbound client-request queue that converts into tasks; an opt-in, token-gated public client board to share progress without giving clients an account; a daily planner; and a built-in MCP server so AI assistants can read and edit your data. Open source (MIT) and self-hosted on Cloudflare Workers (D1 + R2) or a single Node VM — built with Next.js, Drizzle ORM, Better Auth, and Tailwind.",
+      tags: ["TypeScript", "Project Management", "MCP", "Self-Hosted"],
+      link: "https://seederpm.xyz",
+      repoLink: "https://github.com/danielsyauqi/Seeder",
+      accent: "mint",
+      status: "published",
+      featured: false,
+      officialBFP: false,
+      image: "/projects/seeder.png",
+      creator: "Daniel Syauqi",
+      stars: 56,
+    });
+    console.log(`Added Seeder community build: ${id}`);
+    return { ok: true, id };
+  },
+});
+
+// One-off: trim the Seeder card description to match sibling cards (~2 sentences).
+export const fixSeederDescription = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db
+      .query("opportunities")
+      .withIndex("by_status_and_kind", (q) =>
+        q.eq("status", "published").eq("kind", "community_project"),
+      )
+      .collect();
+    const seeder = all.find((d) => d.title === "Seeder");
+    if (!seeder) {
+      console.log("Seeder not found — nothing to patch.");
+      return { patched: false };
+    }
+    await ctx.db.patch(seeder._id, {
+      description:
+        "A foundational project manager for small teams — kanban tasks, an inbound client-request queue, an opt-in public client board, and a daily planner. Self-hosted on Cloudflare Workers or a single Node VM, with a built-in MCP server so AI assistants can read and edit your data.",
+    });
+    console.log(`Patched Seeder description: ${seeder._id}`);
+    return { patched: true };
+  },
+});
+
 export const wipeCommunityProjects = internalMutation({
   args: {},
   handler: async (ctx) => {
