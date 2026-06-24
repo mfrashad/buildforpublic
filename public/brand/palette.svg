@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1192 630" width="1192" height="630">
+  <defs><style>@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap");
+  .t{font-family:"Plus Jakarta Sans",Arial,sans-serif;} .name{font-weight:800;font-size:22px;} .hex{font-weight:700;font-size:18px;fill:#666;} .use{font-weight:700;font-size:13px;fill:#999;letter-spacing:.04em;} .title{font-weight:800;font-size:40px;letter-spacing:-1px;} .sub{font-weight:700;font-size:18px;fill:#666;}</style></defs>
+  <rect width="1192" height="630" fill="#ffffff"/>
+  <text class="t title" x="40" y="70">Build for Public — Color palette</text>
+  <text class="t sub" x="40" y="100">The “WBD pop” palette. Yellow #fff200 is the signature; black for ink, borders, and hard shadows.</text>
+  <rect x="46" y="156" width="200" height="150" fill="#000000"/>
+  <rect x="40" y="150" width="200" height="150" fill="#fff200" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="40" y="328">Yellow</text>
+  <text class="t hex" x="40" y="350">#FFF200</text>
+  <rect x="274" y="156" width="200" height="150" fill="#000000"/>
+  <rect x="268" y="150" width="200" height="150" fill="#94e8ff" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="268" y="328">Blue</text>
+  <text class="t hex" x="268" y="350">#94E8FF</text>
+  <rect x="502" y="156" width="200" height="150" fill="#000000"/>
+  <rect x="496" y="150" width="200" height="150" fill="#6ff5b6" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="496" y="328">Mint</text>
+  <text class="t hex" x="496" y="350">#6FF5B6</text>
+  <rect x="730" y="156" width="200" height="150" fill="#000000"/>
+  <rect x="724" y="150" width="200" height="150" fill="#ffc0a1" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="724" y="328">Peach</text>
+  <text class="t hex" x="724" y="350">#FFC0A1</text>
+  <rect x="958" y="156" width="200" height="150" fill="#000000"/>
+  <rect x="952" y="150" width="200" height="150" fill="#cb6de7" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="952" y="328">Purple</text>
+  <text class="t hex" x="952" y="350">#CB6DE7</text>
+  <rect x="46" y="376" width="200" height="150" fill="#000000"/>
+  <rect x="40" y="370" width="200" height="150" fill="#fa941b" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="40" y="548">Orange</text>
+  <text class="t hex" x="40" y="570">#FA941B</text>
+  <rect x="274" y="376" width="200" height="150" fill="#000000"/>
+  <rect x="268" y="370" width="200" height="150" fill="#000000" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="268" y="548">Black</text>
+  <text class="t hex" x="268" y="570">#000000</text>
+  <rect x="502" y="376" width="200" height="150" fill="#000000"/>
+  <rect x="496" y="370" width="200" height="150" fill="#666666" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="496" y="548">Gray</text>
+  <text class="t hex" x="496" y="570">#666666</text>
+  <rect x="730" y="376" width="200" height="150" fill="#000000"/>
+  <rect x="724" y="370" width="200" height="150" fill="#f5f5f5" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="724" y="548">Light</text>
+  <text class="t hex" x="724" y="570">#F5F5F5</text>
+  <rect x="958" y="376" width="200" height="150" fill="#000000"/>
+  <rect x="952" y="370" width="200" height="150" fill="#ffffff" stroke="#000000" stroke-width="3"/>
+  <text class="t name" x="952" y="548">White</text>
+  <text class="t hex" x="952" y="570">#FFFFFF</text>
+</svg>
