@@ -30,7 +30,11 @@ import {
   AssignedToSelect,
   FieldInput,
   MessageEditor,
+  SendersEditor,
   fmt,
+  resolveSender,
+  useAdminUsers,
+  useSenders,
 } from "./outreachShared";
 
 const PLATFORMS = ["instagram", "facebook", "whatsapp", "email", "linkedin", "twitter", "other"];
@@ -60,6 +64,8 @@ function OutreachView() {
   const [addingManual, setAddingManual] = useState(false);
 
   const records = useQuery(api.outreach.listNonprofitOutreach, { showHidden });
+  const members = useAdminUsers();
+  const { profiles } = useSenders();
   const update = useMutation(api.outreach.updateNonprofitOutreach);
   const setHidden = useMutation(api.outreach.setNonprofitOutreachHidden);
   const addManual = useMutation(api.outreach.addNonprofitOutreach);
@@ -107,6 +113,7 @@ function OutreachView() {
       />
 
       <SectionHeader title="Active outreach" count={records.length}>
+        <SendersEditor />
         <button
           onClick={() => setShowHidden((v) => !v)}
           className={`text-xs px-3 py-1.5 border rounded-lg transition-colors font-medium ${
@@ -257,9 +264,30 @@ function OutreachView() {
                   )}
                   <DetailRow label="Location" value={r.location} />
                   <DetailRow label="Instagram" value={r.instagram} />
-                  <DetailRow label="Facebook" value={r.facebook} />
-                  <DetailRow label="Twitter" value={r.twitter} />
-                  <DetailRow label="LinkedIn" value={r.linkedin} />
+                  <FieldInput
+                    label="Facebook"
+                    value={r.facebook}
+                    placeholder="@handle or full URL"
+                    onSave={(facebook) =>
+                      update({ id: r._id as Id<"nonprofitOutreach">, facebook }).then(() => {})
+                    }
+                  />
+                  <FieldInput
+                    label="Twitter"
+                    value={r.twitter}
+                    placeholder="@handle or full URL"
+                    onSave={(twitter) =>
+                      update({ id: r._id as Id<"nonprofitOutreach">, twitter }).then(() => {})
+                    }
+                  />
+                  <FieldInput
+                    label="LinkedIn"
+                    value={r.linkedin}
+                    placeholder="linkedin.com/company/… or full URL"
+                    onSave={(linkedin) =>
+                      update({ id: r._id as Id<"nonprofitOutreach">, linkedin }).then(() => {})
+                    }
+                  />
                   <FieldInput
                     label="Email"
                     value={r.email}
@@ -293,6 +321,7 @@ function OutreachView() {
                     initialValue={r.message}
                     recipient={r.orgName}
                     templates={NONPROFIT_TEMPLATES}
+                    sender={resolveSender(r.assignedTo, profiles, members)}
                     onSave={(message) =>
                       update({ id: r._id as Id<"nonprofitOutreach">, message }).then(() => {})
                     }

@@ -29,7 +29,11 @@ import {
   AssignedToSelect,
   FieldInput,
   MessageEditor,
+  SendersEditor,
   fmt,
+  resolveSender,
+  useAdminUsers,
+  useSenders,
 } from "./outreachShared";
 
 const PLATFORMS = ["instagram", "threads", "whatsapp", "email", "phone", "facebook", "other"];
@@ -257,6 +261,8 @@ export default function VenuesTab() {
   const [confirmHide, setConfirmHide] = useState<string | null>(null);
 
   const venues = useQuery(api.outreach.listVenues, { showHidden });
+  const members = useAdminUsers();
+  const { profiles } = useSenders();
   const update = useMutation(api.outreach.updateVenue);
   const setHidden = useMutation(api.outreach.setVenueHidden);
   const { toggle, isOpen } = useExpand();
@@ -300,6 +306,7 @@ export default function VenuesTab() {
       />
 
       <SectionHeader title="Venues" count={venues.length}>
+        <SendersEditor />
         <button
           onClick={() => setShowHidden((v) => !v)}
           className={`text-xs px-3 py-1.5 border rounded-lg transition-colors font-medium ${
@@ -509,6 +516,7 @@ export default function VenuesTab() {
                     initialValue={venue.message}
                     recipient={venue.name}
                     templates={VENUE_TEMPLATES}
+                    sender={resolveSender(venue.assignedTo, profiles, members)}
                     onSave={(message) =>
                       update({ id: venue._id as Id<"venueOutreach">, message }).then(() => {})
                     }

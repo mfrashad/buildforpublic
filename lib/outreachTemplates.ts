@@ -4,7 +4,10 @@
 // field with {recipient} replaced by the venue/org name, then you personalise
 // the bracketed bits before recording what you actually sent.
 //
-// Contact details default to the project owner; edit per-send as needed.
+// Sender details ({sender_name}, {sender_phone}, {sender_email},
+// {sender_linkedin}) are auto-filled from whoever the record is assigned to —
+// see resolveSender() in app/admin/tabs/outreachShared.tsx. When a record is
+// unassigned they fall back to DEFAULT_SENDER (the project owner).
 
 import { BRIEF_SAMPLES } from "./constants";
 
@@ -15,12 +18,34 @@ export type OutreachTemplate = {
   label: string; // shown in the picker
   channel: string; // suggested channel
   subject?: string; // for email templates
-  body: string; // {recipient} is replaced with the venue/org name
+  body: string; // {recipient} + {sender_*} tokens are filled in at insert time
 };
 
-const SIGNATURE = `Rashad
-+60 11-6227 1261
-m.fathyrashad@gmail.com`;
+/** Who the message is being sent as. Resolved from the record's assignee. */
+export type Sender = {
+  name: string;
+  email: string;
+  phone?: string;
+  linkedin?: string; // handle or URL, e.g. "linkedin.com/in/mfathyrashad"
+};
+
+/** Fallback sender (project owner) used when a record has no assignee. */
+export const DEFAULT_SENDER: Sender = {
+  name: "Rashad",
+  email: "m.fathyrashad@gmail.com",
+  phone: "+60 11-6227 1261",
+  linkedin: "linkedin.com/in/mfathyrashad",
+};
+
+// Sign-off blocks built from {sender_*} tokens. A line whose only content is a
+// missing optional field (phone / linkedin) is dropped by fillTemplate().
+const SIGNATURE = `{sender_name}
+{sender_phone}
+{sender_email}`;
+
+const SIGNATURE_NGO = `{sender_name}
+Build for Public
+{sender_email}`;
 
 // ── Venue outreach ───────────────────────────────────────────────────────────
 
@@ -104,7 +129,7 @@ Our main requirement is solid WiFi (a projector/screen to present the projects w
 
 Best,
 ${SIGNATURE}
-LinkedIn: linkedin.com/in/mfathyrashad`,
+LinkedIn: {sender_linkedin}`,
   },
 ];
 
@@ -128,9 +153,7 @@ ${SAMPLE_LINKS}
 No cost, no catch — our volunteers do this to give back. Want us to put something together? Reply here or fill in our short form: https://buildforpublic.com/request
 
 Warmly,
-Rashad
-Build for Public
-m.fathyrashad@gmail.com`,
+${SIGNATURE_NGO}`,
   },
   {
     id: "ngo_dm_short",
@@ -154,9 +177,7 @@ And if writing one feels like too much — no problem at all. Just send us your 
 No cost, no catch — our volunteers do this to give back. If you're open to it, reply here or fill in our short project request form: https://buildforpublic.com/request
 
 Warmly,
-Rashad
-Build for Public
-m.fathyrashad@gmail.com`,
+${SIGNATURE_NGO}`,
   },
   {
     id: "ngo_email_long",
@@ -186,11 +207,30 @@ There's no cost and no catch; our volunteers do this to give back to the communi
 
 Warmly,
 ${SIGNATURE}
-LinkedIn: linkedin.com/in/mfathyrashad`,
+LinkedIn: {sender_linkedin}`,
   },
 ];
 
-/** Replace {recipient} with the venue/org name. */
-export function fillTemplate(body: string, recipient: string): string {
-  return body.replace(/\{recipient\}/g, recipient || "there");
+/**
+ * Fill {recipient} and the {sender_*} tokens. A line whose only meaningful
+ * content is an empty optional sender field (phone / linkedin) is dropped, so
+ * senders without a phone or LinkedIn don't leave blank lines in the sign-off.
+ */
+export function fillTemplate(
+  body: string,
+  recipient: string,
+  sender: Sender = DEFAULT_SENDER,
+): string {
+  const kept = body.split("\n").filter((line) => {
+    if (line.includes("{sender_phone}") && !sender.phone?.trim()) return false;
+    if (line.includes("{sender_linkedin}") && !sender.linkedin?.trim()) return false;
+    return true;
+  });
+  return kept
+    .join("\n")
+    .replace(/\{recipient\}/g, recipient || "there")
+    .replace(/\{sender_name\}/g, sender.name)
+    .replace(/\{sender_email\}/g, sender.email)
+    .replace(/\{sender_phone\}/g, sender.phone ?? "")
+    .replace(/\{sender_linkedin\}/g, sender.linkedin ?? "");
 }

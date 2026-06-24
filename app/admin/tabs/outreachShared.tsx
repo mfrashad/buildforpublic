@@ -6,6 +6,8 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
   OutreachTemplate,
+  Sender,
+  DEFAULT_SENDER,
   fillTemplate,
 } from "@/lib/outreachTemplates";
 
@@ -40,6 +42,183 @@ export function useAdminUsers() {
     };
   }, []);
   return members;
+}
+
+const SENDERS_KEY = "outreach_senders";
+
+/** Per-person sender overrides, keyed by the assignee's label. */
+export type SenderProfile = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  linkedin?: string;
+};
+
+/**
+ * Sender profiles (name / email / phone / LinkedIn per assignee), stored as a
+ * JSON map in the `settings` table under `outreach_senders`. Used to fill the
+ * {sender_*} tokens in outreach templates based on who a record is assigned to.
+ */
+export function useSenders() {
+  const settings = useQuery(api.admin.getSettings);
+  const setSetting = useMutation(api.admin.setSetting);
+
+  let profiles: Record<string, SenderProfile> = {};
+  const raw = settings?.[SENDERS_KEY];
+  if (raw) {
+    try {
+      profiles = JSON.parse(raw) as Record<string, SenderProfile>;
+    } catch {
+      profiles = {};
+    }
+  }
+
+  const save = (next: Record<string, SenderProfile>) =>
+    setSetting({ key: SENDERS_KEY, value: JSON.stringify(next) });
+
+  return { profiles, save, loaded: settings !== undefined };
+}
+
+/**
+ * Resolve the effective sender for a record from its assignee. Precedence:
+ * explicit sender profile → Clerk member details → DEFAULT_SENDER (for the
+ * owner) or the bare label. Returns DEFAULT_SENDER when unassigned, preserving
+ * the original behaviour where messages signed off as the project owner.
+ */
+export function resolveSender(
+  label: string | undefined,
+  profiles: Record<string, SenderProfile>,
+  members: AdminUser[],
+): Sender {
+  if (!label) return DEFAULT_SENDER;
+  const p = profiles[label] ?? {};
+  const member = members.find((m) => m.label === label);
+  const isOwner =
+    member?.email?.toLowerCase() === DEFAULT_SENDER.email.toLowerCase();
+  const base: Sender = isOwner
+    ? DEFAULT_SENDER
+    : { name: member?.name ?? label, email: member?.email ?? "", phone: "", linkedin: "" };
+  return {
+    name: p.name?.trim() || base.name,
+    email: p.email?.trim() || base.email,
+    phone: p.phone?.trim() ?? base.phone,
+    linkedin: p.linkedin?.trim() ?? base.linkedin,
+  };
+}
+
+const SENDER_FIELDS: { key: keyof SenderProfile; label: string; placeholder: string }[] = [
+  { key: "name", label: "Name", placeholder: "Display name" },
+  { key: "email", label: "Email", placeholder: "you@buildforpublic.com" },
+  { key: "phone", label: "Phone", placeholder: "+60…" },
+  { key: "linkedin", label: "LinkedIn", placeholder: "linkedin.com/in/…" },
+];
+
+/**
+ * Toggle-able editor for per-assignee sender details. Lists every admin and
+ * lets you set the name / email / phone / LinkedIn that outreach templates use
+ * when a record is assigned to that person.
+ */
+export function SendersEditor() {
+  const members = useAdminUsers();
+  const { profiles, save, loaded } = useSenders();
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState<Record<string, SenderProfile>>({});
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  function openEditor() {
+    setDraft(JSON.parse(JSON.stringify(profiles)) as Record<string, SenderProfile>);
+    setOpen(true);
+  }
+
+  function setField(label: string, key: keyof SenderProfile, value: string) {
+    setDraft((d) => ({ ...d, [label]: { ...d[label], [key]: value } }));
+  }
+
+  async function handleSave() {
+    setSaving(true);
+    // Drop empty profiles so the stored blob stays tidy.
+    const cleaned: Record<string, SenderProfile> = {};
+    for (const [label, p] of Object.entries(draft)) {
+      const entries = Object.entries(p).filter(([, v]) => v && String(v).trim());
+      if (entries.length) cleaned[label] = Object.fromEntries(entries);
+    }
+    await save(cleaned);
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+    setOpen(false);
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={openEditor}
+        disabled={!loaded}
+        className="text-xs px-3 py-1.5 border border-black/20 rounded-lg text-black/40 hover:text-black hover:border-black/40 transition-colors font-medium disabled:opacity-40"
+      >
+        ✎ Sender details{saved ? " ✓" : ""}
+      </button>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+      <div className="bg-white rounded-2xl border border-black/10 shadow-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-black/10 sticky top-0 bg-white">
+          <div>
+            <h3 className="font-semibold text-black">Sender details</h3>
+            <p className="text-xs text-black/50 mt-0.5">
+              Templates auto-fill these based on who a record is assigned to. Blank fields fall back to the owner&apos;s defaults.
+            </p>
+          </div>
+          <button onClick={() => setOpen(false)} className="text-black/40 hover:text-black text-lg leading-none">
+            ✕
+          </button>
+        </div>
+
+        <div className="p-5 space-y-5">
+          {members.length === 0 ? (
+            <p className="text-sm text-black/50">No admin team members found.</p>
+          ) : (
+            members.map((m) => (
+              <div key={m.id} className="space-y-2">
+                <p className="text-sm font-medium text-black">{m.label}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {SENDER_FIELDS.map((f) => (
+                    <label key={f.key} className="flex flex-col gap-1">
+                      <span className="text-[11px] uppercase tracking-wide text-black/40 font-medium">{f.label}</span>
+                      <input
+                        value={draft[m.label]?.[f.key] ?? ""}
+                        onChange={(e) => setField(m.label, f.key, e.target.value)}
+                        placeholder={
+                          f.key === "email" && m.email ? m.email : f.placeholder
+                        }
+                        className="text-sm border border-black/15 rounded-lg px-3 py-1.5 focus:outline-none focus:border-black/40"
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="flex items-center justify-end gap-2 px-5 py-4 border-t border-black/10 sticky bottom-0 bg-white">
+          <button onClick={() => setOpen(false)} className="text-sm px-3 py-1.5 text-black/50 hover:text-black">
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="text-sm px-4 py-1.5 bg-black text-white rounded-lg disabled:opacity-40"
+          >
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -163,11 +342,13 @@ export function MessageEditor({
   initialValue,
   recipient,
   templates,
+  sender = DEFAULT_SENDER,
   onSave,
 }: {
   initialValue?: string;
   recipient: string;
   templates: OutreachTemplate[];
+  sender?: Sender;
   onSave: (message: string) => Promise<void>;
 }) {
   const savedMessage = (initialValue ?? "").trim();
@@ -190,8 +371,8 @@ export function MessageEditor({
   function insertTemplate(id: string) {
     const t = templates.find((x) => x.id === id);
     if (!t) return;
-    const subject = t.subject ? `Subject: ${fillTemplate(t.subject, recipient)}\n\n` : "";
-    setValue(subject + fillTemplate(t.body, recipient));
+    const subject = t.subject ? `Subject: ${fillTemplate(t.subject, recipient, sender)}\n\n` : "";
+    setValue(subject + fillTemplate(t.body, recipient, sender));
   }
 
   async function handleSave() {
@@ -299,6 +480,10 @@ export function MessageEditor({
               {copied ? "Copied!" : "Copy"}
             </button>
           )}
+          <span className="text-[11px] text-black/40">
+            Signing as <span className="font-medium text-black/60">{sender.name}</span>
+            {sender.email ? ` · ${sender.email}` : ""}
+          </span>
         </div>
         <textarea
           value={value}
