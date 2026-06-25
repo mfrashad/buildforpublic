@@ -46,7 +46,7 @@ const BOILERPLATE = {
   oneLiner:
     "Build for Public is a digital-volunteering movement shipping open-source tech for non-profits and the public good.",
   short:
-    "Build for Public is a movement of volunteer builders, designers, and changemakers who ship open-source software for NGOs, nonprofits, and communities that private capital won't serve — and publish every line of it openly.",
+    "Build for Public is a movement of volunteer builders, designers, and changemakers who ship open-source software for NGOs, nonprofits, and the communities the market leaves behind — and publish every line of it openly.",
   long:
     "Build for Public is a community of volunteer builders shipping open code for the public interest. The systems shaping public life — the infrastructure behind loans, jobs, health, and governance — are privately owned and built to maximize private return, not public benefit. Communities that don't generate revenue get left behind. Build for Public exists to close that gap: we match NGOs and public-interest organisations with volunteer builders, use modern AI to ship real tools fast, and release everything as open source so the next builder can pick up where we left off. We run regular meetups and co-building sessions across Malaysia and Southeast Asia.",
 };

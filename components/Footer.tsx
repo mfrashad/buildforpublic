@@ -27,7 +27,7 @@ export default function Footer() {
             </div>
             <p className="text-sm text-black/60 leading-relaxed max-w-sm">
               A movement of builders shipping open code for the public interest.
-              Open-source software for communities private capital won&apos;t serve.
+              Open-source software for the communities the market leaves behind.
               Built by volunteers. Owned by everyone.
             </p>
           </div>
