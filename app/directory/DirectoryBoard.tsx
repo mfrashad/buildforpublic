@@ -8,6 +8,13 @@ import NGOCard from "@/app/components/ui/NGOCard";
 
 type KindFilter = "all" | "ngo_request" | "project_idea" | "oss_project" | "community_project" | "ngo_helped";
 
+// NGO requests are collected privately for now and only revealed to people who
+// show up to the meetup. A couple of NGOs are named as a teaser; the rest stay
+// locked. Bump the count + names as more come in.
+const HIDDEN_NGO_REQUESTS = 5;
+const NAMED_NGO_REQUESTS = ["HumAIne", "100 Women Who Care"];
+const LUMA_CALENDAR_URL = "https://luma.com/buildforpublic";
+
 const TABS: { id: KindFilter; label: string; description: string }[] = [
   {
     id: "all",
@@ -119,14 +126,155 @@ function EmptyState({ kind }: { kind: KindFilter }) {
   );
 }
 
+// A single blurred, redacted teaser card. Looks like a real request sits
+// behind the frosted glass — but nothing legible leaks through.
+function MysteryCard() {
+  return (
+    <div className="card overflow-hidden select-none" aria-hidden="true">
+      <div className="h-2" style={{ background: "#fff200" }} />
+      <div className="p-6 space-y-3" style={{ filter: "blur(6px)", opacity: 0.55 }}>
+        <div className="h-4 bg-black/20 rounded w-28" />
+        <div className="h-5 bg-black/25 rounded w-3/4" />
+        <div className="h-4 bg-black/15 rounded w-1/2" />
+        <div className="space-y-2 pt-2">
+          <div className="h-3 bg-black/15 rounded" />
+          <div className="h-3 bg-black/15 rounded w-5/6" />
+          <div className="h-3 bg-black/15 rounded w-2/3" />
+        </div>
+        <div className="flex gap-2 pt-2">
+          <div className="h-6 bg-black/10 rounded-full w-16" />
+          <div className="h-6 bg-black/10 rounded-full w-20" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Locked view for the NGO Requests tab: we *have* collected requests, but they
+// stay a mystery until you show up to the meetup.
+function LockedNGORequests() {
+  return (
+    <div className="col-span-full">
+      <div className="relative">
+        {/* Blurred teaser cards sitting behind the lock panel */}
+        <div className="grid sm:grid-cols-2 gap-8 pointer-events-none" aria-hidden="true">
+          <MysteryCard />
+          <MysteryCard />
+          <MysteryCard />
+          <MysteryCard />
+        </div>
+
+        {/* Lock overlay */}
+        <div className="absolute inset-0 flex items-center justify-center px-4">
+          <div
+            className="card max-w-lg w-full text-center px-8 py-10"
+            style={{ background: "#fff" }}
+          >
+            <div
+              className="mx-auto mb-5 flex items-center justify-center"
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 9999,
+                background: "#fff200",
+                border: "2px solid #000",
+              }}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            </div>
+
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-black/50 mb-3">
+              {HIDDEN_NGO_REQUESTS} requests collected
+            </p>
+            <p
+              className="text-2xl text-black mb-3"
+              style={{ fontFamily: "var(--font-display)", fontWeight: 600 }}
+            >
+              Hidden until the next meetup
+            </p>
+            <p className="text-black/60 text-sm mb-5 max-w-sm mx-auto leading-relaxed">
+              NGOs have already sent in real problems to solve — including{" "}
+              <span className="text-black font-semibold">HumAIne</span> and{" "}
+              <span className="text-black font-semibold">100 Women Who Care</span>.
+              The rest stay under wraps until the next Build for Public meetup,
+              where we&apos;ll reveal the full board so you can pick one up in the
+              room.
+            </p>
+
+            {/* Teaser chips: two named, the rest locked */}
+            <div className="flex flex-wrap gap-2 justify-center mb-7">
+              {NAMED_NGO_REQUESTS.map((name) => (
+                <span
+                  key={name}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5"
+                  style={{ background: "#fff200", border: "2px solid #000" }}
+                >
+                  {name}
+                </span>
+              ))}
+              {HIDDEN_NGO_REQUESTS - NAMED_NGO_REQUESTS.length > 0 && (
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 text-black/50"
+                  style={{ border: "2px solid rgba(0,0,0,0.2)" }}
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  +{HIDDEN_NGO_REQUESTS - NAMED_NGO_REQUESTS.length} locked
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <a
+                href={LUMA_CALENDAR_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-pill btn-pill-filled"
+              >
+                Join the meetup to unlock →
+              </a>
+              <a href="/request" className="btn-pill btn-pill-outline">
+                Submit an NGO request
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DirectoryBoard() {
   const [activeTab, setActiveTab] = useState<KindFilter>("all");
 
   const isNgoHelpedTab = activeTab === "ngo_helped";
+  const isNgoRequestTab = activeTab === "ngo_request";
 
   const items = useQuery(
     api.opportunities.listPublished,
-    isNgoHelpedTab ? "skip" : activeTab === "all" ? {} : { kind: activeTab },
+    isNgoHelpedTab || isNgoRequestTab ? "skip" : activeTab === "all" ? {} : { kind: activeTab },
   );
 
   const ngoHelped = useQuery(
@@ -177,7 +325,9 @@ export default function DirectoryBoard() {
 
       {/* Cards grid */}
       <div className="grid sm:grid-cols-2 gap-8">
-        {isLoading && (
+        {isNgoRequestTab && <LockedNGORequests />}
+
+        {!isNgoRequestTab && isLoading && (
           <>
             <SkeletonCard />
             <SkeletonCard />
@@ -186,7 +336,7 @@ export default function DirectoryBoard() {
           </>
         )}
 
-        {isEmpty && <EmptyState kind={activeTab} />}
+        {!isNgoRequestTab && isEmpty && <EmptyState kind={activeTab} />}
 
         {isNgoHelpedTab && !isLoading &&
           ngoHelped!.map((n) => (
