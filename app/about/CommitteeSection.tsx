@@ -210,9 +210,16 @@ export default function CommitteeSection() {
 
   // Filled members first (in their set order), then open roles, then mystery.
   const rank = (s: Member["slotType"]) => (s === "filled" ? 0 : s === "open" ? 1 : 2);
+  // The co-founder closes out the team — always shown last among filled members.
+  const isCoFounder = (m: Member) => /co-?founder/i.test(m.roleTitle || "");
   const ordered = members
     .map((m, i) => ({ m, i }))
-    .sort((a, b) => rank(a.m.slotType) - rank(b.m.slotType) || a.i - b.i)
+    .sort(
+      (a, b) =>
+        rank(a.m.slotType) - rank(b.m.slotType) ||
+        (isCoFounder(a.m) ? 1 : 0) - (isCoFounder(b.m) ? 1 : 0) ||
+        a.i - b.i,
+    )
     .map((x) => x.m);
 
   return (
