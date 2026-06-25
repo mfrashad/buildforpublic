@@ -141,8 +141,8 @@ export const VISION = {
   problemImage: "/sprites/vision-problem.png",
   vision: [
     {
-      title: "Build What Private Capital Won't",
-      text: "We build and fund projects private capital won't touch. If no company will ship it for public benefit, we will.",
+      title: "Build for Communities, Not Customers",
+      text: "We build and fund the projects no company will take on. If it serves people rather than a market, we'll build it.",
       image: "/sprites/vision-fund.png",
     },
     {

@@ -29,7 +29,7 @@ const TAGLINES = [
 
 const KEY_MESSAGES = [
   {
-    title: "Build what private capital won't",
+    title: "Build for communities, not customers",
     text: "We build and fund the public-interest projects no company will ship — tools for NGOs, public services, and communities that don't generate revenue.",
   },
   {
@@ -55,8 +55,7 @@ const USE_WORDS = ["movement", "builders", "ship", "open / open-source", "public
 const AVOID_WORDS = ["users (say “people” / “communities”)", "charity / handout", "disrupt", "synergy / leverage", "customers", "growth-hacking"];
 
 const ASSETS = [
-  { label: "Color palette — SVG", href: "/brand/palette.svg", note: "Swatch sheet" },
-  { label: "Social card — PNG", href: "/og/buildforpublic.png", note: "1600 × 827" },
+  { label: "Color palette — SVG", href: "/brand/palette.svg", note: "Swatch sheet, all 10 hex" },
 ];
 
 const BRICKS = ["yellow-cube", "blue-plate", "green-cube", "red-slope", "purple-cube", "cobalt-cube"];
@@ -403,19 +402,54 @@ export default function BrandKit() {
         id="motifs"
         intro="A bold, neobrutalist style: 2px black outlines, hard offset shadows, sharp corners, a faint grid, and playful LEGO-style bricks and stars."
       >
-        <div className="flex flex-wrap items-end gap-6 mb-8">
-          {BRICKS.map((b) => (
-            <Image
-              key={b}
-              src={`/bricks/${b}.png`}
-              alt={`${b.replace("-", " ")} brick`}
-              width={72}
-              height={72}
-              className="object-contain"
-            />
-          ))}
-          <Star1 size={56} color="#fff200" stroke="#000" strokeWidth={6} />
-          <Star6 size={40} color="#000" />
+        <div className="mb-8">
+          <p className="eyebrow mb-3">Bricks &amp; stars — click any to download</p>
+          <div className="flex flex-wrap items-center gap-3">
+            {BRICKS.map((b) => (
+              <a
+                key={b}
+                href={`/bricks/${b}.png`}
+                download
+                title={`Download ${b.replace("-", " ")} (PNG)`}
+                className="card bg-white p-2 hover:bg-bp-yellow transition-colors"
+              >
+                <Image
+                  src={`/bricks/${b}.png`}
+                  alt={`${b.replace("-", " ")} brick`}
+                  width={60}
+                  height={60}
+                  className="object-contain"
+                />
+              </a>
+            ))}
+            <a
+              href="/brand/star-spark.svg"
+              download
+              title="Download spark star (SVG)"
+              className="card bg-white p-3 flex items-center justify-center hover:bg-bp-yellow transition-colors"
+            >
+              <Star1 size={48} color="#fff200" stroke="#000" strokeWidth={6} />
+            </a>
+            <a
+              href="/brand/star-burst.svg"
+              download
+              title="Download burst star (SVG)"
+              className="card bg-white p-3 flex items-center justify-center hover:bg-bp-yellow transition-colors"
+            >
+              <Star4 size={48} color="#fff200" stroke="#000" strokeWidth={6} />
+            </a>
+            <a
+              href="/brand/star-sparkle.svg"
+              download
+              title="Download sparkle star (SVG)"
+              className="card bg-white p-3 flex items-center justify-center hover:bg-bp-yellow transition-colors"
+            >
+              <Star6 size={44} color="#000" />
+            </a>
+          </div>
+          <p className="text-xs text-black/40 mt-3">
+            PNG bricks (cubes, plates &amp; slopes, 6 colors) and SVG stars — drop them into Canva as elements.
+          </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
@@ -441,6 +475,32 @@ export default function BrandKit() {
         id="assets"
         intro="Palette sheet and social card here; the logo (PNG/SVG, all three variants) is up top. Need a format that isn't here? Email us."
       >
+        {/* Social card — visual preview + download */}
+        <div className="card overflow-hidden mb-4">
+          <a href="/og/buildforpublic.png" download className="block" title="Download social card (PNG)">
+            <div className="relative aspect-[1600/827] border-b-2 border-black bg-bp-light">
+              <Image
+                src="/og/buildforpublic.png"
+                alt="Build for Public social card preview"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 1024px"
+              />
+            </div>
+          </a>
+          <div className="bg-white px-5 py-3 flex items-center justify-between gap-3">
+            <div>
+              <p className="font-bold text-black" style={{ fontFamily: "var(--font-display)" }}>
+                Social card
+              </p>
+              <p className="text-xs text-black/50 mt-0.5">PNG · 1600 × 827 — share image / link preview</p>
+            </div>
+            <a href="/og/buildforpublic.png" download className="btn-pill btn-pill-filled text-sm shrink-0">
+              Download PNG ↓
+            </a>
+          </div>
+        </div>
+
         <div className="grid sm:grid-cols-2 gap-4 mb-8">
           {ASSETS.map((a) => (
             <a
