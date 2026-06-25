@@ -17,7 +17,7 @@ const geist = Geist({
 });
 
 const DESCRIPTION =
-  "A movement of volunteer builders shipping open-source software for NGOs, nonprofits, and communities that private capital won't serve.";
+  "A movement of volunteer builders shipping open-source software for NGOs, nonprofits, and the communities the market leaves behind.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://buildforpublic.com"),

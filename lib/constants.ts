@@ -6,7 +6,7 @@ export const SITE = {
   name: "Build for Public",
   domain: "buildforpublic.com",
   description:
-    "A movement of builders shipping open code for the public interest — open-source software for communities private capital won't serve.",
+    "A movement of builders shipping open code for the public interest — open-source software for the communities the market leaves behind.",
   email: "m.fathyrashad@gmail.com",
   github: "https://github.com/mfrashad/buildforpublic",
   twitter: "https://x.com/build4public",

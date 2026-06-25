@@ -50,7 +50,7 @@ export default function HeroSection({ hero, slogan }: HeroSectionProps) {
           className="text-base sm:text-lg mb-12 max-w-xl leading-relaxed"
           style={{ color: "rgba(0,0,0,0.7)" }}
         >
-          We build open-source AI tools for communities private capital won&apos;t serve — and keep everything free. Starting where private capital is concentrating fastest: AI.
+          We build open-source AI tools for the communities the market leaves behind — and keep everything free. Starting where private capital is concentrating fastest: AI.
         </p>
 
         {/* CTAs */}

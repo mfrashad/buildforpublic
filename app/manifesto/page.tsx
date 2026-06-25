@@ -6,7 +6,7 @@ import { MANIFESTO_CLAIMS } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Manifesto",
   description:
-    "We build open-source software for communities private capital won't serve. Our commitments: open by default, impact over profit, community-driven.",
+    "We build open-source software for the communities the market leaves behind. Our commitments: open by default, impact over profit, community-driven.",
   alternates: { canonical: "https://buildforpublic.com/manifesto" },
 };
 

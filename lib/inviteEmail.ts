@@ -24,7 +24,7 @@ During the interview, we'll discuss:
 - What to expect from the position and the community
 - Any questions you might have for us
 
-In case you'd like a refresher on who we are: Build for Public is a community of volunteer builders shipping open-source software for NGOs, nonprofits, and communities that private capital won't serve.
+In case you'd like a refresher on who we are: Build for Public is a community of volunteer builders shipping open-source software for NGOs, nonprofits, and the communities the market leaves behind.
 - Website: https://buildforpublic.com
 - The LinkedIn post you likely found us through: https://www.linkedin.com/posts/mfathyrashad_build-for-public-open-source-tech-for-the-share-7468574544933535744-B2am/
 
