@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { OWNER_EMAIL } from "@/lib/constants";
+import { OWNER_EMAIL, RECRUITMENT_PERMISSION } from "@/lib/constants";
 import RecruitmentTab from "./tabs/RecruitmentTab";
 import ProjectRequestsTab from "./tabs/ProjectRequestsTab";
 import OpportunitiesTab from "./tabs/OpportunitiesTab";
@@ -132,6 +132,11 @@ export default function AdminDashboard() {
   // dashboard; the owner additionally sees owner-only tabs (Recruitment, Admins).
   const isAdmin = user?.publicMetadata?.role === "admin";
   const isOwner = user?.primaryEmailAddress?.emailAddress === OWNER_EMAIL;
+  // Per-admin grants (mirrors requirePermission in convex/admin.ts). The owner
+  // implicitly holds every grant.
+  const permsRaw = user?.publicMetadata?.permissions;
+  const permissions = Array.isArray(permsRaw) ? (permsRaw as string[]) : [];
+  const canRecruitment = isOwner || permissions.includes(RECRUITMENT_PERMISSION);
 
   if (!user || (!isAdmin && !isOwner)) {
     return (
@@ -163,9 +168,13 @@ export default function AdminDashboard() {
     );
   }
 
-  // Recruitment (volunteer PII) and Admins (role management) are owner-only.
-  const ownerOnlyTabs: Tab[] = ["volunteers", "committee", "admins"];
-  const visibleNav = NAV.filter((n) => !ownerOnlyTabs.includes(n.id) || isOwner);
+  // Committee and Admins (role management) stay owner-only. Recruitment
+  // (volunteer PII) is owner-only by default but can be granted per-admin.
+  const ownerOnlyTabs: Tab[] = ["committee", "admins"];
+  const visibleNav = NAV.filter((n) => {
+    if (n.id === "volunteers") return canRecruitment;
+    return !ownerOnlyTabs.includes(n.id) || isOwner;
+  });
   const activeNav = NAV.find((n) => n.id === activeTab)!;
 
   return (
@@ -243,7 +252,7 @@ export default function AdminDashboard() {
         {/* ── Content ── */}
         <main className="flex-1 min-w-0 p-6 lg:p-8">
           {activeTab === "overview" && <OverviewTab />}
-          {activeTab === "volunteers" && isOwner && <RecruitmentTab />}
+          {activeTab === "volunteers" && canRecruitment && <RecruitmentTab />}
           {activeTab === "project-requests" && <ProjectRequestsTab />}
           {activeTab === "opportunities" && <OpportunitiesTab />}
           {activeTab === "venues" && <VenuesTab />}

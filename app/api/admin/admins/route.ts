@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { OWNER_EMAIL } from "@/lib/constants";
+import { GRANTABLE_PERMISSIONS, OWNER_EMAIL } from "@/lib/constants";
 
 // Owner-only admin management. The owner (OWNER_EMAIL) can grant or revoke the
 // Clerk `publicMetadata.role = "admin"` claim on any user by email. That role is
@@ -33,13 +33,21 @@ async function requireOwner(): Promise<
   return { client };
 }
 
+function permissionsOf(user: ClerkUser): string[] {
+  const raw = (user.publicMetadata as { permissions?: unknown })?.permissions;
+  return Array.isArray(raw) ? raw.filter((p): p is string => typeof p === "string") : [];
+}
+
 function adminView(user: ClerkUser) {
+  const isOwner = primaryEmail(user) === OWNER_EMAIL.toLowerCase();
   return {
     id: user.id,
     email: primaryEmail(user),
     name: [user.firstName, user.lastName].filter(Boolean).join(" ") || null,
     imageUrl: user.imageUrl,
-    isOwner: primaryEmail(user) === OWNER_EMAIL.toLowerCase(),
+    isOwner,
+    // The owner implicitly holds every grant; surface that to the UI.
+    permissions: isOwner ? [...GRANTABLE_PERMISSIONS] : permissionsOf(user),
   };
 }
 
@@ -104,8 +112,60 @@ export async function DELETE(req: Request) {
   }
 
   await client.users.updateUserMetadata(id, {
-    publicMetadata: { role: null },
+    publicMetadata: { role: null, permissions: null },
   });
 
   return NextResponse.json({ ok: true });
+}
+
+// ── Grant / revoke a per-admin permission ─────────────────────────────────────
+// Body: { id: string, permission: string, grant: boolean }
+export async function PATCH(req: Request) {
+  const guard = await requireOwner();
+  if ("error" in guard) return guard.error;
+  const { client } = guard;
+
+  const body = (await req.json().catch(() => ({}))) as {
+    id?: unknown;
+    permission?: unknown;
+    grant?: unknown;
+  };
+  const id = typeof body.id === "string" ? body.id : "";
+  const permission = typeof body.permission === "string" ? body.permission : "";
+  const grant = body.grant === true;
+
+  if (!id) {
+    return NextResponse.json({ error: "A user id is required." }, { status: 400 });
+  }
+  if (!(GRANTABLE_PERMISSIONS as readonly string[]).includes(permission)) {
+    return NextResponse.json({ error: `Unknown permission: ${permission}.` }, { status: 400 });
+  }
+
+  const target = await client.users.getUser(id).catch(() => null);
+  if (!target) {
+    return NextResponse.json({ error: "Account not found." }, { status: 404 });
+  }
+  if ((target.publicMetadata as { role?: string })?.role !== "admin") {
+    return NextResponse.json(
+      { error: "Permissions can only be granted to admins." },
+      { status: 400 },
+    );
+  }
+  if (primaryEmail(target) === OWNER_EMAIL.toLowerCase()) {
+    return NextResponse.json(
+      { error: "The owner already holds every permission." },
+      { status: 400 },
+    );
+  }
+
+  const current = permissionsOf(target);
+  const next = grant
+    ? Array.from(new Set([...current, permission]))
+    : current.filter((p) => p !== permission);
+
+  await client.users.updateUserMetadata(id, {
+    publicMetadata: { role: "admin", permissions: next },
+  });
+
+  return NextResponse.json({ admin: { ...adminView(target), permissions: next } });
 }

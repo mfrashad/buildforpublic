@@ -2,6 +2,14 @@
 // server-side OWNER_EMAIL guard in convex/admin.ts.
 export const OWNER_EMAIL = "m.fathyrashad@gmail.com";
 
+// Per-admin permission grants. The owner can grant individual admins access to
+// specific owner-only sections without making them the owner. Stored on each
+// admin's Clerk publicMetadata.permissions (a string array); mirrors the
+// requirePermission guard in convex/admin.ts. The owner implicitly holds all.
+export const RECRUITMENT_PERMISSION = "recruitment";
+export const GRANTABLE_PERMISSIONS = [RECRUITMENT_PERMISSION] as const;
+export type GrantablePermission = (typeof GRANTABLE_PERMISSIONS)[number];
+
 export const SITE = {
   name: "Build for Public",
   domain: "buildforpublic.com",

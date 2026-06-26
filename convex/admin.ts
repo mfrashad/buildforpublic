@@ -29,6 +29,25 @@ export async function requireOwner(ctx: AuthCtx) {
   return identity;
 }
 
+// ── Per-admin permission grants ────────────────────────────────────────────────
+// The owner can grant individual admins access to specific owner-only sections
+// (currently just recruitment) without making them the owner. Grants live in the
+// admin's Clerk publicMetadata.permissions (a string array) and are propagated to
+// Convex via the "convex" JWT template:
+//   { "permissions": "{{user.public_metadata.permissions}}" }
+// The owner implicitly holds every permission.
+export const RECRUITMENT_PERMISSION = "recruitment";
+
+export async function requirePermission(ctx: AuthCtx, permission: string) {
+  const identity = await requireAdmin(ctx);
+  const email = ((identity as { email?: string }).email ?? "").toLowerCase();
+  if (email === OWNER_EMAIL) return identity; // owner has all permissions
+  const perms = (identity as { permissions?: unknown }).permissions;
+  const granted = Array.isArray(perms) ? perms : [];
+  if (!granted.includes(permission)) throw new ConvexError("Not authorized.");
+  return identity;
+}
+
 // ── Stats ─────────────────────────────────────────────────────────────────────
 
 export const getStats = query({
@@ -82,7 +101,7 @@ export const getStats = query({
 export const listVolunteers = query({
   args: { showHidden: v.optional(v.boolean()) },
   handler: async (ctx, args) => {
-    await requireOwner(ctx);
+    await requirePermission(ctx, RECRUITMENT_PERMISSION);
     const all = await ctx.db.query("volunteers").order("desc").collect();
     return args.showHidden ? all : all.filter((v) => !v.hidden);
   },
@@ -99,7 +118,7 @@ export const updateVolunteerStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    await requireOwner(ctx);
+    await requirePermission(ctx, RECRUITMENT_PERMISSION);
     await ctx.db.patch(args.id, { status: args.status });
   },
 });
@@ -107,7 +126,7 @@ export const updateVolunteerStatus = mutation({
 export const setVolunteerNotes = mutation({
   args: { id: v.id("volunteers"), notes: v.string() },
   handler: async (ctx, args) => {
-    await requireOwner(ctx);
+    await requirePermission(ctx, RECRUITMENT_PERMISSION);
     await ctx.db.patch(args.id, { notes: args.notes || undefined });
   },
 });
@@ -139,7 +158,7 @@ export const updateRecruitment = mutation({
     inviteEmailSentAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    await requireOwner(ctx);
+    await requirePermission(ctx, RECRUITMENT_PERMISSION);
     const { id, ...fields } = args;
     // Remove undefined values so we only patch what changed
     const patch = Object.fromEntries(
@@ -152,7 +171,7 @@ export const updateRecruitment = mutation({
 export const setVolunteerHidden = mutation({
   args: { id: v.id("volunteers"), hidden: v.boolean() },
   handler: async (ctx, args) => {
-    await requireOwner(ctx);
+    await requirePermission(ctx, RECRUITMENT_PERMISSION);
     await ctx.db.patch(args.id, { hidden: args.hidden });
   },
 });

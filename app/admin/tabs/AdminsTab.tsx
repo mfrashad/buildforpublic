@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { RECRUITMENT_PERMISSION } from "@/lib/constants";
 import { ConfirmModal, SectionHeader } from "../ui";
 
 type Admin = {
@@ -9,6 +10,7 @@ type Admin = {
   name: string | null;
   imageUrl: string;
   isOwner: boolean;
+  permissions: string[];
 };
 
 export default function AdminsTab() {
@@ -67,6 +69,22 @@ export default function AdminsTab() {
     await load();
   }
 
+  async function togglePermission(admin: Admin, permission: string, grant: boolean) {
+    setBusy(true);
+    setError(null);
+    const res = await fetch("/api/admin/admins", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: admin.id, permission, grant }),
+    });
+    setBusy(false);
+    if (!res.ok) {
+      setError((await res.json().catch(() => ({})))?.error ?? "Failed to update access.");
+      return;
+    }
+    await load();
+  }
+
   return (
     <div className="space-y-8 max-w-2xl">
       <ConfirmModal
@@ -115,6 +133,12 @@ export default function AdminsTab() {
 
       <div>
         <SectionHeader title="Current admins" />
+        <p className="text-sm text-black/50 mb-4 leading-relaxed">
+          Toggle <span className="font-medium text-black/70">Recruitment</span> to let an
+          admin see and manage the recruitment pipeline (volunteer applicants). The change
+          takes effect the next time they refresh their session. Everything else stays
+          owner-only.
+        </p>
         {admins === null ? (
           <div className="h-16 bg-black/5 rounded-xl animate-pulse" />
         ) : admins.length === 0 ? (
@@ -145,13 +169,27 @@ export default function AdminsTab() {
                     Owner
                   </span>
                 ) : (
-                  <button
-                    onClick={() => setPendingRemove(admin)}
-                    disabled={busy}
-                    className="text-xs text-red-500/70 hover:text-red-600 underline underline-offset-2 disabled:opacity-50 shrink-0"
-                  >
-                    Remove
-                  </button>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <label className="flex items-center gap-1.5 text-xs text-black/60 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={admin.permissions.includes(RECRUITMENT_PERMISSION)}
+                        disabled={busy}
+                        onChange={(e) =>
+                          togglePermission(admin, RECRUITMENT_PERMISSION, e.target.checked)
+                        }
+                        className="accent-black w-3.5 h-3.5 disabled:opacity-50"
+                      />
+                      Recruitment
+                    </label>
+                    <button
+                      onClick={() => setPendingRemove(admin)}
+                      disabled={busy}
+                      className="text-xs text-red-500/70 hover:text-red-600 underline underline-offset-2 disabled:opacity-50"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 )}
               </li>
             ))}
