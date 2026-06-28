@@ -274,7 +274,7 @@ export default function DirectoryBoard() {
 
   const items = useQuery(
     api.opportunities.listPublished,
-    isNgoHelpedTab || isNgoRequestTab ? "skip" : activeTab === "all" ? {} : { kind: activeTab },
+    isNgoHelpedTab ? "skip" : activeTab === "all" ? {} : { kind: activeTab },
   );
 
   const ngoHelped = useQuery(
@@ -325,9 +325,10 @@ export default function DirectoryBoard() {
 
       {/* Cards grid */}
       <div className="grid sm:grid-cols-2 gap-8">
-        {isNgoRequestTab && <LockedNGORequests />}
+        {/* Locked teaser only when no NGO requests are published yet */}
+        {isNgoRequestTab && isEmpty && <LockedNGORequests />}
 
-        {!isNgoRequestTab && isLoading && (
+        {isLoading && (
           <>
             <SkeletonCard />
             <SkeletonCard />

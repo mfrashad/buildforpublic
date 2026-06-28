@@ -505,3 +505,160 @@ export const seedCommunityProjects = internalMutation({
     return { seeded: count };
   },
 });
+
+/**
+ * Add specific board projects (HumAIne, TitikLab, YouthWave MY).
+ * Idempotent: skips any whose title already exists.
+ */
+export const seedBoardProjects = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("opportunities").collect();
+    const titles = new Set(all.map((o) => o.title));
+
+    const entries: Parameters<typeof ctx.db.insert<"opportunities">>[1][] = [
+      {
+        kind: "community_project",
+        title: "HumAIne",
+        summary:
+          "A movement and manifesto for staying human with AI — read, sign, and join.",
+        description:
+          "HumAIne is a global movement for people who refuse to choose between embracing AI and staying deeply human. The site lets people read the manifesto, sign it (with a hand-drawn or typed signature that replays stroke-by-stroke), and watch a living wall of signatures and messages grow. Built with Next.js + Turso. Open to contributors — next up are the About, Messages, and Resources pages.",
+        tags: ["Open Source", "AI", "Movement", "Next.js"],
+        link: "https://humaine-movement.com",
+        repoLink: "https://github.com/buildforpublic/humaine",
+        accent: "peach",
+        status: "published",
+        featured: false,
+        creator: "Build for Public",
+        skillsNeeded: ["Next.js", "React", "Design"],
+        difficulty: "intermediate",
+        stars: 0,
+        officialBFP: true,
+      },
+      {
+        kind: "community_project",
+        title: "TitikLab — Pendigitalan Irama Kulintangan Bajau",
+        summary:
+          "A digital learning platform preserving traditional Bajau Tagungguk music and its five titik rhythms.",
+        description:
+          "TitikLab digitises and promotes traditional Bajau music (Tagungguk) from Semporna, Sabah. The educational site will let people learn the history and cultural significance of Tagungguk, explore the five traditional titik (Tabawan, Tarirai, Limbayan, Lellang, and Senai-senai), discover the ensemble's instruments, watch demonstration photos and videos, listen to each titik's rhythm, download a learning pamphlet, and read about the community partners. Early-stage build, in collaboration with researcher Cikgu Rosley (traditional rhythm codes) and the Sulimbag Jawtee music group of Semporna (content verification and workshop demonstrations). Builders welcome.",
+        tags: ["Cultural Heritage", "Education", "Music", "Sabah"],
+        repoLink: "https://github.com/buildforpublic/titiklab",
+        accent: "blue",
+        status: "published",
+        featured: false,
+        orgName: "TitikLab",
+        creator: "Build for Public",
+        skillsNeeded: ["Next.js", "Design", "Content"],
+        difficulty: "beginner",
+        stars: 0,
+        officialBFP: true,
+      },
+      {
+        kind: "ngo_request",
+        title: "YouthWave MY (Pertubuhan Gelombang Muda Malaysia)",
+        summary:
+          "A Malaysian youth-empowerment NGO looking for builders — scope to be defined.",
+        description:
+          'Pertubuhan Gelombang Muda Malaysia ("YouthWave MY") is a youth-focused NGO in Malaysia. Public information is limited, so builders should research their Facebook group/posts and LinkedIn to understand their work, then propose how technology could help — for example a website, member/event tools, or content. An open opportunity to scope and shape from the ground up.',
+        tags: ["NGO", "Youth", "Malaysia", "Scoping"],
+        link: "https://my.linkedin.com/in/youthwave-malaysia-341347200",
+        accent: "purple",
+        status: "published",
+        featured: false,
+        orgName: "Pertubuhan Gelombang Muda Malaysia (YouthWave MY)",
+        difficulty: "beginner",
+      },
+    ];
+
+    let count = 0;
+    for (const e of entries) {
+      if (titles.has(e.title)) {
+        console.log(`Skip existing: ${e.title}`);
+        continue;
+      }
+      await ctx.db.insert("opportunities", e);
+      count++;
+    }
+
+    console.log(`Seeded ${count} board projects.`);
+    return { seeded: count };
+  },
+});
+
+/**
+ * Reclassify the board projects as NGO requests and rewrite each as a
+ * developer-facing build brief (design guidelines + pages where they exist,
+ * otherwise point devs to the org's socials to infer scope).
+ * Idempotent: patches by title; safe to re-run.
+ */
+export const reclassifyBoardProjects = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("opportunities").collect();
+    const byTitle = new Map(all.map((o) => [o.title, o._id]));
+
+    const patches: Record<string, Record<string, unknown>> = {
+      HumAIne: {
+        kind: "ngo_request",
+        summary:
+          "Help build the HumAIne movement site — a signable manifesto for staying human with AI. Full brand + PRD provided.",
+        description:
+          "HumAIne is a global movement and a signable manifesto for people who refuse to choose between embracing AI and staying deeply human. Build a site that makes the manifesto feel serious, human, and signable, and turns agreement into visible momentum through signatures and messages. Pages: (1) Homepage — the why (why HumAIne exists), the what (a global movement with the manifesto at its heart), founding members, and follow-the-movement (socials + newsletter); (2) Manifesto — the four values and principles plus a sign form (name, email, optional message), a live signature counter, a signature wall, and a message board. Future pages: About, Messages, Resources. Brand: titles in Georgia, body in Nunito; HUMAINE palette — Ancient Parchment #F4F1EA (background), Carbon Slate #2F353B (ink / the AI), Sun-Flare Amber #E6A532 (Purposeful Use), Ancient Moss #2D5A27 (Active Thinking), Burned Terracotta #A35C44 (Human Agency), Dusk Rose #D4908B (Deeper Connection); the logo is a fingerprint + circuit 'H'. A working build and full PRD already exist — see the repo README (linked) for the brief, brand kit, and voice guide. Good next tasks: align the live site to the official brand and build the About / Messages / Resources pages.",
+        tags: ["AI", "Movement", "Manifesto", "Next.js"],
+        skillsNeeded: ["Next.js", "React", "Design"],
+        difficulty: "intermediate",
+        link: "https://humaine-movement.com",
+        repoLink: "https://github.com/buildforpublic/humaine",
+        orgName: "HumAIne Movement",
+        accent: "peach",
+        officialBFP: false,
+        featured: false,
+      },
+      "TitikLab — Pendigitalan Irama Kulintangan Bajau": {
+        kind: "ngo_request",
+        summary:
+          "Build a digital learning platform for traditional Bajau Tagungguk music — page brief provided; brand open.",
+        description:
+          "TitikLab (Pendigitalan Irama Kulintangan Bajau) preserves and promotes traditional Bajau music — Tagungguk — from Semporna, Sabah. Build a simple educational website where users can: learn the history and cultural significance of Tagungguk; explore the five traditional titik (Tabawan, Tarirai, Limbayan, Lellang, and Senai-senai); learn about the instruments in a Tagungguk ensemble; view demonstration photos and videos; listen to the rhythm of each titik (if possible); download a learning pamphlet; and read about the project and its community partners. It's early-stage, in collaboration with Cikgu Rosley (academic research on the traditional rhythm codes) and Sulimbag Jawtee, a traditional music group from Semporna (content verification and workshop demonstrations). No brand guidelines yet — propose a culturally-appropriate direction, or infer one from the partners' materials. The repo is set up (linked).",
+        tags: ["Cultural Heritage", "Education", "Music", "Sabah"],
+        skillsNeeded: ["Web", "Design", "Content"],
+        difficulty: "beginner",
+        repoLink: "https://github.com/buildforpublic/titiklab",
+        orgName: "TitikLab",
+        accent: "blue",
+        officialBFP: false,
+        featured: false,
+      },
+      "YouthWave MY (Pertubuhan Gelombang Muda Malaysia)": {
+        kind: "ngo_request",
+        summary:
+          "A Malaysian youth NGO needs a builder — no brief yet; infer scope from their socials.",
+        description:
+          'Pertubuhan Gelombang Muda Malaysia ("YouthWave MY") is a Malaysian youth NGO that represents the voices of young people on current national issues. There is no brief, brand, or page spec yet — builders should infer what\'s needed from the organisation\'s social media and posts, then propose how technology could help (a website, member/event tools, content, etc.) and reach out to scope it. Socials — Facebook: facebook.com/youthwaveMY ; LinkedIn: linkedin.com/company/pertubuhan-gelombang-muda-malaysia-youthwave.',
+        tags: ["NGO", "Youth", "Malaysia", "Scoping"],
+        difficulty: "beginner",
+        link: "https://www.facebook.com/youthwaveMY/",
+        orgName: "Pertubuhan Gelombang Muda Malaysia (YouthWave MY)",
+        accent: "purple",
+        officialBFP: false,
+        featured: false,
+      },
+    };
+
+    let count = 0;
+    for (const [title, patch] of Object.entries(patches)) {
+      const id = byTitle.get(title);
+      if (!id) {
+        console.log(`Not found: ${title}`);
+        continue;
+      }
+      await ctx.db.patch(id, patch);
+      count++;
+    }
+
+    console.log(`Reclassified ${count} board projects to ngo_request.`);
+    return { updated: count };
+  },
+});
